@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 贺坤的个人博客
+title: 专业治头秃的博客
 subtitle: 'Simple is better than complex!'
 description: ''
-keywords:
-author: 贺坤
+keywords: 
+author: 专业治头秃
 language: zh-CN
 timezone: ''
 
@@ -45,13 +45,17 @@ post_asset_folder: true
 relative_link: false
 future: true
 highlight:
-  enable: false
+  enable: true
+  line_number: true
+  auto_detect: false
+  tab_replace:
+
 
 prism_plugin:
   mode: 'preprocess'    # realtime/preprocess
   theme: 'tomorrow'
   line_number: false    # default false
-  custom_css:
+  custom_css: 
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -124,3 +128,6 @@ deploy:
   repo:
     # coding: git@e.coding.net:zongyan/zongyan.git,master
     github: git@github.com:hekun97/hekun97.github.io.git,master
+# butterfly音乐插件
+aplayer:
+  asset_inject: false
