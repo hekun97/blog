@@ -27,7 +27,7 @@ cover: https://cdn.pixabay.com/photo/2017/06/12/04/21/database-2394312_960_720.j
 
 ## 对数据库的操作
 
-### 创建数据库：
+### 创建数据库
 
 ```mysql
 CREATE DATABASE 数据库名;
@@ -39,7 +39,7 @@ CREATE DATABASE 数据库名;
 
 - 后续字符由<font color="green">字母、十进制数、下划线、#、$及@符号</font>组成。
 
-- 不能为<font color="green">RDBMS（数据库管理系统）</font>的保留关键字。
+- 不能为<font color="green">RDBMS（关系型数据库管理系统）</font>的保留关键字。
 
 - 不允许<font color="green">空格及其他字符</font>。
 
@@ -61,7 +61,7 @@ CREATE DATABASE test_sql
 SHOW DATABASES;
 ```
 
-### 连接数据库：
+### 连接数据库
 
 ```mysql
 USE test_sql;
@@ -73,7 +73,7 @@ USE test_sql;
 SELECT DATABASE();
 ```
 
-### 删除数据库：
+### 删除数据库
 
 ```mysql
 DROP DATABASE test_sql;
@@ -83,23 +83,23 @@ DROP DATABASE test_sql;
 
 接下来就开始创建表了，在创建表之前先列出几种常用的数据类型
 
-### 整数数据类型：
+### 整数数据类型
 
 - `INT` 大小：4字节
 
 - `BIGINT `大小：8字节
 
-### 浮点数据类型：
+### 浮点数据类型
 
 - `FLOAT `大小：4字节 精度：7位小数
 
 - `DOUBLE `大小：8字节 精度：15位小数
 
-### 字符串数据类型：
+### 字符串数据类型
 
 - `VARCHAR `范围：0-65535
 
-### 日期数据类型：
+### 日期数据类型
 
 - `DATE `大小：3字节 格式：YYYY
 
@@ -121,7 +121,7 @@ DROP DATABASE test_sql;
   * 更改列
   * 删除列
 
-### 创建表：
+### 创建表
 
 ```mysql
 CREATE TABLE < 表名 > (< 列名 > < 列的数据类型 > [<列的约束>]);
@@ -164,13 +164,13 @@ SHOW TABLES;
 DESCRIBE t_student;
 ```
 
-### 删除表：
+### 删除表
 
 ```mysql
 DROP TABLE t_student;
 ```
 
-### 复制表：
+### 复制表
 
 #### 同时复制表的结构和内容
 
@@ -184,7 +184,7 @@ FROM t_student;
 如此我们便复制了一张名为`copy_student`的表，它包括`t_student`表中的内容与结构。
 <font color="red">注意：复制表的同时表的约束并不能复制过来。</font>
 
-### 只复制表结构而不复制表内容：
+### 只复制表结构而不复制表内容
 
 ```mysql
 CREATE TABLE copy_student
@@ -199,7 +199,7 @@ WHERE
 
 ### 修改表
 
-#### 添加新列：
+#### 添加新列
 
 ```mysql
 ALTER TABLE t_student
@@ -209,7 +209,7 @@ ADD
 
 ![](https://pic.downk.cc/item/5e858643504f4bcb04cee0cf.jpg)
 
-#### 更改列：
+#### 更改列
 
 ```mysql
 ALTER TABLE t_student
@@ -221,7 +221,7 @@ CHANGE
 
 ![](https://pic.downk.cc/item/5e85867c504f4bcb04cf0e43.jpg)
 
-#### 删除列：
+#### 删除列
 
 ```mysql
 ALTER TABLE t_student
@@ -249,7 +249,7 @@ DROP COLUMN
 4. 用户自定义完整性
    保证自定义规则
 
-### 实体完整性--主键约束：
+### 实体完整性--主键约束
 
 `PRIMARY KEY`
 
@@ -265,7 +265,7 @@ CREATE TABLE t_student(
 );
 ```
 
-### 实体完整性--唯一约束：
+### 实体完整性--唯一约束
 
 `UNIQUE`
 
@@ -281,7 +281,7 @@ CREATE TABLE t_student(
 );
 ```
 
-### 域完整性--非空约束：
+### 域完整性--非空约束
 
 `NOT NULL`
 
@@ -297,7 +297,7 @@ CREATE TABLE t_student(
 );
 ```
 
-### 域完整性--默认约束：
+### 域完整性--默认约束
 
 设定默认值后，可以在添加此列时不指定值,数据库会自动填充设定的默认值。
 
@@ -318,7 +318,7 @@ CREATE TABLE t_student(
 
 ![](https://pic.downk.cc/item/5e858713504f4bcb04cf85ed.jpg)
 
-### 引用完整性--外键约束：
+### 引用完整性--外键约束
 
 外键约束是指在外键关联主键上强制加上一个约束，如果违反该约束，则不允许该条数据的修改。
 
@@ -447,7 +447,7 @@ WHERE
 
 <font color="red">注：修改多个列的值时用逗号隔开。要想设置某一列的值为空，只需让`<列名>=NULL` 即可。`WHERE`表示过滤条件。</font>
 
-###  删除数据（行）：
+###  删除数据（行）
 
 ```mysql
 DELETE FROM 表名
@@ -490,7 +490,7 @@ TRUNCATE TABLE 表名
 - 排序操作
   指定查询的结果以什么样的顺序显示
 
-### 投影操作：
+### 投影操作
 
 ```mysql
 SELECT
@@ -578,7 +578,7 @@ LIMIT
 
 <font color="red">注：`LIMIT`很重要，它是之后做数据表格分页的关键。</font>
 
-### 选择操作——WHERE：
+### 选择操作——WHERE
 
 * 单条件选择
 * 多条件选择
@@ -709,7 +709,7 @@ WHERE
 ![](https://pic.downk.cc/item/5e858d69504f4bcb04d448d9.jpg)
 这下模糊查询就很明白了吧，当然还有其他组合，大家可以自己尝试。
 
-#### 处理空值数据：
+#### 处理空值数据
 
 判断条件不能用`列名=NULL`，而是要用`IS NULL`或`IS NOT NULL`。
 
@@ -783,7 +783,7 @@ ORDER BY
 ![](https://pic.downk.cc/item/5e858f04504f4bcb04d5769e.jpg)
 
 
-### 执行列、行计数（count）：
+### 执行列、行计数（count）
 
 标准格式
 
@@ -837,7 +837,7 @@ FROM t_student;
 
  
 
-### 返回列合计值（SUM）：
+### 返回列合计值（SUM）
 
 <font color="red">注：`sum`只有`ALL`与`DISTINCT`两种计数规范，无`*`。</font>
 
@@ -852,7 +852,7 @@ FROM t_student;
 ![](https://pic.downk.cc/item/5e8591b6504f4bcb04d765aa.jpg)
 
 
-### 返回列平均值（AVG）：
+### 返回列平均值（AVG）
 
 **计算学生平均年龄：**
 
@@ -866,9 +866,9 @@ FROM t_student;
 
  
 
-### 返回最大值/最小值（MAX/MIN）：
+### 返回最大值/最小值（MAX/MIN）
 
-**求年龄最大的学生信息（最小值同理）：**
+**求年龄最大的学生信息（最小值同理）**
 
 ```mysql
 SELECT
@@ -882,7 +882,7 @@ FROM t_student;
 
  
 
-## 数据分组（GROUP BY)：
+## 数据分组（GROUP BY)
 
 `SQL`中数据可以按列名分组，搭配聚合函数十分实用。
 
@@ -925,7 +925,7 @@ GROUP BY
 ![](https://pic.downk.cc/item/5e859258504f4bcb04d7de5a.jpg)
 
 
-### HAVING过滤条件：
+### HAVING过滤条件
 
 之前说了分组操作、聚合函数、`WHERE`过滤的执行顺序，那如果我们希望在聚合之后执行过滤条件怎么办？
 
@@ -1005,7 +1005,7 @@ HAVING
 
  
 
-### 在SELECT中嵌套：
+### 在SELECT中嵌套
 
 学生信息和班级名称位于不同的表中，要在同一张表中查出学生的学号、姓名、班级名称：
 
@@ -1043,7 +1043,7 @@ GROUP BY
 ![](https://pic.downk.cc/item/5e859345504f4bcb04d88abb.jpg)
 
 
-### 在WHERE中嵌套：
+### 在WHERE中嵌套
 
 现要查出C语言成绩最高的学生的信息：
 
@@ -1125,7 +1125,7 @@ WHERE
 ![](https://pic.downk.cc/item/5e8593f4504f4bcb04d90360.jpg)
 
 
-### 子查询的分类：
+### 子查询的分类
 
 - 相关子查询
   * 执行依赖于外部查询的数据。
@@ -1143,7 +1143,7 @@ WHERE
 
  
 
-## 组合查询：
+## 组合查询
 
 通过`UNION`运算符来将两张表纵向联接，基本方式为：
 
@@ -1237,7 +1237,7 @@ JOIN t_class c ON s._fk = c._infor;
 
 ## 表联接的分类：
 
-### 内联接：
+### 内联接
 
 内联接是指两个表中某一行相关的列值匹配时，这一行才会出现在表中。就像上例中`s._fk`与`c._infor`相同时才会出行该行，其他的行剔除。
 
@@ -1256,7 +1256,7 @@ WHERE
 
 此写法也是我们用的最多的。
 
-### 外联接：
+### 外联接
 
 **分类：**
 
@@ -1298,7 +1298,7 @@ WHERE
 
  
 
-### 自联接：
+### 自联接
 
 自联接属于内联接或外联接的一种特例，自联接所联接的表均是来自同一张，用法个人感觉还是比较巧妙的。
 
@@ -1330,7 +1330,7 @@ WHERE
 
  
 
-## 知识点罗列到这里，做题时间到：
+## 知识点罗列到这里，做题时间到
 
 ### 1.查询凤姐所在的班级
 

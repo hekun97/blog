@@ -126,8 +126,8 @@ deploy:
   #   github: https://github.com/hekun97/hekun97.github.io.git
   # branch: master
   repo:
-    # coding: git@e.coding.net:zongyan/zongyan.git,master
     github: git@github.com:hekun97/hekun97.github.io.git,master
+    coding: git@git.coding.net:zongyan/zongyan.git,master1234567
 # butterfly音乐插件
 aplayer:
   asset_inject: false
