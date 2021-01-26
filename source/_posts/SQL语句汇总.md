@@ -20,10 +20,14 @@ cover: https://cdn.pixabay.com/photo/2017/06/12/04/21/database-2394312_960_720.j
 
 其包括：
 
-* 数据定义语言（`DDL`）
-* 数据查询语言（`DQL`）
-* 数据操作语言（`DML`）
-* 数据控制语言（`DCL`）
+* 数据定义语言（`DDL`）(`Data Definition Language`)
+  * `DDL`允许用户定义数据，也就是创建表、删除表、修改表结构这些操作。通常，`DDL`由数据库管理员执行。
+* 数据查询语言（`DQL`）(`Data Query Language`)
+  * `DQL`允许用户查询数据，这也是通常最频繁的数据库日常操作
+* 数据操作语言（`DML`）(`Data Manipulation Language`)
+  * `DML`为用户提供添加、删除、更新数据的能力，这些是应用程序对数据库的日常操作。
+* 数据控制语言（`DCL`）(`Data Control Language`)
+  * 是用来设置或更改数据库用户或角色权限的语句，包括（`grant`,`deny`,`revoke`等）语句。在默认状态下，只有`sysadmin`,`dbcreator`,`db_owner`或`db_securityadmin`等人员才有权力执行`DCL`
 
 ## 对数据库的操作
 
@@ -51,7 +55,7 @@ CREATE DATABASE test_sql
 
 ![](https://pic.downk.cc/item/5e8585d1504f4bcb04ce88cd.jpg)
 
-此图为SQLyog的左侧目录栏，前三个为本地自带数据库。将SQL语句全部选中运行（F8）后，F5刷新目录栏，出现了我们创建的数据库。
+此图为`SQLyog`的左侧目录栏，前三个为本地自带数据库。将`SQL`语句全部选中运行（`F8`）后，`F5`刷新目录栏，出现了我们创建的数据库。
 
 ### 查看数据库
 
