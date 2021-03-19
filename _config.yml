@@ -46,7 +46,7 @@ relative_link: false
 future: true
 highlight:
   enable: true
-  line_number: true
+  line_number: false
   auto_detect: false
   tab_replace:
 
@@ -86,7 +86,7 @@ meta_generator: true
 date_format: YYYY-MM-DD
 time_format: HH:mm:ss
 ## Use post's date for updated date unless set in front-matter
-use_date_for_updated: false
+updated_option: false
 
 # Pagination
 ## Set per_page to 0 to disable pagination
@@ -127,7 +127,7 @@ deploy:
   # branch: master
   repo:
     github: git@github.com:hekun97/hekun97.github.io.git,master
-    coding: git@git.coding.net:zongyan/zongyan.git,master1234567
+    gitee: git@gitee.com:hek97/hek97.git,master
 # butterfly音乐插件
 aplayer:
   asset_inject: false
