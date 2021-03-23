@@ -16,8 +16,6 @@ cover: https://cdn.pixabay.com/photo/2020/10/01/22/31/moss-5619857_960_720.jpg
 
 Git是目前世界上最先进的分布式版本控制系统，使用C语言开发。
 
-![Git流程](Git笔记/Git流程.webp)
-
 ## 1.2 版本控制系统
 
 
@@ -50,6 +48,10 @@ Git是目前世界上最先进的分布式版本控制系统，使用C语言开�
 | 安全性   | 中央服务器出问题，所有人都没法干活 | 某一个人的电脑坏掉了不要紧，随便从其他人哪里复制一个即可 |
 | 分支管理 | 分支功能不够强大                   | 极其强大的分支管理                                       |
 | 暂存区   | 无                                 | 有                                                       |
+
+## 1.3 Git流程图解
+
+![Git流程](Git笔记/Git流程.jpg)
 
 # 2. 基本使用
 
@@ -609,6 +611,42 @@ Git的版本回退速度非常快，因为Git在内部有个指向当前版本�
 
 ## 5.3 “储藏”工作现场
 
-软件开发中，`bug`就像家常便饭一样。有了`bug`就需要修复，在Git中，由于分支是如此的强大，所以，每个bug都可以通过一个新的临时分支来修复，修复后，合并分支，然后将临时分支删除。
+修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；
 
-当你接到一个修复一个代号101的bug的任务时，很自然地，你想创建一个分支`issue-101`来修复它，但是，等等，当前正在`dev`上进行的工作还没有提交：
+当手头工作没有完成时，需要先把工作现场“储藏”一下，然后去修复bug，修复后，再把“储藏”的工作现场恢复出来继续工作。
+
+1. 查看当前工作区状态
+
+   ```bash
+   $ git status
+   On branch dev
+   Changes to be committed:
+     (use "git reset HEAD <file>..." to unstage)
+   
+   	new file:   hello.py
+   
+   Changes not staged for commit:
+     (use "git add <file>..." to update what will be committed)
+     (use "git checkout -- <file>..." to discard changes in working directory)
+   
+   	modified:   readme.txt
+   ```
+
+2. 把当前工作现场“储藏”起来
+
+   ```bash
+   $ git stash
+   Saved working directory and index state WIP on dev: f52c633 add merge
+   ```
+
+   
+
+3. 再查看当前工作区状态
+
+   ```
+   
+   ```
+
+   
+
+4. 
