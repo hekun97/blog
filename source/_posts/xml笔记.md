@@ -57,10 +57,10 @@ gender=nv
 
 ```xml
 <user id='1'>
-		<name>zhangsan</name>
-		<age>23</age>
-		<gender>male</gender>
-	</user>
+	<name>zhangsan</name>
+	<age>23</age>
+	<gender>male</gender>
+</user>
 
 <user id='2'>
 	<name>lisi</name>
@@ -72,8 +72,9 @@ gender=nv
 ## XML功能
 
 存储数据。
-	1. 配置文件；
-	2. 在网络中传输。
+
+​	1. 配置文件；
+​	2. 在网络中传输。
 
 ## xml与html的区别
 
@@ -225,7 +226,6 @@ name{
 * 分类：
 	1. `DTD`:一种简单的约束技术；
 	2. `Schema`:一种复杂的约束技术。
-	
 ### DTD
 
 ```dtd
