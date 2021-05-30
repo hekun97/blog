@@ -96,14 +96,13 @@ gender=nv
 		<age>23</age>
 		<gender>male</gender>
 		<br/>
-	</user>
-	
+	</user> 
 
-<user id='2'>
-	<name>lisi</name>
-	<age>24</age>
-	<gender>female</gender>
-</user>
+    <user id='2'>
+        <name>lisi</name>
+        <age>24</age>
+        <gender>female</gender>
+    </user>
 
 </users>
 ```
