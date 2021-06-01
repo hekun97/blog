@@ -96,7 +96,11 @@ gender=nv
 		<age>23</age>
 		<gender>male</gender>
 		<br/>
+<<<<<<< HEAD
 	</user>
+=======
+	</user> 
+>>>>>>> 6910af398ff0869ffe038409b4f01c597ab3bb44
 
     <user id='2'>
         <name>lisi</name>
@@ -111,7 +115,7 @@ gender=nv
 
 直接把.xml文档拖到浏览器，不报错就证明没错误。
 
-![1. 判断是否有错](\xml笔记\1. 判断是否有错.png)
+![1. 判断是否有错](https://pic.imgdb.cn/item/60b32ddf39f6859bc22adaae.png)
 
 ## ★基本语法
 
@@ -216,7 +220,7 @@ name{
 ## 约束
 概念：规定`xml`文档的书写规则，由软件   使用者（程序员）编写，软件进行解析。
 
-![2. 约束](xml笔记/2. 约束.bmp)
+![2. 约束](https://pic.imgdb.cn/item/60b32ddf39f6859bc22adb9d.png)
 
 作为框架的使用者(程序员)：
  	1. 能够在`xml`中引入约束文档
@@ -496,7 +500,7 @@ name{
 
 1. 导入`jar`包；(`jsoup-1.11.2.jar`)
 
-   ![Jsoup的jar包](xml笔记/Jsoup的jar包.png)
+   ![Jsoup的jar包](https://pic.imgdb.cn/item/60b32ddf39f6859bc22adbbd.png)
 
 2. 获取`Document`对象；
 
