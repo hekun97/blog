@@ -73,8 +73,8 @@ gender=nv
 
 存储数据。
 
-​	1. 配置文件；
-​	2. 在网络中传输。
+	1. 配置文件；
+	2. 在网络中传输。
 
 ## xml与html的区别
 
@@ -97,13 +97,12 @@ gender=nv
 		<gender>male</gender>
 		<br/>
 	</user>
-	
 
-<user id='2'>
-	<name>lisi</name>
-	<age>24</age>
-	<gender>female</gender>
-</user>
+    <user id='2'>
+        <name>lisi</name>
+        <age>24</age>
+        <gender>female</gender>
+    </user>
 
 </users>
 ```
@@ -148,8 +147,8 @@ gender=nv
 
          	* 取值：
            
-           		* `yes`：不依赖其他文件
-           		* `no`：依赖其他文件
+           * `yes`：不依赖其他文件
+           * `no`：依赖其他文件
 
 ### 指令(了解)
 
