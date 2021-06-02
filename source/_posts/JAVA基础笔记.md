@@ -10,6 +10,10 @@ cover: https://cdn.pixabay.com/photo/2017/02/22/11/47/foggy-2089233_960_720.jpg
 
 ---
 
+# Java基础知识
+
+Java最早是由SUN公司（已被Oracle收购）的[詹姆斯·高斯林](https://en.wikipedia.org/wiki/James_Gosling)（高司令，人称Java之父）在上个世纪90年代初开发的一种编程语言。
+
 # 面向对象编程
 
 ## 面向对象基础
