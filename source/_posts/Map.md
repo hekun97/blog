@@ -1,14 +1,15 @@
 ---
-title: 04.Map
+title: Map集合
 date: 2020-07-12 18:24:27
-categories: 
-- Java集合
+category: 
+- Java基础知识
 tags: 
 - Map
-
+type: artitalk
+cover: https://pixabay.com/zh/illustrations/compass-map-nautical-antique-3408928/
 ---
 
-# 04.Map
+# Map
 
 ## 主要内容
 
@@ -46,7 +47,6 @@ tags:
 * **LinkedHashMap<K,V>**：HashMap下有个子类LinkedHashMap，存储数据采用的哈希表结构+链表结构。通过链表结构可以保证元素的存取顺序一致；通过哈希表结构可以保证的键的唯一、不重复，需要重写键的hashCode()方法、equals()方法。
 
 > tips：Map接口中的集合都有两个泛型变量<K,V>,在使用时，要为两个泛型变量赋予数据类型。两个泛型变量<K,V>的数据类型可以相同，也可以不同。
->
 
 ## 1.3  Map接口中的常用方法
 
@@ -180,14 +180,12 @@ public class MapDemo02 {
 {% asset_img 2MapCollectionTraversalMode.bmp 遍历图解  %}
 
 > tips：Map集合不能直接使用迭代器或者foreach进行遍历。但是转成Set之后就可以使用了。
->
 
 ## 1.7  HashMap存储自定义类型键值
 
 练习：每位学生（姓名，年龄）都有自己的家庭住址。那么，既然有对应关系，则将学生对象和家庭住址存储到map集合中。学生作为键, 家庭住址作为值。
 
 > 注意，学生姓名相同并且年龄相同视为同一名学生。
->
 
 编写学生类：
 
@@ -462,7 +460,6 @@ public class HelloJDK9 {
 4. 查看三人各自手中的牌（按照牌的大小排序）、底牌
 
 > 规则：手中扑克牌从大到小的摆放顺序：大王,小王,2,A,K,Q,J,10,9,8,7,6,5,4,3
->
 
 ## 3.2 案例需求分析
 

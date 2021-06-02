@@ -3,9 +3,8 @@ title: XML笔记
 date: 2021-03-23 00:45:43
 tags: 
 - XML
-- 可拓展标记语言
 category:
-- JAVA WEB
+- XML
 type: artitalk
 cover: https://cdn.pixabay.com/photo/2021/02/08/16/03/dinosaur-5995333_960_720.png
 ---
