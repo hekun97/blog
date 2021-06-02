@@ -10,52 +10,112 @@ cover: https://cdn.pixabay.com/photo/2017/02/22/11/47/foggy-2089233_960_720.jpg
 
 ---
 
+
 # Java基础知识
 
 Java最早是由SUN公司（已被Oracle收购）的[詹姆斯·高斯林](https://en.wikipedia.org/wiki/James_Gosling)（高司令，人称Java之父）在上个世纪90年代初开发的一种编程语言。
 
-# 面向对象编程
+# 面向对象编程(`OOP`)
+
+## 面向对象编程的学习路线
+
+面向对象的基本概念，包括：
+
+- 类
+- 实例
+- 方法
+
+面向对象的实现方式，包括：
+
+- 继承
+- 多态
+
+Java语言本身提供的机制，包括：
+
+- package
+- classpath
+- jar
+
+以及Java标准库提供的核心类，包括：
+
+- 字符串
+- 包装类型
+- JavaBean
+- 枚举
+- 常用工具类
 
 ## 面向对象基础
 
-### 抽象类
+**面向对象和面向过程编程的概念**
 
-如果一个`class`定义了方法，但没有具体执行代码，这个方法就是抽象方法，抽象方法用`abstract`修饰。
+1. **面向过程编程：**是把模型分解成一步一步的过程。
 
-因为无法执行抽象方法，因此这个类也必须申明为抽象类（abstract class）。
+2. **面向对象编程：**是一种通过对象的方式，把现实世界映射到计算机模型的一种编程方法。
 
-使用`abstract`修饰的类就是抽象类。我们无法实例化一个抽象类：
+**面向对象编程解析**
 
-```
-Person p = new Person(); // 编译错误
-```
+现实世界中，我们定义了“人”这种抽象概念，而具体的人则是“小明”、“小红”、“小军”等一个个具体的人。所以，“人”可以定义为一个类（`class`），而具体的人则是实例（`instance`）
 
-无法实例化的抽象类有什么用？
+| 现实世界 | 计算机模型    | `Java`代码                   |
+| :------- | :------------ | :--------------------------- |
+| 人       | 类 / `class`  | `class Person { }`           |
+| 小明     | 实例 / `ming` | `Person ming = new Person()` |
+| 小红     | 实例 / `hong` | `Person hong = new Person()` |
+| 小军     | 实例 / `jun`  | `Person jun = new Person()`  |
 
-因为抽象类本身被设计成只能用于被继承，因此，抽象类可以强迫子类实现其定义的抽象方法，否则编译会报错。因此，抽象方法实际上相当于定义了“规范”。
+**`class`和`instance`**
 
-例如，`Person`类定义了抽象方法`run()`，那么，在实现子类`Student`的时候，就必须覆写`run()`方法：
+`class`是一种对象模版，它定义了如何创建实例，因此，`class`本身就是一种数据类型。
 
-```java
-// abstract class
-public class Main {
-    public static void main(String[] args) {
-        Person p = new Student();
-        p.run();
-    }
-}
+![class类似模型](https://www.liaoxuefeng.com/files/attachments/1260571618658976/l)
 
-abstract class Person {
-    public abstract void run();
-}
+而`instance`是对象实例，`instance`是根据`class`创建的实例，可以创建多个`instance`，每个`instance`类型相同，但各自属性可能不相同。
 
-class Student extends Person {
-    @Override
-    public void run() {
-        System.out.println("Student.run");
-    }
-}
-```
+![instances类似用模型做出来的实例](https://www.liaoxuefeng.com/files/attachments/1260571718581056/l)
+
+> `class`本身就是一种数据类型，类似`String`；每个`instance`类型相同，但各自属性可能不相同，类似"`Hello`"，"`hi`"的类型相同，但值不一样。
+
+###  方法(`method`)
+
+一个`class`可以包含多个`field`，但是，直接把`field`用`public`暴露给外部可能会破坏封装性，直接操作`field`，容易造成逻辑混乱。因此可以使用`private`修饰`field`，拒绝外部访问，然后使用方法（`method`）来让外部代码可以间接修改`field`，在方法内部，我们还可以检查参数对不对。
+
+### 构造方法(`Constructor Method`)
+
+在创建对象实例时就把内部字段全部初始化为合适的值，构造方法的名称就是类名。
 
 
 
+> 1. 和普通方法相比，构造方法没有返回值（也没有`void`），调用构造方法，必须用`new`操作符。
+> 2. 一个构造方法可以调用其他构造方法，这样做的目的是便于代码复用。调用其他构造方法的语法是`this(…)`
+
+### 方法重载(`overloading method`)
+
+在一个类中，我们可以定义多个方法。如果有一系列方法，它们的功能都是类似的，只有参数有所不同，那么，可以把这一组方法名做成同名方法。这种方法名相同，但各自的参数不同，称为方法重载（`Overload`）。
+
+方法重载的目的是，功能类似的方法使用同一名字，更容易记住，因此，调用起来更简单。
+
+> 方法重载的返回值类型通常都是相同的。
+
+### 继承(`inherit`)
+
+继承是面向对象编程中非常强大的一种机制，它可以复用代码，我们只需要为子类编写新增的功能
+
+> 继承有个特点，就是子类无法访问父类的`private`字段或者`private`方法。为了让子类可以访问父类的字段，我们需要把`private`改为`protected`
+
+### 多态(`polymorphic`)
+
+#### 覆写
+
+在继承关系中，子类如果定义了一个与父类方法签名完全相同的方法，被称为覆写（`Override`）
+
+##### `Override`和`Overload`的不同
+
+如果方法签名不同，就是`Overload`，`Overload`方法是一个新方法；如果方法签名相同，并且返回值也相同，就是`Override`。
+
+> 方法名相同，方法参数相同，但方法返回值不同，也是不同的方法。在Java程序中，出现这种情况，编译器会报错。加上`@Override`可以让编译器帮助检查是否进行了正确的覆写，但是`@Override`不是必需的。
+
+#### 多态
+
+多态是指，针对某个类型的方法调用，其真正执行的方法取决于运行时期实际类型的方法。
+
+多态的特性就是，运行期才能动态决定调用的子类方法。对某个类型调用某个方法，执行的实际方法可能是某个子类的覆写方法。
