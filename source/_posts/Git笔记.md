@@ -10,28 +10,28 @@ type: artitalk
 cover: https://cdn.pixabay.com/photo/2020/10/01/22/31/moss-5619857_960_720.jpg
 ---
 
-# 1. Git简介
+# Git简介
 
-## 1.1 Git的概念
+## Git的概念
 
 Git是目前世界上最先进的分布式版本控制系统，使用C语言开发。
 
-## 1.2 版本控制系统
+## 版本控制系统
 
 
 概念：版本控制最主要的功能是追踪文件的变更，记录每次文件的改动。
 
-### 1.2.1 版本控制系统分类
+### 版本控制系统分类
 
 分为集中式和分布式，其中CVS、SVN为集中式的版本控制系统，Git为分布式版本控制系统。
 
-#### 1.2.1.1 集中式版本控制系统
+####  集中式版本控制系统
 
 集中式版本控制系统，版本库是集中存放在中央服务器的，而干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，干完活了，再把自己的活推送给中央服务器。中央服务器就好比是一个图书馆，你要改一本书，必须先从图书馆借出来，然后回到家自己改，改完了，再放回图书馆。
 
 ![central-repo](Git笔记/集中式版本控制系统.jpg)
 
-#### 1.2.1.2 分布式版本控制系统
+####  分布式版本控制系统
 
 分布式版本控制系统根本没有“中央服务器”，每个人的电脑上都是一个完整的版本库，这样，你工作的时候，就不需要联网了，因为版本库就在你自己的电脑上。既然每个人电脑上都有一个完整的版本库，那多个人如何协作呢？比方说你在自己电脑上改了文件A，你的同事也在他的电脑上改了文件A，这时，你们俩之间只需把各自的修改推送给对方，就可以互相看到对方的修改了。
 和集中式版本控制系统相比，分布式版本控制系统的安全性要高很多，因为每个人电脑里都有完整的版本库，某一个人的电脑坏掉了不要紧，随便从其他人那里复制一个就可以了。而集中式版本控制系统的中央服务器要是出了问题，所有人都没法干活了。
@@ -39,7 +39,7 @@ Git是目前世界上最先进的分布式版本控制系统，使用C语言开�
 
 ![](Git笔记/分布式版本控制系统.jpg)
 
-### 1.2.2 集中式VS分布式的区别
+### 集中式VS分布式的区别
 
 | 区别     | 集中式                             | 分布式                                                   |
 | -------- | ---------------------------------- | -------------------------------------------------------- |
@@ -49,15 +49,15 @@ Git是目前世界上最先进的分布式版本控制系统，使用C语言开�
 | 分支管理 | 分支功能不够强大                   | 极其强大的分支管理                                       |
 | 暂存区   | 无                                 | 有                                                       |
 
-## 1.3 Git流程图解
+## Git流程图解
 
 ![Git流程](Git笔记/Git流程.jpg)
 
-# 2. 基本使用
+# 基本使用
 
-## 2.1 快速入门
+## 快速入门
 
-### 2.1.1 创建仓库(repository)
+### 创建仓库(repository)
 
 1. 创建一个空目录；
 
@@ -86,7 +86,7 @@ Git是目前世界上最先进的分布式版本控制系统，使用C语言开�
 
 > 仓库建立后，我们对文件的新增、修改操作是在工作区。
 
-### 2.1.2 添加文件到暂存区
+###  添加文件到暂存区
 
 1. 从工作区添加单个文件到暂存区
 
@@ -106,7 +106,7 @@ Git是目前世界上最先进的分布式版本控制系统，使用C语言开�
    $ git add --all
    ```
 
-### 2.1.3 提交到版本库
+###  提交到版本库
 
 把暂存区的文件提交到版本库。
 
@@ -118,9 +118,9 @@ $ git commit -m "wrote a readme file"
 # -m 后面输入的是本次提交的说明，可以输入任意内容
 ```
 
-## 2.2 管理修改
+## 管理修改
 
-### 2.2.1 修改文件
+### 修改文件
 
 当修改了`readme.txt`文件时。
 
@@ -130,7 +130,7 @@ Git is a distributed version control system.
 Git is free software
 ```
 
-### 2.2.2 查看仓库状态
+### 查看仓库状态
 
 运行`git status`查看仓库当前的状态
 
@@ -145,7 +145,7 @@ Git is free software
    no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-### 2.2.3 查看修改内容
+### 查看修改内容
 
 当不清楚修改的内容时，运行`git diff`查看具体修改了什么内容
 
@@ -162,7 +162,7 @@ index d8036c1..013b5bc 100644
 \ No newline at end of file
 ```
 
-### 2.2.4 添加文件到暂存区
+### 添加文件到暂存区
 
 把被修改的文件从工作区添加到暂存区，运行`git add`；
 
@@ -170,7 +170,7 @@ index d8036c1..013b5bc 100644
 $ git add readme.txt
 ```
 
-### 2.2.5 提交文件到版本库
+### 提交文件到版本库
 
 把暂存区的文件提交到版本库，运行`git commit -m "add distributed"`；
 
@@ -180,7 +180,7 @@ $ git commit -m "add distributed"
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
-### 2.2.6 确认仓库状态
+### 确认仓库状态
 
 运行`git status`查看仓库当前的状态
 
@@ -190,9 +190,9 @@ On branch master
 nothing to commit, working tree clean
 ```
 
-## 2.3 撤销修改
+##  撤销修改
 
-### 2.3.1 撤销工作区的修改
+###  撤销工作区的修改
 
 命令`git checkout -- readme.txt`意思就是，把`readme.txt`文件在工作区的修改全部撤销，这里有两种情况：
 
@@ -207,7 +207,7 @@ nothing to commit, working tree clean
 $ git checkout --readme.txt
 ```
 
-### 2.3.2 撤销暂存区的修改
+###  撤销暂存区的修改
 
 1. 发现添加内容有错误，已添加（add）到暂存区，还未进行提交（commit）到版本库。
 
@@ -242,7 +242,7 @@ $ git checkout --readme.txt
    nothing to commit, working tree clean
    ```
 
-### 2.3.3 撤销版本库的修改
+### 撤销版本库的修改
 
 1. 发现添加内容有错误，已添加（add）并提交（commit）到版本库。
 
@@ -252,7 +252,7 @@ $ git checkout --readme.txt
    git reset --hard HEAD^ 
    ```
 
-## 2.4 删除文件
+## 删除文件
 
 需要删除某文件，可以直接使用命令`rm file`删除或在资源管理器中删除。
 
@@ -299,11 +299,11 @@ no changes added to commit (use "git add" and/or "git commit -a")
      # git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”
      ```
 
-# 3. 时光机穿梭
+# 时光机穿梭
 
-## 3.1 版本回退
+## 版本回退
 
-### 3.1.1版本的概念
+### 版本的概念
 
 每次修改文件后，`commit`一次，称为一个新版本。
 
@@ -313,7 +313,7 @@ $ git commit -m "add distributed"
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
-### 3.1.2 回退到过去的版本
+### 回退到过去的版本
 
 当前版本提交的内容错误，需要回到上一个版本。
 
@@ -351,7 +351,7 @@ $ git commit -m "add distributed"
    61f336fd68ff39bcd1da26324c755f71a65ccb72 wrote a readme file
    ```
 
-### 3.1.3 回到未来的版本
+### 回到未来的版本
 
 因为一些原因，我现在非常后悔，需要回到最初的`add distributed`的版本。
 
@@ -383,7 +383,7 @@ $ git commit -m "add distributed"
    61f336fd68ff39bcd1da26324c755f71a65ccb72 wrote a readme file
    ```
 
-### 3.1.4 深入理解版本回退
+### 深入理解版本回退
 
 Git的版本回退速度非常快，因为Git在内部有个指向当前版本的`HEAD`指针，当你回退版本的时候，Git仅仅是改变了指针的指向。
 
@@ -415,9 +415,9 @@ Git的版本回退速度非常快，因为Git在内部有个指向当前版本�
             ○ wrote a readme file
     ```
 
-# 4. 远程仓库
+# 远程仓库
 
-## 4.1 准备工作
+## 准备工作
 
 这里使用github作为免费的远程仓库。由于本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以需要一些设置。
 
@@ -436,7 +436,7 @@ Git的版本回退速度非常快，因为Git在内部有个指向当前版本�
 >
 > 当然，GitHub允许你添加多个Key。假定你有若干电脑，你一会儿在公司提交，一会儿在家里提交，只要把每台电脑的Key都添加到GitHub，就可以在每台电脑上往GitHub推送了。
 
-## 4.2 添加远程库 
+## 添加远程库 
 
 1. 登录GitHub，然后在右上角找到"Create a new repo"按钮，创建一个新的仓库。
 
@@ -465,7 +465,7 @@ Git的版本回退速度非常快，因为Git在内部有个指向当前版本�
    Branch 'master' set up to track remote branch 'master' from 'origin'.
    ```
 
-## 4.3 从远程库克隆
+## 从远程库克隆
 
 使用命令`git clone`克隆。
 
@@ -481,11 +481,13 @@ Git的版本回退速度非常快，因为Git在内部有个指向当前版本�
    https://github.com/hekun97/learngit.git # https协议
    ```
 
-# 5. 分支管理
+
+
+# 分支管理
 
 分支就是在主分支上创建一个属于你自己的分支，别人看不到，但我能继续工作，想提交就提交，完成之后直接合并到主分支就行。
 
-## 5.1 创建与合并分支
+## 创建与合并分支
 
 1. 创建`dev`分支，然后切换到`dev`分支。
 
@@ -538,7 +540,7 @@ Git的版本回退速度非常快，因为Git在内部有个指向当前版本�
 
 > 还可以使用`git checkout -b <branch>`来创建并切换分支，`git checkout <branch>`切换分支，而前面讲过的撤销修改则是`git checkout -- <file>`，同一个命令，有两种作用。所以此处只使用`switch`，`checkout`仅做了解。
 
-## 5.2 解决冲突
+## 解决冲突
 
 人生不如意之事十之八九，合并分支往往也不是一帆风顺的。
 
@@ -684,23 +686,20 @@ Deleted branch feature1 (was 14096d0).
 
 工作完成。
 
+> 当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。
+>
+> 解决冲突就是把Git合并失败的文件手动编辑为我们希望的内容，再提交。
+>
+> 用`git log --graph`命令可以看到分支合并图。
+>
 
-
-### 小结
-
-当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。
-
-解决冲突就是把Git合并失败的文件手动编辑为我们希望的内容，再提交。
-
-用`git log --graph`命令可以看到分支合并图。
-
-## 5.23分支管理策略
+## 分支管理策略
 
 通常，合并分支时，如果可以，Git会用`Fast forward`模式，但这种模式下，删除分支后，会丢掉分支信息。
 
 如果要强制禁用`Fast forward`模式，Git会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息。
 
-### 5.3.1 保留分支信息
+### 保留分支信息
 
 强制禁用`Fast forward`模式，保留分支信息。
 
@@ -753,7 +752,7 @@ Deleted branch feature1 (was 14096d0).
 
    ![git-no-ff-mode](Git笔记/分支图片.jpg)
 
-### 5.3.2 分支管理原则
+### 分支管理原则
 
 在实际开发中，我们应该按照几个基本原则进行分支管理：
 
@@ -765,7 +764,7 @@ Deleted branch feature1 (was 14096d0).
 
 ![git-br-policy](Git笔记/分支图片2.jpg)
 
-### 5.3.3 强制删除分支
+### 强制删除分支
 
 添加一个新功能时，你肯定不希望因为一些实验性质的代码，把主分支搞乱了，所以，每添加一个新功能，最好新建一个feature分支，在上面开发，完成后，合并，最后，删除该feature分支。
 
@@ -786,9 +785,9 @@ Deleted branch feature-vulcan (was 287773e).
 
 
 
-## 5.4 bug分支
+## bug分支
 
-### 5.4.1  “储藏”工作现场
+###   “储藏”工作现场
 
 修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；
 
@@ -937,7 +936,7 @@ Deleted branch feature-vulcan (was 287773e).
 > $ git stash apply stash@{0}
 > ```
 
-### 5.4.2 同步被修复的bug到别的分支
+###  同步被修复的bug到别的分支
 
 在master分支上修复了bug后，我们要想一想，dev分支是早期从master分支分出来的，所以，这个bug其实在当前dev分支上也存在。
 
@@ -960,17 +959,17 @@ $ git cherry-pick 4c805e2
  1 file changed, 1 insertion(+), 1 deletion(-)
 ```
 
-Git自动给dev分支做了一次提交，注意这次提交的commit是`1d4b803`，它并不同于master的`4c805e2`，因为这两个commit只是改动相同，但确实是两个不同的commit。用`git cherry-pick`，我们就不需要在dev分支上手动再把修bug的过程重复一遍。
+`Git`自动给`dev`分支做了一次提交，注意这次提交的`commit`是`1d4b803`，它并不同于`master`的`4c805e2`，因为这两个commit只是改动相同，但确实是两个不同的`commit`。用`git cherry-pick`，我们就不需要在`dev`分支上手动再把修`bug`的过程重复一遍。
 
-有些聪明的童鞋会想了，既然可以在master分支上修复bug后，在dev分支上可以“重放”这个修复过程，那么直接在dev分支上修复bug，然后在master分支上“重放”行不行？当然可以，不过你仍然需要`git stash`命令保存现场，才能从dev分支切换到master分支。
+有些聪明的童鞋会想了，既然可以在`master`分支上修复`bug`后，在`dev`分支上可以“重放”这个修复过程，那么直接在`dev`分支上修复`bug`，然后在`master`分支上“重放”行不行？当然可以，不过你仍然需要`git stash`命令保存现场，才能从`dev`分支切换到`master`分支。
 
-> 在master分支上修复的bug，想要合并到当前dev分支，可以用`git cherry-pick <commit>`命令，把bug提交的修改“复制”到当前分支，避免重复劳动。
+> 在`master`分支上修复的`bug`，想要合并到当前`dev`分支，可以用`git cherry-pick <commit>`命令，把`bug`提交的修改“复制”到当前分支，避免重复劳动。
 
-## 5.5 多人协作
+# 多人协作
 
-当你从远程仓库克隆时，实际上Git自动把本地的`master`分支和远程的`master`分支对应起来了，并且，远程仓库的默认名称是`origin`。
+当你从远程仓库克隆时，实际上`Git`自动把本地的`master`分支和远程的`master`分支对应起来了，并且，远程仓库的默认名称是`origin`。
 
-### 5.5.1 查看远程库的信息
+## 查看远程库的信息
 
 要查看远程库的信息，用`git remote`：
 
@@ -987,11 +986,11 @@ origin  git@github.com:michaelliao/learngit.git (fetch)
 origin  git@github.com:michaelliao/learngit.git (push)
 ```
 
-上面显示了可以抓取和推送的`origin`的地址。如果没有推送权限，就看不到push的地址。
+上面显示了可以抓取和推送的`origin`的地址。如果没有推送权限，就看不到`push`的地址。
 
-### 5.5.2 推送分支
+## 推送分支
 
-推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git就会把该分支推送到远程库对应的远程分支上：
+推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，`Git`就会把该分支推送到远程库对应的远程分支上：
 
 ```bash
 $ git push origin master
@@ -1007,18 +1006,16 @@ $ git push origin dev
 
 - `master`分支是主分支，因此要时刻与远程同步；
 - `dev`分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；
-- bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；
-- feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。
+- `bug`分支只用于在本地修复`bug`，就没必要推到远程了，除非老板要看看你每周到底修复了几个`bug`；
+- `feature`分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。
 
-总之，就是在Git中，分支完全可以在本地自己藏着玩，是否推送，视你的心情而定！
+总之，就是在`Git`中，分支完全可以在本地自己藏着玩，是否推送，视你的心情而定！
 
-
-
-### 5.5.3 抓取分支
+## 抓取分支
 
 多人协作时，大家都会往`master`和`dev`分支上推送各自的修改。
 
-现在，模拟一个你的小伙伴，可以在另一台电脑（注意要把SSH Key添加到GitHub）或者同一台电脑的另一个目录下克隆：
+现在，模拟一个你的小伙伴，可以在另一台电脑（注意要把`SSH Key`添加到`GitHub`）或者同一台电脑的另一个目录下克隆：
 
 ```bash
 $ git clone git@github.com:michaelliao/learngit.git
@@ -1030,7 +1027,7 @@ Receiving objects: 100% (40/40), done.
 Resolving deltas: 100% (14/14), done.
 ```
 
-当你的小伙伴从远程库clone时，默认情况下，你的小伙伴只能看到本地的`master`分支。不信可以用`git branch`命令看看：
+当你的小伙伴从远程库`clone`时，默认情况下，你的小伙伴只能看到本地的`master`分支。不信可以用`git branch`命令看看：
 
 ```bash
 $ git branch
@@ -1088,7 +1085,7 @@ hint: 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 ```
 
-推送失败，因为你的小伙伴的最新提交和你试图推送的提交有冲突，解决办法也很简单，Git已经提示我们，先用`git pull`把最新的提交从`origin/dev`抓下来，然后，在本地合并，解决冲突，再推送：
+推送失败，因为你的小伙伴的最新提交和你试图推送的提交有冲突，解决办法也很简单，`Git`已经提示我们，先用`git pull`把最新的提交从`origin/dev`抓下来，然后，在本地合并，解决冲突，再推送：
 
 ```bash
 $ git pull
@@ -1110,7 +1107,7 @@ $ git branch --set-upstream-to=origin/dev dev
 Branch 'dev' set up to track remote branch 'dev' from 'origin'.
 ```
 
-再pull：
+再`pull`：
 
 ```bash
 $ git pull
@@ -1148,20 +1145,19 @@ To github.com:michaelliao/learngit.git
 
 这就是多人协作的工作模式，一旦熟悉了，就非常简单。
 
-### 5.5.4 小结
+> - 查看远程库信息，使用`git remote -v`；
+> - 本地新建的分支如果不推送到远程，对其他人就是不可见的；
+> - 从本地推送分支，使用`git push origin branch-name`，如果推送失败，先用`git pull`抓取远程的新提交；
+> - 在本地创建和远程分支对应的分支，使用`git checkout -b branch-name origin/branch-name`，本地和远程分支的名称最好一致；
+> - 建立本地分支和远程分支的关联，使用`git branch --set-upstream branch-name origin/branch-name`；
+> - 从远程抓取分支，使用`git pull`，如果有冲突，要先处理冲突。
+>
 
-- 查看远程库信息，使用`git remote -v`；
-- 本地新建的分支如果不推送到远程，对其他人就是不可见的；
-- 从本地推送分支，使用`git push origin branch-name`，如果推送失败，先用`git pull`抓取远程的新提交；
-- 在本地创建和远程分支对应的分支，使用`git checkout -b branch-name origin/branch-name`，本地和远程分支的名称最好一致；
-- 建立本地分支和远程分支的关联，使用`git branch --set-upstream branch-name origin/branch-name`；
-- 从远程抓取分支，使用`git pull`，如果有冲突，要先处理冲突。
+## rebase
 
-## 5.6 rebase
+在上一节我们看到了，多人在同一个分支上协作时，很容易出现冲突。即使没有冲突，后`push`的童鞋不得不先`pull`，在本地合并，然后才能`push`成功。
 
-在上一节我们看到了，多人在同一个分支上协作时，很容易出现冲突。即使没有冲突，后push的童鞋不得不先pull，在本地合并，然后才能push成功。
-
-每次合并再push后，分支变成了这样：
+每次合并再`push`后，分支变成了这样：
 
 ```
 $ git log --graph --pretty=oneline --abbrev-commit
@@ -1185,11 +1181,11 @@ $ git log --graph --pretty=oneline --abbrev-commit
 *   cf810e4 conflict fixed
 ```
 
-总之看上去很乱，有强迫症的童鞋会问：为什么Git的提交历史不能是一条干净的直线？
+总之看上去很乱，有强迫症的童鞋会问：为什么`Git`的提交历史不能是一条干净的直线？
 
 其实是可以做到的！
 
-Git有一种称为rebase的操作，有人把它翻译成“变基”。
+`Git`有一种称为`rebase`的操作，有人把它翻译成“变基”。
 
 ![rebase](https://www.liaoxuefeng.com/files/attachments/1216294032394112/l)
 
@@ -1211,7 +1207,7 @@ $ git log --graph --pretty=oneline --abbrev-commit
 ...
 ```
 
-注意到Git用`(HEAD -> master)`和`(origin/master)`标识出当前分支的HEAD和远程origin的位置分别是`582d922 add author`和`d1be385 init hello`，本地分支比远程分支快两个提交。
+注意到`Git`用`(HEAD -> master)`和`(origin/master)`标识出当前分支的`HEAD`和远程`origin`的位置分别是`582d922 add author`和`d1be385 init hello`，本地分支比远程分支快两个提交。
 
 现在我们尝试推送本地分支：
 
@@ -1227,7 +1223,7 @@ hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 ```
 
-很不幸，失败了，这说明有人先于我们推送了远程分支。按照经验，先pull一下：
+很不幸，失败了，这说明有人先于我们推送了远程分支。按照经验，先`pull`一下：
 
 ```
 $ git pull
@@ -1283,7 +1279,7 @@ $ git log --graph --pretty=oneline --abbrev-commit
 
 有！
 
-这个时候，rebase就派上了用场。我们输入命令`git rebase`试试：
+这个时候，`rebase`就派上了用场。我们输入命令`git rebase`试试：
 
 ```
 $ git rebase
@@ -1311,11 +1307,11 @@ $ git log --graph --pretty=oneline --abbrev-commit
 ...
 ```
 
-原本分叉的提交现在变成一条直线了！这种神奇的操作是怎么实现的？其实原理非常简单。我们注意观察，发现Git把我们本地的提交“挪动”了位置，放到了`f005ed4 (origin/master) set exit=1`之后，这样，整个提交历史就成了一条直线。rebase操作前后，最终的提交内容是一致的，但是，我们本地的commit修改内容已经变化了，它们的修改不再基于`d1be385 init hello`，而是基于`f005ed4 (origin/master) set exit=1`，但最后的提交`7e61ed4`内容是一致的。
+原本分叉的提交现在变成一条直线了！这种神奇的操作是怎么实现的？其实原理非常简单。我们注意观察，发现`Git`把我们本地的提交“挪动”了位置，放到了`f005ed4 (origin/master) set exit=1`之后，这样，整个提交历史就成了一条直线。`rebase`操作前后，最终的提交内容是一致的，但是，我们本地的`commit`修改内容已经变化了，它们的修改不再基于`d1be385 init hello`，而是基于`f005ed4 (origin/master) set exit=1`，但最后的提交`7e61ed4`内容是一致的。
 
-这就是rebase操作的特点：把分叉的提交历史“整理”成一条直线，看上去更直观。缺点是本地的分叉提交已经被修改过了。
+这就是`rebase`操作的特点：把分叉的提交历史“整理”成一条直线，看上去更直观。缺点是本地的分叉提交已经被修改过了。
 
-最后，通过push操作把本地分支推送到远程：
+最后，通过`push`操作把本地分支推送到远程：
 
 ```
 Mac:~/learngit michael$ git push origin master
@@ -1342,9 +1338,5 @@ $ git log --graph --pretty=oneline --abbrev-commit
 
 远程分支的提交历史也是一条直线。
 
-
-
-### 小结
-
-- rebase操作可以把本地未push的分叉提交历史整理成直线；
-- rebase的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要三方对比。
+> - `rebase`操作可以把本地未`push`的分叉提交历史整理成直线；
+> - `rebase`的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要三方对比。
