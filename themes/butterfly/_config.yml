@@ -14,6 +14,8 @@ menu:
   列表||fas fa-list:
     - 音乐 || /music/ || fas fa-music
     - 电影 || /movies/ || fas fa-video
+  Java基础||fas fa-list:
+    - 面向对象编程 || ./2020/12/01/java-ji-chu-bi-ji/ || fas fa-male
   链接: /link/ || fas fa-link
   关于: /about/ || fas fa-heart
 
