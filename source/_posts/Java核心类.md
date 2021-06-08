@@ -63,4 +63,7 @@ public class Main {
 
 # 字符串拼接(`StringBuilder`)
 
-Java编译器对`String`做了特殊处理，使得我们可以直接用`+`拼接字符串。
+> 1. 高效拼接字符串用StringBuilder，要在拼接字符串时还需要添加分隔符使用StringJoiner。
+> 2. 用指定分隔符拼接字符串数组时，使用`StringJoiner`或者`String.join()`更方便；
+> 3. 用`StringJoiner`拼接字符串时，还可以额外附加一个“开头”和“结尾”。
+
