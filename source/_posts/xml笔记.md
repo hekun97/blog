@@ -72,8 +72,8 @@ gender=nv
 
 存储数据。
 
-	1. 配置文件；
-	2. 在网络中传输。
+1. 配置文件；
+2. 在网络中传输。
 
 ## xml与html的区别
 
@@ -95,11 +95,8 @@ gender=nv
 		<age>23</age>
 		<gender>male</gender>
 		<br/>
-<<<<<<< HEAD
 	</user>
-=======
 	</user> 
->>>>>>> 6910af398ff0869ffe038409b4f01c597ab3bb44
 
     <user id='2'>
         <name>lisi</name>
