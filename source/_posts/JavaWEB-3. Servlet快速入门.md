@@ -182,10 +182,10 @@ IDEA会为每一个tomcat部署的项目单独建立一份配置文件。
 
 ## 区分工作空间项目和tomcat部署的web项目
 
-- `"C:\Users\HK\AppData\Local\JetBrains\IntelliJIdea2020.1\tomcat\_Test"`为工作空间项目;
-- `"C:\Users\HK\IdeaProjects\Test\out\artifacts\Tomcat_war_exploded2`"为tomcat部署的web项目。
+- `"C:\Users\HK\AppData\Local\JetBrains\IntelliJIdea2020.1\tomcat\_Test"`为工作空间项目，也就是在IDEA中编辑的WEB项目，可以理解为源代码;
+- `"C:\Users\HK\IdeaProjects\Test\out\artifacts\Tomcat_war_exploded2`"为tomcat部署的web项目，其中的Java代码已经被编译为class文件存放到WEB-INF目录下。
 
-> 1. tomcat真正访问的是“tomcat部署的web项目”，"tomcat部署的web项目"对应着"工作空间项目" 的web目录下的所有资源
+> 1. tomcat真正访问的是“tomcat部署的web项目”，"tomcat部署的web项目"对应着"工作空间项目" 的web目录下的所有资源；
 >
 > 2. WEB-INF目录下的资源不能被浏览器直接访问，不要把WEB资源放到该目录下。
 
