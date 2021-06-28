@@ -14,7 +14,7 @@ cover: https://cdn.pixabay.com/photo/2021/04/22/15/46/landscape-6199355_960_720.
 
 将Tomcat集成到IDEA中，并且创建JavaEE的项目，部署项目。
 
-## 集成步骤
+## 具体步骤
 
 1. 创建一个空项目以便配置Tomcat；
 
@@ -23,16 +23,16 @@ cover: https://cdn.pixabay.com/photo/2021/04/22/15/46/landscape-6199355_960_720.
 2. 在Run中编辑配置；
 
    ![在Run中编辑配置](https://pic.imgdb.cn/item/60d340e7844ef46bb2aadf03.jpg)
+   
+3. 导入Tomcat安装路径；
 
-3.导入Tomcat安装路径；
-
-![导入Tomcat安装路径](https://pic.imgdb.cn/item/60d342f5844ef46bb2bec78f.jpg)
+   ![导入Tomcat安装路径](https://pic.imgdb.cn/item/60d342f5844ef46bb2bec78f.jpg)
 
 4. 配置成功，现在新建一个模块JavaWEB的项目；
 
-![](https://pic.imgdb.cn/item/60d34514844ef46bb2d3e12b.jpg)
+   ![](https://pic.imgdb.cn/item/60d34514844ef46bb2d3e12b.jpg)
 
-5. 编辑index.jsp文件；
+5. 编辑index.jsp文件，把网页标题和内容进行了修改；
 
    ![](https://pic.imgdb.cn/item/60d34630844ef46bb2de5319.jpg)
 
@@ -40,13 +40,13 @@ cover: https://cdn.pixabay.com/photo/2021/04/22/15/46/landscape-6199355_960_720.
 
    ![](https://pic.imgdb.cn/item/60d346cd844ef46bb2e4023b.jpg)
 
-7. 查看运行结果；
+7. 打开浏览器，查看运行结果。
 
-   ![image-20210623223822512](C:\Users\HK\AppData\Roaming\Typora\typora-user-images\image-20210623223822512.png)
+   ![](https://pic.imgdb.cn/item/60d942785132923bf8fac063.jpg)
 
 ## 注意事项
 
-### 修改Tomcat服务器的配置
+### 修改Tomcat服务器的配置信息
 
 在编辑配置中，可对Tomcat服务器进行新增、删除和修改的操作。
 
@@ -66,11 +66,11 @@ cover: https://cdn.pixabay.com/photo/2021/04/22/15/46/landscape-6199355_960_720.
 
 访问资源通过修改访问路径实现，这里的index.jsp属于配置中声明的默认首页，所以可以不加也能访问到该资源。
 
-![image-20210623224848521](C:\Users\HK\AppData\Roaming\Typora\typora-user-images\image-20210623224848521.png)
+![](https://pic.imgdb.cn/item/60d943465132923bf8001128.jpg)
 
 ### 目录结构
 
-java动态项目的目录结构：
+java动态项目web下目录结构：
 -- 项目的根目录
 	-- WEB-INF目录：
 		-- web.xml：web项目的核心配置文件

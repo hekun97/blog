@@ -25,7 +25,7 @@ HttpServlet  -- 抽象类
 
 ### GenericServlet
 
-将Servlet接口中其他的方法做了默认空实现，只将service()方法作为抽象，将来定义Servlet类时，可以继承GenericServlet，实现service()方法即可。
+将Servlet接口中其他的方法做了默认空实现，只将service()方法作为抽象方法，将来定义Servlet类时，可以继承GenericServlet，实现service()方法即可。
 
 > 了解即可，真正开发时不用这种方式。
 
@@ -56,7 +56,7 @@ public class ServletDemo extends HttpServlet {
 
 3. 使用doGet方法，默认情况下直接访问该路径就是get请求，触发该方法。
 
-4. 使用doPost方法，最简单的方式为建立一个表单，然后访问表单的路径(/login.html)，使用post方法将信息提交到/demo路径下。
+4. 使用doPost方法，最简单的方式为建立一个表单页面(login.html)，然后访问表单的路径(/login.html)，使用post方法将信息提交到/demo路径下。
 
    ```html
    <!-- web目录下的login.html 表单-->
@@ -77,7 +77,7 @@ public class ServletDemo extends HttpServlet {
 
 ## Servlet访问路径
 
-一个Servlet可以定义多个访问路径 ： @WebServlet({"/d4","/dd4","/ddd4"})，然后可以通过其中的任意一个路径进行访问到该资源。
+一个Servlet可以定义多个访问路径 ，如`@WebServlet({"/d4","/dd4","/ddd4"})`，然后可以通过其中的任意一个路径进行访问到该资源。
 
 ### 路径定义规则
 
@@ -88,9 +88,10 @@ public class ServletDemo extends HttpServlet {
 ![](https://pic.imgdb.cn/item/60d541dc844ef46bb27ee124.jpg)
 
 ## HTTP入门
-HTTP的概念：Hyper Text Transfer Protocol 超文本传输协议。
 
-传输协议：定义了客户端和服务器端通信时，发送数据的格式。
+### HTTP的概念
+
+超文本传输协议（Hypertext Transfer Protocol，HTTP）：定义了客户端和服务器端通信时，发送数据的格式。
 
 ![](https://pic.imgdb.cn/item/60d5ec90844ef46bb2ea2c9a.jpg)
 
@@ -110,36 +111,35 @@ HTTP的概念：Hyper Text Transfer Protocol 超文本传输协议。
 
 ### 请求消息(Request)数据格式
 
-请求行、请求头部、请求空行、请求体（正文）
+包含请求行、请求头(也叫请求头部)、请求空行、请求体（正文）。
 
 #### ![](https://pic.imgdb.cn/item/60d5fff7844ef46bb288ad01.jpg)
 
 #### 请求行
 
-| 请求方式 | 请求url     | 请求协议/版本 |
-| -------- | ----------- | ------------- |
-| GET      | /login.html | HTTP/1.1      |
+请求行的内容为`POST /demo HTTP/1.1`，请求行的格式为`请求方式 请求url 请求协议/版本`。
 
   * 请求方式：
-    * HTTP协议有7中请求方式，常用的有2种
-      * GET：
-      	1. 请求参数在请求行中，在url后。
-      	
-      	   类似这种`http://localhost:8080/demo1?username=zhangsan`
-      	
-      	2. 请求的url长度有限制的
-      	
-      	3. 不太安全，直接暴露在URL中。
-      * POST：
-      	1. 请求参数在请求体中
-      	
-      	   ![](https://pic.imgdb.cn/item/60d5fe1b844ef46bb27952cd.jpg)
-      	
-      	2. 请求的url长度没有限制的
-      	
-      	3. 相对安全，需要通过一定的操作才能看到。
 
-#### 请求头部
+    HTTP协议有7种请求方式，常用的有GET和POST2种。
+    * GET：
+    	1. 请求参数放在请求行中，在url后。
+    	
+    	   类似这种`http://localhost:8080/demo1?username=zhangsan`
+    	
+    	2. 请求的url长度有限制的
+    	
+    	3. 不太安全，直接暴露在URL中。
+    * POST：
+    	1. 请求参数在请求体中
+    	
+    	   ![](https://pic.imgdb.cn/item/60d5fe1b844ef46bb27952cd.jpg)
+    	
+    	2. 请求的url长度没有限制的
+    	
+    	3. 相对安全，需要通过一定的操作才能看到。
+
+#### 请求头
 
 客户端浏览器告诉服务器一些信息。
 格式：请求头名称: 请求头值。
@@ -267,7 +267,6 @@ tomcat源码下的实现类。
           ![原理](https://pic.imgdb.cn/item/60d899365132923bf8ce976d.jpg)
        
           ![部分代码](https://pic.imgdb.cn/item/60d6a0b7844ef46bb22f5057.jpg)
-     
 
 #### 获取请求体数据
 
@@ -287,7 +286,6 @@ tomcat源码下的实现类。
      ![](https://pic.imgdb.cn/item/60d87dc85132923bf8de7831.jpg)
 
 > ​	这里还需要创建一个login.html的表单页面将数据提交到RequestDemo5的虚拟路径。
->
 
 ## 其他功能
 
@@ -480,267 +478,3 @@ public class RequestDemo9 extends HttpServlet {
 ```
 
 > 该部分功能放到进阶部分讲解。
-
-
-# 案例：用户登录
-* 用户登录案例需求：
-	1.编写login.html登录页面
-		username & password 两个输入框
-	2.使用Druid数据库连接池技术,操作mysql，today数据库中user表
-	3.使用JdbcTemplate技术封装JDBC
-	4.登录成功跳转到SuccessServlet展示：登录成功！用户名,欢迎您
-	5.登录失败跳转到FailServlet展示：登录失败，用户名或密码错误
-
-* 分析
-
-* 开发步骤
-	1. 创建项目，导入html页面，配置文件，jar包
-	2. 创建数据库环境
-		CREATE DATABASE today;
-		USE today;
-		CREATE TABLE USER(
-		
-		​	id INT PRIMARY KEY AUTO_INCREMENT,
-		​	username VARCHAR(32) UNIQUE NOT NULL,
-		​	PASSWORD VARCHAR(32) NOT NULL
-		);
-
-	3. 创建包cn.itcast.domain,创建类User
-		package cn.itcast.domain;
-		/**
-		 * 用户的实体类
-		 */
-		    public class User {
-		
-		    private int id;
-		    private String username;
-		    private String password;
-
-
-​			
-
-​		    public int getId() {
-​		        return id;
-​		    }
-​		
-​		    public void setId(int id) {
-​		        this.id = id;
-​		    }
-​		
-​		    public String getUsername() {
-​		        return username;
-​		    }
-​		
-​		    public void setUsername(String username) {
-​		        this.username = username;
-​		    }
-​		
-​		    public String getPassword() {
-​		        return password;
-​		    }
-​		
-​		    public void setPassword(String password) {
-​		        this.password = password;
-​		    }
-​		
-​		    @Override
-​		    public String toString() {
-​		        return "User{" +
-​		                "id=" + id +
-​		                ", username='" + username + '\'' +
-​		                ", password='" + password + '\'' +
-​		                '}';
-​		    }
-​		}
-
-4. 创建包cn.itcast.util,编写工具类JDBCUtils
-	package cn.itcast.util;
-
-
-
-​	import com.alibaba.druid.pool.DruidDataSourceFactory;
-​	
-​	import javax.sql.DataSource;
-​	import javax.xml.crypto.Data;
-​	import java.io.IOException;
-​	import java.io.InputStream;
-​	import java.sql.Connection;
-​	import java.sql.SQLException;
-​	import java.util.Properties;
-​	
-​	/**
-
-
-​			
-
-​		    /**
-​		     * 获取连接Connection对象
-​		     */
-​		    public static Connection getConnection() throws SQLException {
-​		        return  ds.getConnection();
-​		    }
-​		}
-​	5. 创建包cn.itcast.dao,创建类UserDao,提供login方法
-​		
-​		package cn.itcast.dao;
-​	
-​		import cn.itcast.domain.User;
-​		import cn.itcast.util.JDBCUtils;
-​		import org.springframework.dao.DataAccessException;
-​		import org.springframework.jdbc.core.BeanPropertyRowMapper;
-​		import org.springframework.jdbc.core.JdbcTemplate;
-​		
-​		/**
-​		 * 操作数据库中User表的类
-​		 */
-​		public class UserDao {
-​		
-​		    //声明JDBCTemplate对象共用
-​		    private JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
-​		
-​		    /**
-​		     * 登录方法
-​		     * @param loginUser 只有用户名和密码
-​		     * @return user包含用户全部数据,没有查询到，返回null
-​		     */
-​		    public User login(User loginUser){
-​		        try {
-​		            //1.编写sql
-​		            String sql = "select * from user where username = ? and password = ?";
-​		            //2.调用query方法
-​		            User user = template.queryForObject(sql,
-​		                    new BeanPropertyRowMapper<User>(User.class),
-​		                    loginUser.getUsername(), loginUser.getPassword());
-
-
-​			
-
-​		            return user;
-​		        } catch (DataAccessException e) {
-​		            e.printStackTrace();//记录日志
-​		            return null;
-​		        }
-​		    }
-​		}
-​	
-
-6. 编写cn.itcast.web.servlet.LoginServlet类
-	package cn.itcast.web.servlet;
-
-​	import cn.itcast.dao.UserDao;
-​	import cn.itcast.domain.User;
-​	
-​	import javax.servlet.ServletException;
-​	import javax.servlet.annotation.WebServlet;
-​	import javax.servlet.http.HttpServlet;
-​	import javax.servlet.http.HttpServletRequest;
-​	import javax.servlet.http.HttpServletResponse;
-​	import java.io.IOException;
-
-
-​			
-
-​		@WebServlet("/loginServlet")
-​		public class LoginServlet extends HttpServlet {
-
-
-​			
-
-​		    @Override
-​		    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-​		        //1.设置编码
-​		        req.setCharacterEncoding("utf-8");
-​		        //2.获取请求参数
-​		        String username = req.getParameter("username");
-​		        String password = req.getParameter("password");
-​		        //3.封装user对象
-​		        User loginUser = new User();
-​		        loginUser.setUsername(username);
-​		        loginUser.setPassword(password);
-​		
-​		        //4.调用UserDao的login方法
-​		        UserDao dao = new UserDao();
-​		        User user = dao.login(loginUser);
-​		
-​		        //5.判断user
-​		        if(user == null){
-​		            //登录失败
-​		            req.getRequestDispatcher("/failServlet").forward(req,resp);
-​		        }else{
-​		            //登录成功
-​		            //存储数据
-​		            req.setAttribute("user",user);
-​		            //转发
-​		            req.getRequestDispatcher("/successServlet").forward(req,resp);
-​		        }
-​		
-​		    }
-​		
-​		    @Override
-​		    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-​		        this.doGet(req,resp);
-​		    }
-​		}
-
-7. 编写FailServlet和SuccessServlet类
-	@WebServlet("/successServlet")
-	public class SuccessServlet extends HttpServlet {
-	    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	        //获取request域中共享的user对象
-	        User user = (User) request.getAttribute("user");
-	
-	​        if(user != null){
-	​            //给页面写一句话
-	
-	​            //设置编码
-	​            response.setContentType("text/html;charset=utf-8");
-	​            //输出
-	​            response.getWriter().write("登录成功！"+user.getUsername()+",欢迎您");
-	​        }
-
-
-​			
-
-​		    }		
-
-​		@WebServlet("/failServlet")
-​		public class FailServlet extends HttpServlet {
-​		    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-​		        //给页面写一句话
-​		
-​		        //设置编码
-​		        response.setContentType("text/html;charset=utf-8");
-​		        //输出
-​		        response.getWriter().write("登录失败，用户名或密码错误");
-​		
-​		    }
-​		
-​		    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-​		        this.doPost(request,response);
-​		    }
-​		}
-
-
-
-8. login.html中form表单的action路径的写法
-	* 虚拟目录+Servlet的资源路径
-
-9. BeanUtils工具类，简化数据封装
-	* 用于封装JavaBean的
-	1. JavaBean：标准的Java类
-		1. 要求：
-			1. 类必须被public修饰
-			2. 必须提供空参的构造器
-			3. 成员变量必须使用private修饰
-			4. 提供公共setter和getter方法
-		2. 功能：封装数据
-
-	2. 概念：
-		成员变量：
-		属性：setter和getter方法截取后的产物
-			例如：getUsername() --> Username--> username
-
-	3. 方法：
-		1. setProperty()
-		2. getProperty()
-		3. populate(Object obj , Map map):将map集合的键值对信息，封装到对应的JavaBean对象中
