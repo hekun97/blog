@@ -117,32 +117,29 @@ public class ServletDemo extends HttpServlet {
 
 #### 请求行
 
-请求行的内容为`POST /demo HTTP/1.1`，请求行的格式为`请求方式 请求url 请求协议/版本`。
+这里的请求行的内容为`POST /demo HTTP/1.1`，请求行的格式为`请求方式 请求url 请求协议/版本`。
 
   * 请求方式：
 
     HTTP协议有7种请求方式，常用的有GET和POST2种。
     * GET：
-    	1. 请求参数放在请求行中，在url后。
+    	1. 请求参数放在请求行中，在url后。类似这种`http://localhost:8080/demo1?username=zhangsan`；
     	
-    	   类似这种`http://localhost:8080/demo1?username=zhangsan`
-    	
-    	2. 请求的url长度有限制的
+    	2. 请求的url长度是有限制的；
     	
     	3. 不太安全，直接暴露在URL中。
     * POST：
-    	1. 请求参数在请求体中
+    	1. 请求参数在请求体中；
     	
     	   ![](https://pic.imgdb.cn/item/60d5fe1b844ef46bb27952cd.jpg)
     	
-    	2. 请求的url长度没有限制的
+    	2. 请求的url长度没有限制；
     	
     	3. 相对安全，需要通过一定的操作才能看到。
 
 #### 请求头
 
-客户端浏览器告诉服务器一些信息。
-格式：请求头名称: 请求头值。
+客户端浏览器告诉服务器一些信息。请求头的格式：`请求头名称: 请求头值`。
 
 #### 请求空行
 
@@ -150,12 +147,12 @@ public class ServletDemo extends HttpServlet {
 
 #### 请求体(正文)
 
-封装POST请求消息的请求参数的
+用来封装POST请求消息的请求参数。
 
 
 ### 响应消息(response)数据格式
 
-> 进阶阶段学习
+> 后续的进阶阶段学习。
 
 
 # Request入门
@@ -163,7 +160,7 @@ public class ServletDemo extends HttpServlet {
 
 1. request和response对象是由服务器创建的。我们只是来使用它们；
 
-2. request对象是来获取请求消息，response对象是来设置响应消息。
+2. request对象的作用是获取请求消息，response对象的作用是设置响应消息。
 
 ## request对象和response对象的原理
 
@@ -180,21 +177,17 @@ HttpServletRequest	-- 接口
 org.apache.catalina.connector.RequestFacade//该位置是拓展HttpServletRequest接口中的request方法的位置。
 ```
 
-tomcat源码下的实现类。
+tomcat源码下的实现类，打开看源码可以发现继承了HttpServletRequest接口。
 
 ![](https://pic.imgdb.cn/item/60d68eb3844ef46bb2e088ab.jpg)
 
 ## request功能
 
-主要可以获取请求消息数据。
+主要可以获取请求消息数据，包括请求行、请求头、请求体的数据。
 
-### 获取请求消息数据
+### 获取请求行数据
 
-包括请求行、请求头部、请求体的数据。
-
-#### 获取请求行数据
-
-`GET /today/demo1?name=zhangsan HTTP/1.1`
+此处示例的请求行的数据内容为`GET /today/demo1?name=zhangsan HTTP/1.1`。
 
 * 方法：
   1. 获取请求方式 ：GET
@@ -217,13 +210,13 @@ tomcat源码下的实现类。
 
   5. (重点)获取请求URI：/today/demo1
 
-     String getRequestURI():		/today/demo1
+     String getRequestURI():		`/today/demo1`
 
      StringBuffer getRequestURL() :  `http://localhost/today/demo1`
 
      URL:统一资源定位符 ： `http://localhost/today/demo1`	中华人民共和国
 
-     URI：统一资源标识符 : /today/demo1					共和国
+     URI：统一资源标识符 : `/today/demo1`					共和国
 
      > URL和URI的区别：URL是全路径包含HTTP协议、IP地址、资源路径， URI是资源路径。
 
@@ -239,7 +232,7 @@ tomcat源码下的实现类。
   
   ![](https://pic.imgdb.cn/item/60d6d44e844ef46bb2340c76.jpg)
 
-#### 获取请求头部数据
+### 获取请求头数据
 
 * 方法：
 
@@ -268,24 +261,24 @@ tomcat源码下的实现类。
        
           ![部分代码](https://pic.imgdb.cn/item/60d6a0b7844ef46bb22f5057.jpg)
 
-#### 获取请求体数据
+### 获取请求体数据
 
 只有POST请求方式，才有请求体，在请求体中封装了POST请求的请求参数。
 
 * 步骤：
-  1. 获取流对象
+  1. 获取流对象；
 
-     - BufferedReader getReader()：获取字符输入流，只能操作字符数据
+     - BufferedReader getReader()：获取字符输入流，只能操作字符数据；
 
-     - ServletInputStream getInputStream()：获取字节输入流，可以操作所有类型数据
+     - ServletInputStream getInputStream()：获取字节输入流，可以操作所有类型数据。
 
-       > 获取字节输入流，在文件上传知识点后讲解
+       > 获取字节输入流，在后续学习文件上传知识点中讲解。
 
-  2. 再从流对象中拿数据
+  2. 再从流对象中拿数据；
 
      ![](https://pic.imgdb.cn/item/60d87dc85132923bf8de7831.jpg)
 
-> ​	这里还需要创建一个login.html的表单页面将数据提交到RequestDemo5的虚拟路径。
+> ​	这里还需要创建一个login.html的表单页面将数据提交到RequestDemo5的虚拟路径/demo5中。
 
 ## 其他功能
 
@@ -299,7 +292,7 @@ tomcat源码下的实现类。
 
   1. `String getParameter(String name)`:根据参数名称获取参数值。    `username=zs&password=123`
 
-  2. `String[] getParameterValues(String name)`:根据参数名称获取参数值的数组，比如复选框的值。  `hobby=xx&hobby=game`
+  2. `String[] getParameterValues(String name)`:根据参数名称获取参数值的数组，比如复选框的值。  `hobby=game&hobby=study`
 
   3. `Enumeration<String> getParameterNames()`:获取所有请求的参数名称。
 
@@ -394,15 +387,16 @@ tomcat源码下的实现类。
 
 一种在服务器内部的资源跳转方式。
 
-1. 步骤：
+- 步骤：
 
-   1. 通过request对象获取请求转发器对象：RequestDispatcher getRequestDispatcher(String path)
+   1. 通过request对象获取请求转发器对象：`RequestDispatcher getRequestDispatcher(String path)`；
 
-   2. 使用RequestDispatcher对象来进行转发：forward(ServletRequest request, ServletResponse response) 
+   2. 使用RequestDispatcher对象来进行转发：`forward(ServletRequest request, ServletResponse response) `。
 
       ![](https://pic.imgdb.cn/item/60d8951f5132923bf8a49eba.jpg)
 
-2. 特点：
+- 特点：
+
    1. 浏览器地址栏路径不发生变化，状态码为200；
 
    2. 只能转发到当前服务器内部资源中，服务器外部的资源会报404；
@@ -410,6 +404,7 @@ tomcat源码下的实现类。
    3. 转发只有一次请求，使用的只有demo7。
 
       ![](https://pic.imgdb.cn/item/60d896575132923bf8b0db91.jpg)
+
 
 ### 共享数据
 
