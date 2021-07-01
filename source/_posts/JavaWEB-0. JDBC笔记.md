@@ -23,233 +23,217 @@ cover: https://cdn.pixabay.com/photo/2021/06/10/19/03/sea-6326812_1280.jpg
 
 # 快速入门
 
-## 步骤
-
-1. 导入驱动jar包`mysql-connector-java-5.1.37-bin.jar`；
-
-   - 复制`mysql-connector-java-5.1.37-bin.jar`到项目的libs目录下，没有则新建该目录；
-   - 在libs目录上点击右键，找到`Add As Library`并添加使用。
-
-2. 注册驱动
-
-   `class.forname("com.mysql.jdbc.Driver");`
-
-3. 获取数据库连接对象 Connection
-
-   `Connection coon = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");`
-
-4. 定义sql
-
-   `String sql = "update account banlance = 1500 where id = 1";`
-
-5. 获取执行sql语句的对象 Statement
-
-   `Statement stmt = coon.createStatement();`
-
-6. 执行sql，接受返回结果
-
-   `int count = stmt.executeUpdate(sql);`
-
-7. 处理结果
-
-   `system.out.print(count);`
-
-8. 释放资源
-
-   `stmt.close();`
-
-   `coon.close();`
-
-## 代码实现
-
 ```java
-package cn.itcast.jdbc;
+package io.gitee.hek97.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 
-/**
- * JDBC快速入门
- */
 public class JdbcDemo1 {
     public static void main(String[] args) throws Exception {
-
-        //1. 导入驱动jar包
-        //2.注册驱动
-     // Class.forName("com.mysql.jdbc.Driver");
-        //3.获取数据库连接对象
-//        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db3", "root", "root");
-        Connection conn = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
-        //4.定义sql语句
-//        String sql = "update account set balance = 2000 where id = 1";
-        String sql = "update account set balance = 2000";
-        //5.获取执行sql的对象 Statement
-        Statement stmt = conn.createStatement();
-        //6.执行sql
-        int count = stmt.executeUpdate(sql);
-        //7.处理结果
-        System.out.println(count);
-        //8.释放资源
+        /*1. 导入驱动jar包mysql-connector-java-5.1.37-bin.jar；
+        复制mysql-connector-java-5.1.37-bin.jar到项目的libs目录下，没有则新建该目录；
+        在libs目录上点击右键，找到Add As Library并添加使用。*/
+        //2. 注册驱动
+        Class.forName("com.mysql.jdbc.Driver");
+        //3. 获取数据库连接对象,这里需要抛出异常，避免错误
+        Connection coon = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
+        //4.1 定义第一条SQL语句
+        String sql1 = "update account set balance = 3500 where id = 1";
+        //4.2 定义第二条防注入SQL语句
+        String sql2 = "update account set balance = ? where id = ?";
+        //5.1 获取执行SQL对象 statement
+        Statement stmt = coon.createStatement();
+        //5.2 获取执行防注入SQL对象 prepareStatement
+        PreparedStatement ps = coon.prepareStatement(sql2);//注意：这里放SQL语句
+        ps.setObject(1,4500);
+        ps.setObject(2,2);
+        //6. 执行 sql，接受返回结果
+        int count1 = stmt.executeUpdate(sql1);
+        int count2 = ps.executeUpdate();//注意：这里直接执行，不用放SQL语句
+        //7. 处理结果
+        System.out.println("SQL1："+count1);
+        System.out.println("SQL2："+count2);
+        //8. 释放资源
         stmt.close();
-        conn.close();
-
+        ps.close();
+        coon.close();
     }
 }
-
 ```
 
-
-
-# 详解各个对象
+# 详解各个对象的功能
 
 ## DriverManager：驱动管理对象。
 
-* 功能：
-	1. 注册驱动：告诉程序该使用哪一个数据库驱动jar。
-		`static void registerDriver(Driver driver) `:注册与给定的驱动程序 DriverManager 。 
-		写代码使用：  `Class.forName("com.mysql.jdbc.Driver");`
-		通过查看源码发现：在`com.mysql.jdbc.Driver`类中存在静态代码块
-		
-		```java
-		 static {
-		        try {
-		            java.sql.DriverManager.registerDriver(new Driver());
-		        } catch (SQLException E) {
-		            throw new RuntimeException("Can't register driver!");
-  	}
-			}
-		```
-		> mysql5之后的驱动jar包可以省略注册驱动的步骤。
+### 注册驱动
 
-## 获取数据库连接
+告诉程序该使用哪一个数据库驱动jar包。
+`static void registerDriver(Driver driver) `:注册与给定的驱动程序 DriverManager 。 
+写代码使用：  `Class.forName("com.mysql.jdbc.Driver");`
+通过查看源码发现：在`com.mysql.jdbc.Driver`类中存在静态代码块
 
-* 方法：static Connection getConnection(String url, String user, String password) 
-* 参数：
-	* url：指定连接的路径
-		* 语法：jdbc:mysql://ip地址(域名):端口号/数据库名称
-		* 例子：jdbc:mysql://localhost:3306/db3
-		* 细节：如果连接的是本机mysql服务器，并且mysql服务默认端口是3306，则url可以简写为：jdbc:mysql:///数据库名称
-	* user：用户名
-	* password：密码 
+```java
+ static {
+        try {
+            java.sql.DriverManager.registerDriver(new Driver());
+        } catch (SQLException E) {
+            throw new RuntimeException("Can't register driver!");
+}
+	}
+```
+> mysql5之后的驱动jar包可以省略注册驱动的步骤。
+
+## getConnection：获取数据库连接
+
+### 具体方法
+
+`static Connection getConnection(String url, String user, String password) `
+
+### 参数解析
+
+1. url：指定连接的路径。
+	* 格式：`jdbc:mysql://ip地址(域名):端口号/数据库名称`；
+	* 示例：`jdbc:mysql://localhost:3306/db3`；
+	
+	  > 如果连接的是本机mysql服务器，并且mysql服务默认端口是3306，则url可以简写为：`jdbc:mysql:///数据库名称`，示例：`jdbc:mysql:///db3`。
+2. user：数据库的用户名，示例：`root`；
+3. password：数据库的密码 ，示例：`root`。
 
 ## Connection：数据库连接对象
 
-1. 功能：
-	1. 获取执行sql 的对象
-		* Statement createStatement()
-		* PreparedStatement prepareStatement(String sql)  
-	2. 管理事务：
-		* 开启事务：setAutoCommit(boolean autoCommit) ：调用该方法设置参数为false，即开启事务
-		* 提交事务：commit() 
-		* 回滚事务：rollback() 
+### 获取执行SQL的 对象
+
+1. `Statement createStatement()`
+
+   使用的SQL语句直接把参数写在字符串中或通过参数拼接字符串。示例：`String sql1 = "update account set balance = 3500 where id = 1";`。
+
+2. `PreparedStatement prepareStatement(String sql)  `
+
+   使用的SQL语句通过占位符`?`代替需要传入的参数，然后再通过`setObject`方法设置每个`?`的值。示例：`String sql2 = "update account set balance = ? where id = ?";`
+
+  > 为了完全避免SQL注入，使用Java对数据库进行操作时，必须使用PreparedStatement，严禁任何通过参数拼字符串的代码！
+  >
+  > 具体使用查看快速入门示例。
+
+### 管理事务
+
+* 开启事务：`setAutoCommit(boolean autoCommit) `：调用该方法设置参数为false，即开启事务
+* 提交事务：`commit() `
+* 回滚事务：`rollback() `
 
 ## Statement：执行sql的对象
 
-1. 执行sql
-	1. boolean execute(String sql) ：可以执行任意的sql 了解 
-	2. int executeUpdate(String sql) ：执行DML（insert、update、delete）语句、DDL(create，alter、drop)语句
-		* 返回值：影响的行数，可以通过这个影响的行数判断DML语句是否执行成功 返回值>0的则执行成功，反之，则失败。
-	3. ResultSet executeQuery(String sql)  ：执行DQL（select)语句
-	
-2. 练习：
-	1. account表 添加一条记录
-	2. account表 修改记录
+### 执行sql
 
-3. account表 删除一条记录
-	
-	代码：
-	
-	
-	
-	
-	   ```java
-	   Statement stmt = null;
-	        Connection conn = null;
-	        try {
-	            //1. 注册驱动
-	            Class.forName("com.mysql.jdbc.Driver");
-	            //2. 定义sql
-	            String sql = "insert into account values(null,'王五',3000)";
-	            //3.获取Connection对象
-	            conn = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
-	            //4.获取执行sql的对象 Statement
-	            stmt = conn.createStatement();
-	            //5.执行sql
-	            int count = stmt.executeUpdate(sql);//影响的行数
-	            //6.处理结果
-	            System.out.println(count);
-	            if(count > 0){
-	                System.out.println("添加成功！");
-	         }else{
-	                System.out.println("添加失败！");
-	            }
-	   
-	   ​     } catch (ClassNotFoundException e) {
-	   ​         e.printStackTrace();
-	   ​     } catch (SQLException e) {
-	   ​         e.printStackTrace();
-	   ​     }finally {
-	   ​         //stmt.close();
-	   ​         //7. 释放资源
-	   ​         //避免空指针异常
-	   ​         if(stmt != null){
-	   ​             try {
-	   ​                 stmt.close();
-	   ​             } catch (SQLException e) {
-	​                 e.printStackTrace();
-	   ​             }
-	   ​         }
-	   
-	   ​         if(conn != null){
-	   ​             try {
-	   ​                 conn.close();
-	   ​             } catch (SQLException e) {
-	   ​                 e.printStackTrace();
-	   ​             }
-	   ​         }
-	   ​     }
-	   ```
-	
-	   
-	
-4. ResultSet：结果集对象,封装查询结果
-	* boolean next(): 游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，如果是，则返回false，如果不是则返回true
-	* getXxx(参数):获取数据
-		* Xxx：代表数据类型   如： int getInt() ,	String getString()
-		* 参数：
-			1. int：代表列的编号,从1开始   如： getString(1)
-		2. String：代表列名称。 如： getDouble("balance")
-	
-	* 注意：
-		* 使用步骤：
-			1. 游标向下移动一行
-			2. 判断是否有数据
-			3. 获取数据
+1. boolean execute(String sql) ：可以执行任意的sql ，仅需了解； 
 
-		   //循环判断游标是否是最后一行末尾。
-            
-    ```java
-       while(rs.next()){
-                //获取数据
-                //6.2 获取数据
-         int id = rs.getInt(1);
-                String name = rs.getString("name");
-                double balance = rs.getDouble(3);
-    
-   	  ​         System.out.println(id + "---" + name + "---" + balance);
-		  ​     }
-	 ```
-	
-	
-	​	  
-	​	
-	* 练习：
-		* 定义一个方法，查询emp表的数据将其封装为对象，然后装载集合，返回。
-			1. 定义Emp类
-			2. 定义方法` public List<Emp> findAll(){}`
-			3. 实现方法 `select * from emp` 
-	
+2. int executeUpdate(String sql) ：执行DML（insert、update、delete）语句、DDL(create，alter、drop)语句。
+
+  > 返回值int为影响的行数，可以通过这个影响的行数判断DML语句是否执行成功 返回值>0的则执行成功，反之，则失败。
+
+3. ResultSet executeQuery(String sql)  ：执行DQL（select)语句。
+
+### 练习
+
+1. account表 添加一条记录
+2. account表 修改记录
+
+account表 删除一条记录
+
+代码：
+
+
+```java
+   Statement stmt = null;
+        Connection conn = null;
+        try {
+            //1. 注册驱动
+            Class.forName("com.mysql.jdbc.Driver");
+            //2. 定义sql
+            String sql = "insert into account values(null,'王五',3000)";
+            //3.获取Connection对象
+            conn = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
+            //4.获取执行sql的对象 Statement
+            stmt = conn.createStatement();
+            //5.执行sql
+            int count = stmt.executeUpdate(sql);//影响的行数
+            //6.处理结果
+            System.out.println(count);
+            if(count > 0){
+                System.out.println("添加成功！");
+         }else{
+                System.out.println("添加失败！");
+            }
+   
+   ​     } catch (ClassNotFoundException e) {
+   ​         e.printStackTrace();
+   ​     } catch (SQLException e) {
+   ​         e.printStackTrace();
+   ​     }finally {
+   ​         //stmt.close();
+   ​         //7. 释放资源
+   ​         //避免空指针异常
+   ​         if(stmt != null){
+   ​             try {
+   ​                 stmt.close();
+   ​             } catch (SQLException e) {
+​                 e.printStackTrace();
+   ​             }
+   ​         }
+   
+   ​         if(conn != null){
+   ​             try {
+   ​                 conn.close();
+   ​             } catch (SQLException e) {
+   ​                 e.printStackTrace();
+   ​             }
+   ​         }
+   ​     }
+```
+
+   
+
+## ResultSet：结果集对象
+
+### 封装查询结果
+
+* boolean next(): 游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，如果是，则返回false，如果不是则返回true
+* getXxx(参数):获取数据
+	* Xxx：代表数据类型   如： int getInt() ,	String getString()
+	* 参数：
+		1. int：代表列的编号,从1开始   如： getString(1)
+	2. String：代表列名称。 如： getDouble("balance")
+
+* 注意：
+	* 使用步骤：
+		1. 游标向下移动一行
+		2. 判断是否有数据
+		3. 获取数据
+
+	   //循环判断游标是否是最后一行末尾。
+         
+```java
+    while(rs.next()){
+             //获取数据
+             //6.2 获取数据
+      int id = rs.getInt(1);
+             String name = rs.getString("name");
+             double balance = rs.getDouble(3);
+ 
+	  ​         System.out.println(id + "---" + name + "---" + balance);
+	  ​     }
+```
+
+### 练习
+
+* 定义一个方法，查询emp表的数据将其封装为对象，然后装载集合，返回。
+	1. 定义Emp类
+	2. 定义方法` public List<Emp> findAll(){}`
+	3. 实现方法 `select * from emp` 
+
 5. PreparedStatement：执行sql的对象
 	1. SQL注入问题：在拼接sql时，有一些sql的特殊关键字参与字符串的拼接。会造成安全性问题
 		1. 输入用户随便，输入密码：a' or 'a' = 'a
@@ -854,7 +838,7 @@ public class JdbcDemo1 {
 ​			
 
 
-# JDBC控制事务：
+# JDBC控制事务
 1. 事务：一个包含多个步骤的业务操作。如果这个业务操作被事务管理，则这多个步骤要么同时成功，要么同时失败。
 
 2. 操作：
