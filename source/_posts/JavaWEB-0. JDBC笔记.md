@@ -33,22 +33,20 @@ import java.sql.Statement;
 
 public class JdbcDemo1 {
     public static void main(String[] args) throws Exception {
-        /*1. 导入驱动jar包mysql-connector-java-5.1.37-bin.jar；
-        复制mysql-connector-java-5.1.37-bin.jar到项目的libs目录下，没有则新建该目录；
-        在libs目录上点击右键，找到Add As Library并添加使用。*/
-        //2. 注册驱动
+        //1. 导入驱动jar包
+        //2. 注册驱动，mysql5之后的驱动jar包可以省略该步骤
         Class.forName("com.mysql.jdbc.Driver");
-        //3. 获取数据库连接对象,这里需要抛出异常，避免错误
+        //3. 获取数据库连接对象
         Connection coon = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
         //4.1 定义第一条SQL语句
-        String sql1 = "update account set balance = 3500 where id = 1";
+        String sql1 = "update account set balance = 4500 where id = 1";
         //4.2 定义第二条防注入SQL语句
         String sql2 = "update account set balance = ? where id = ?";
         //5.1 获取执行SQL对象 statement
         Statement stmt = coon.createStatement();
         //5.2 获取执行防注入SQL对象 prepareStatement
         PreparedStatement ps = coon.prepareStatement(sql2);//注意：这里放SQL语句
-        ps.setObject(1,4500);
+        ps.setObject(1,3500);
         ps.setObject(2,2);
         //6. 执行 sql，接受返回结果
         int count1 = stmt.executeUpdate(sql1);
@@ -66,33 +64,36 @@ public class JdbcDemo1 {
 
 # 详解各个对象的功能
 
-## DriverManager：驱动管理对象。
+## DriverManager：驱动管理对象
 
-### 注册驱动
+### 主要作用
 
-告诉程序该使用哪一个数据库驱动jar包。
-`static void registerDriver(Driver driver) `:注册与给定的驱动程序 DriverManager 。 
-写代码使用：  `Class.forName("com.mysql.jdbc.Driver");`
-通过查看源码发现：在`com.mysql.jdbc.Driver`类中存在静态代码块
+告诉程序该使用哪一个数据库驱动jar包和获取数据库的连接对象。
+
+### 使用解析
+
+#### 注册驱动
+
+写代码使用`Class.forName("com.mysql.jdbc.Driver");`，将`com.mysql.jdbc.Driver`这个类加载进内存，
+通过查看mysql驱动的源码找到`com.mysql.jdbc.Driver`类，发现其中的静态代码块的DriverManager类使用registerDriver方法注册了Driver驱动。
 
 ```java
  static {
         try {
-            java.sql.DriverManager.registerDriver(new Driver());
+            //static void registerDriver(Driver driver) :注册与给定的驱动程序 DriverManager 。 
+            java.sql.DriverManager.registerDriver(new Driver());//DriverManager类使用registerDriver方法注册驱动
         } catch (SQLException E) {
             throw new RuntimeException("Can't register driver!");
 }
 	}
 ```
-> mysql5之后的驱动jar包可以省略注册驱动的步骤。
+> mysql5之后的驱动jar包可以省略注册驱动的步骤，也就是快速入门的第1步可以省略。是因为mysql5之后的驱动jar包将该步骤给写到文件里了，使用时，会自动读取该文件去注册驱动。
+>
+> ![](https://pic.imgdb.cn/item/60ddd7525132923bf83d1c29.jpg)
 
-## getConnection：获取数据库连接
-
-### 具体方法
+#### 获取数据库连接
 
 `static Connection getConnection(String url, String user, String password) `
-
-### 参数解析
 
 1. url：指定连接的路径。
 	* 格式：`jdbc:mysql://ip地址(域名):端口号/数据库名称`；
@@ -104,7 +105,13 @@ public class JdbcDemo1 {
 
 ## Connection：数据库连接对象
 
-### 获取执行SQL的 对象
+### 主要作用
+
+获取执行SQL的对象和管理事务。
+
+### 使用解析
+
+#### 获取执行SQL的 对象
 
 1. `Statement createStatement()`
 
@@ -118,11 +125,11 @@ public class JdbcDemo1 {
   >
   > 具体使用查看快速入门示例。
 
-### 管理事务
+#### 管理事务
 
-* 开启事务：`setAutoCommit(boolean autoCommit) `：调用该方法设置参数为false，即开启事务
-* 提交事务：`commit() `
-* 回滚事务：`rollback() `
+* 开启事务：`setAutoCommit(boolean autoCommit) `：调用该方法设置参数为false，即开启事务；
+* 提交事务：`commit() `；
+* 回滚事务：`rollback() `。
 
 ## Statement：执行sql的对象
 
