@@ -2,9 +2,9 @@
 title: JDBC相关知识
 date: 2021-06-30 23:48:29
 tags: 
-- Java JDBC
+- JavaSE JDBC
 category:
-- JavaWEB
+- Java基础知识
 type: artitalk
 cover: https://cdn.pixabay.com/photo/2021/06/10/19/03/sea-6326812_1280.jpg
 ---
@@ -22,6 +22,14 @@ cover: https://cdn.pixabay.com/photo/2021/06/10/19/03/sea-6326812_1280.jpg
 ![](https://pic.imgdb.cn/item/60dc89fe5132923bf8dea0cb.jpg)
 
 # 快速入门
+
+这里只是简单快速入门，为避免释放资源的空指针异常，实际中需要使用异常处理。详见[进阶练习](#进阶练习)
+
+数据库表信息
+
+![](https://pic.imgdb.cn/item/60ded5f45132923bf8d0f509.jpg)
+
+详细代码
 
 ```java
 package io.gitee.hek97.jdbc;
@@ -131,107 +139,139 @@ public class JdbcDemo1 {
 * 提交事务：`commit() `；
 * 回滚事务：`rollback() `。
 
-## Statement：执行sql的对象
+## Statement和PreparedStatement ：执行sql的对象
 
-### 执行sql
+### 主要作用
+
+执行SQL语句。
+
+### 使用解析
+
+#### 执行sql
 
 1. boolean execute(String sql) ：可以执行任意的sql ，仅需了解； 
 
-2. int executeUpdate(String sql) ：执行DML（insert、update、delete）语句、DDL(create，alter、drop)语句。
+2. int executeUpdate(String sql) ：执行DML（insert、delete、update）语句、DDL(create，alter、drop)语句。DDL直接使用的比较少，一般都是执行DML语句。
 
   > 返回值int为影响的行数，可以通过这个影响的行数判断DML语句是否执行成功 返回值>0的则执行成功，反之，则失败。
 
 3. ResultSet executeQuery(String sql)  ：执行DQL（select)语句。
 
-### 练习
+### 进阶练习
 
-1. account表 添加一条记录
-2. account表 修改记录
+1. 在account表中，添加一条记录；
 
-account表 删除一条记录
+2. 在account表中，修改一条记录；
 
-代码：
+3. 在account表中，删除一条记录。
 
+   > 修改和删除的操作大同小异，在此只具体讲解添加记录。
+
+#### 解析
+
+在之前的快速入门中，我们的代码很粗糙，比如第8步释放资源的代码，如果之前的代码存在错误的话，会导致运行出错，然后资源就不能被释放，造成内存泄露。
+
+> 内存泄露就是一部分资源未被释放，然后一直驻留在内存中，最终导致系统内存变小的情况。
+
+#### 添加操作
+
+使用 insert 语句在account 表中添加一条记录。
 
 ```java
-   Statement stmt = null;
-        Connection conn = null;
+package io.gitee.hek97.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+/**
+ * account 表，添加一条记录，使用 insert 语句。
+ */
+public class JdbcDemo2 {
+    public static void main(String[] args){
+        Connection coon=null;
+        PreparedStatement ps=null;
+        //1. 注册驱动
         try {
-            //1. 注册驱动
             Class.forName("com.mysql.jdbc.Driver");
-            //2. 定义sql
-            String sql = "insert into account values(null,'王五',3000)";
-            //3.获取Connection对象
-            conn = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
-            //4.获取执行sql的对象 Statement
-            stmt = conn.createStatement();
-            //5.执行sql
-            int count = stmt.executeUpdate(sql);//影响的行数
-            //6.处理结果
-            System.out.println(count);
-            if(count > 0){
-                System.out.println("添加成功！");
-         }else{
-                System.out.println("添加失败！");
+            //2. 获取链接
+            coon = DriverManager.getConnection("jdbc:mysql:///db3", "root", "root");
+            //3. 定义SQL语句
+            String sql1="insert into account values (null,?,?)";
+            //4. 获取PreparedStatement对象
+            ps = coon.prepareStatement(sql1);
+            ps.setObject(1,"麻子");
+            ps.setObject(2,6000);
+            //5. 执行
+            int count = ps.executeUpdate();
+            //6. 处理结果
+            if(count>0){
+                System.out.println("添加成功");
             }
-   
-   ​     } catch (ClassNotFoundException e) {
-   ​         e.printStackTrace();
-   ​     } catch (SQLException e) {
-   ​         e.printStackTrace();
-   ​     }finally {
-   ​         //stmt.close();
-   ​         //7. 释放资源
-   ​         //避免空指针异常
-   ​         if(stmt != null){
-   ​             try {
-   ​                 stmt.close();
-   ​             } catch (SQLException e) {
-​                 e.printStackTrace();
-   ​             }
-   ​         }
-   
-   ​         if(conn != null){
-   ​             try {
-   ​                 conn.close();
-   ​             } catch (SQLException e) {
-   ​                 e.printStackTrace();
-   ​             }
-   ​         }
-   ​     }
+            else{
+                System.out.println("添加失败");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }finally {
+            //7. 释放资源
+            //避免空指针异常
+            if(ps!=null){
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(coon!=null){
+                try {
+                    coon.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
 ```
 
    
 
 ## ResultSet：结果集对象
 
-### 封装查询结果
+### 主要作用
+
+封装查询的结果。
+
+### 使用步骤
+
+1. 游标向下移动一行；
+2. 判断是否有数据；
+3. 获取当前行中某一列的数据。
+
+### 使用解析
 
 * boolean next(): 游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，如果是，则返回false，如果不是则返回true
 * getXxx(参数):获取数据
-	* Xxx：代表数据类型   如： int getInt() ,	String getString()
-	* 参数：
-		1. int：代表列的编号,从1开始   如： getString(1)
-	2. String：代表列名称。 如： getDouble("balance")
+  * Xxx：代表数据类型   如： 获取int类型的方法为getInt() ，获取String类型的方法为getString()。
+  * 参数：
+  	1. int：代表数据库中的列编号，从1开始   如： getString(1)为第1列id。
+  	2. String：代表数据库中的列名称。 如： getDouble("balance")为第3列balance。
 
-* 注意：
-	* 使用步骤：
-		1. 游标向下移动一行
-		2. 判断是否有数据
-		3. 获取数据
 
-	   //循环判断游标是否是最后一行末尾。
-         
+### 核心代码
+
 ```java
-    while(rs.next()){
+ //循环判断游标是否是最后一行末尾。   
+while(rs.next()){
              //获取数据
              //6.2 获取数据
       int id = rs.getInt(1);
              String name = rs.getString("name");
              double balance = rs.getDouble(3);
- 
-	  ​         System.out.println(id + "---" + name + "---" + balance);
-	  ​     }
+    System.out.println(id + "---" + name + "---" + balance);
+}
 ```
 
 ### 练习
