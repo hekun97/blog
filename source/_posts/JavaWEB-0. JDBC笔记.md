@@ -25,11 +25,11 @@ cover: https://cdn.pixabay.com/photo/2021/06/10/19/03/sea-6326812_1280.jpg
 
 这里只是简单快速入门，为避免释放资源的空指针异常，实际中需要使用异常处理。详见[进阶练习](#进阶练习)
 
-数据库表信息
+## 数据库表信息
 
 ![](https://pic.imgdb.cn/item/60ded5f45132923bf8d0f509.jpg)
 
-详细代码
+## 详细代码
 
 ```java
 package io.gitee.hek97.jdbc;
@@ -151,11 +151,11 @@ public class JdbcDemo1 {
 
 1. boolean execute(String sql) ：可以执行任意的sql ，仅需了解； 
 
-2. int executeUpdate(String sql) ：执行DML（insert、delete、update）语句、DDL(create，alter、drop)语句。DDL直接使用的比较少，一般都是执行DML语句。
+2. int executeUpdate(String sql)：执行DML(insert、delete、update)语句、DDL(create，alter、drop)语句。DDL直接使用的比较少，一般都是执行DML语句。
 
   > 返回值int为影响的行数，可以通过这个影响的行数判断DML语句是否执行成功 返回值>0的则执行成功，反之，则失败。
 
-3. ResultSet executeQuery(String sql)  ：执行DQL（select)语句。
+3. ResultSet executeQuery(String sql)  ：执行DQL(select)语句。
 
 ### 进阶练习
 
@@ -242,71 +242,83 @@ public class JdbcDemo2 {
 
 ### 主要作用
 
-封装查询的结果。
+封装查询的结果，用于执行DQL(select)语句。
 
 ### 使用步骤
 
-1. 游标向下移动一行；
-2. 判断是否有数据；
-3. 获取当前行中某一列的数据。
+1. 执行DQL(select)语句；
+2. 游标向下移动一行；
+3. 判断当前行是否有数据；
+4. 获取当前行中某一列的数据。
 
 ### 使用解析
 
-* boolean next(): 游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，如果是，则返回false，如果不是则返回true
-* getXxx(参数):获取数据
-  * Xxx：代表数据类型   如： 获取int类型的方法为getInt() ，获取String类型的方法为getString()。
-  * 参数：
-  	1. int：代表数据库中的列编号，从1开始   如： getString(1)为第1列id。
-  	2. String：代表数据库中的列名称。 如： getDouble("balance")为第3列balance。
+![](https://pic.imgdb.cn/item/60df33f05132923bf80ff997.jpg)
+
+#### boolean next()
+
+游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，如果是，则返回false，如果不是则返回true
+
+#### getXxx(参数)
+
+获取数据
+
+* Xxx：
+  * 这里的Xxx代表的是数据类型，如： 获取int类型的方法为getInt() ，获取String类型的方法为getString()。
+* 参数：
+	1. int：代表数据库中的列编号，从1开始   如： getString(1)为第1列的值id。
+	2. String：代表数据库中的列名称。 如： getDouble("balance")为第3列的值balance。
 
 
 ### 核心代码
 
 ```java
- //循环判断游标是否是最后一行末尾。   
+//循环判断游标是否是最后一行末尾。
+//rs 为 ResultSet 结果集
 while(rs.next()){
-             //获取数据
-             //6.2 获取数据
+       //获取数据
       int id = rs.getInt(1);
-             String name = rs.getString("name");
-             double balance = rs.getDouble(3);
+      String name = rs.getString("name");
+      double balance = rs.getDouble(3);
     System.out.println(id + "---" + name + "---" + balance);
 }
 ```
 
 ### 练习
 
-* 定义一个方法，查询emp表的数据将其封装为对象，然后装载集合，返回。
-	1. 定义Emp类
-	2. 定义方法` public List<Emp> findAll(){}`
-	3. 实现方法 `select * from emp` 
+#### 需求
 
-5. PreparedStatement：执行sql的对象
-	1. SQL注入问题：在拼接sql时，有一些sql的特殊关键字参与字符串的拼接。会造成安全性问题
-		1. 输入用户随便，输入密码：a' or 'a' = 'a
-		2. sql：select * from user where username = 'fhdsjkf' and password = 'a' or 'a' = 'a' 
+定义一个方法，查询account表的数据将其封装为对象，然后装载集合，返回。
 
-	2. 解决sql注入问题：使用PreparedStatement对象来解决
-	3. 预编译的SQL：参数使用?作为占位符
-	
-4. 步骤：
-		1. 导入驱动jar包 mysql-connector-java-5.1.37-bin.jar
-		2. 注册驱动
-		3. 获取数据库连接对象 Connection
-		4. 定义sql
-			* 注意：sql的参数使用？作为占位符。 如：select * from user where username = ? and password = ?;
-		5. 获取执行sql语句的对象 PreparedStatement  Connection.prepareStatement(String sql) 
-		6. 给？赋值：
-			* 方法： setXxx(参数1,参数2)
-				* 参数1：？的位置编号 从1 开始
-				* 参数2：？的值
-		7. 执行sql，接受返回结果，不需要传递sql语句
-		8. 处理结果
-		9. 释放资源
+#### 步骤
 
-	5. 注意：后期都会使用PreparedStatement来完成增删改查的所有操作
-		1. 可以防止SQL注入
-		2. 效率更高
+1. 定义[Accout](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/domian/Account.java)类，将查询的同一类型（account表）的数据封装起来，方便调用；
+2. 在[JdbcDemo4](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/jdbc/JdbcDemo4.java)定义方法` public List<Account> findAll(){}`，将查询的数据封装到Account类中，然后装载到list集合中。
+3. 在[JdbcDemo5](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/jdbc/JdbcDemo5.java)类中调用findAll()方法，得到输出结果。
+
+#### 代码
+
+具体代码查看封装SQL数据的[Accout](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/domian/Account.java)类和[JdbcDemo4](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/jdbc/JdbcDemo4.java)类中查询SQL数据的findAll()方法。
+
+## PreparedStatement：执行sql的对象
+
+### 主要作用
+
+1. 可以防止SQL注入；
+2. 效率更高。
+
+### 解析
+
+1. SQL注入问题：在拼接sql时，有一些sql的特殊关键字参与字符串的拼接。会造成安全性问题。
+	- 输入用户随便，输入密码：`a' or 'a' = 'a`；
+	- 最后的sql会变成`select * from user where username = 'fhdsjkf' and password = 'a' or 'a' = 'a' `，失去了密码的意义。
+
+2. 解决sql注入问题：使用PreparedStatement对象来解决；
+3. 预编译的SQL：参数使用?作为占位符。
+
+### 使用步骤
+
+具体使用参考[快速入门](#快速入门)和[进阶练习](#进阶练习)。
 
 # 抽取JDBC工具类 ： JDBCUtils
 ## 目的
