@@ -1,12 +1,12 @@
 ---
-title: 使用hexo搭建自己的个人博客（一）
+title: 使用hexo搭建博客
 date: 2020-02-16 17:45:19
-categories: 
-- hexo搭建博客
-tags:
+tags: 
 - hexo
-- GitHub
-- Coding
+category:
+- hexo搭建博客
+type: artitalk
+cover: https://cdn.pixabay.com/photo/2021/06/21/05/01/clouds-6352673_960_720.jpg
 ---
 
 # 前言

@@ -16,6 +16,7 @@ menu:
     - 电影 || /movies/ || fas fa-video
   Java基础||fas fa-list:
     - 面向对象编程 || 2020/12/01/java-ji-chu-bi-ji/ || fas fa-male
+    - JDBC相关知识 || 2021/06/30/java-ji-chu-2.jdbc-bi-ji/ || fas fa-adjust
   JavaWEB||fas fa-list:
     - Tomcat基础知识 || 2021/06/24/javaweb-1.tomcat-ji-chu-zhi-shi/ || fas fa-certificate
     - 将Tomcat集成到IDEA中 || 2021/06/24/javaweb-2.jiang-tomcat-ji-cheng-dao-idea-zhong/ || fas fa-code

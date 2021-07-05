@@ -3,7 +3,7 @@ title: ListNode-链表
 date: 2021-06-22 11:40:00
 type: artitalk
 categories:
-- JAVA基础知识
+- Java基础
 tags:
 - 数据结构
 cover: https://cdn.pixabay.com/photo/2021/06/13/07/33/mountain-pass-6332476_960_720.jpg

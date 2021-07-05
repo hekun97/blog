@@ -2,11 +2,11 @@
 title: Map集合
 date: 2020-07-12 18:24:27
 category: 
-- Java基础知识
+- Java基础
 tags: 
 - Map
 type: artitalk
-cover: https://pixabay.com/zh/illustrations/compass-map-nautical-antique-3408928/
+cover: https://cdn.pixabay.com/photo/2020/05/26/17/57/cottages-5224102_960_720.jpg
 ---
 
 # Map

@@ -3,7 +3,7 @@ title: Java核心类
 date: 2021-06-03 14:39:55
 type: artitalk
 categories:
-- JAVA基础知识
+- Java基础
 tags:
 - JAVA
 cover: https://cdn.pixabay.com/photo/2018/01/17/20/22/analytics-3088958__340.jpg
