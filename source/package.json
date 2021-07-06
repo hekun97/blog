@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "hexo-generator-search": "^2.4.3"
+  }
+}
