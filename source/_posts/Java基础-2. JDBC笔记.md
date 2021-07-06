@@ -311,7 +311,7 @@ while(rs.next()){
 
 具体使用参考[快速入门](#快速入门)和[进阶练习](#进阶练习)。
 
-# 抽取JDBC工具类 ： JDBCUtils
+# 抽取JDBC工具类
 ## 目的
 
 回顾之前的代码，会发现有很多重复代码，JDBC工具类可以简化书写，方便复用代码。
@@ -338,7 +338,7 @@ while(rs.next()){
 
    ![](https://pic.imgdb.cn/item/60ded5f45132923bf8d0f509.jpg)
 
-2. 配置文件：[jdbc.properties]((https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/jdbc.properties))
+2. 配置文件：[jdbc.properties](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/jdbc.properties)
 
    ```properties
    url=jdbc:mysql:///db3
@@ -347,7 +347,7 @@ while(rs.next()){
    driver=com.mysql.jdbc.Driver
    ```
 
-1. 工具类：[JDBCUtils]((https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/jdbcUtils/JDBCUtils.java))
+1. 工具类：[JDBCUtils](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/jdbcUtils/JDBCUtils.java)
 2. 具体使用的例子：[JdbcDemo6](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/jdbc/JdbcDemo6.java)
 
 ## 练习
@@ -376,7 +376,7 @@ while(rs.next()){
 
 2. 代码实现。
 
-   - 工具类：[JDBCUtils]((https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/jdbcUtils/JDBCUtils.java))
+   - 工具类：[JDBCUtils](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/io/gitee/hek97/jdbcUtils/JDBCUtils.java)
 
    - 具体使用：JdbcDemo7
 
