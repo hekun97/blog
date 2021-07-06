@@ -61,7 +61,45 @@ cover: https://cdn.pixabay.com/photo/2021/06/22/17/24/torres-del-paine-6356782_9
 
 > 连接获取后，具体的使用和之前的差不多。
 
-### 实现代码
+#### 配置文件
+
+```xml
+<!--c3p0-config.xml-->
+<?xml version="1.0" encoding="UTF-8"?>
+<c3p0-config>
+    <!-- 使用默认的配置读取连接池对象 -->
+    <default-config>
+        <!--  连接参数 -->
+        <property name="driverClass">com.mysql.jdbc.Driver</property>
+        <property name="jdbcUrl">jdbc:mysql:///db3</property>
+        <property name="user">root</property>
+        <property name="password">root</property>
+
+        <!-- 连接池参数 -->
+        <!--初始化的申请的连接数量-->
+        <property name="initialPoolSize">5</property>
+        <!--最大的连接数量-->
+        <property name="maxPoolSize">10</property>
+        <!--连接超时时间-->
+        <property name="checkoutTimeout">3000</property>
+    </default-config>
+
+    <named-config name="otherc3p0">
+        <!--  连接参数 -->
+        <property name="driverClass">com.mysql.jdbc.Driver</property>
+        <property name="jdbcUrl">jdbc:mysql:///db3</property>
+        <property name="user">root</property>
+        <property name="password">root</property>
+
+        <!-- 连接池参数 -->
+        <property name="initialPoolSize">5</property>
+        <property name="maxPoolSize">8</property>
+        <property name="checkoutTimeout">1000</property>
+    </named-config>
+</c3p0-config>
+```
+
+#### 实现代码
 
 ```java
 package io.gitee.hek97.datasource.c3p0;
@@ -100,184 +138,198 @@ public class C3P0Demo1 {
 4. 获取数据库连接池对象：通过工厂类 来获取  DruidDataSourceFactory；
 5. 获取连接，使用getConnection方法。
 
-* 代码：
+#### 配置文件
 
-     ```java
-     package cn.itcast.datasource.druid;
-        
-     import com.alibaba.druid.pool.DruidDataSourceFactory;
-        
-     import javax.sql.DataSource;
-     import java.io.IOException;
-     import java.io.InputStream;
-     import java.sql.Connection;
-     import java.util.Properties;
-        
-     /**
-      * Druid演示
-      */
-     public class DruidDemo {
-         public static void main(String[] args) throws Exception {
-             //1.导入jar包
-             //2.定义配置文件
-             //3.加载配置文件
-             Properties pro = new Properties();
-             InputStream is = DruidDemo.class.getClassLoader().getResourceAsStream("druid.properties");
-             pro.load(is);
-             //4.获取连接池对象
-             DataSource ds = DruidDataSourceFactory.createDataSource(pro);
-             //5.获取连接
-             Connection conn = ds.getConnection();
-             //打印
-             System.out.println(conn);
-        
-         }
-     }
-  ```
-  
-  2. 定义工具类
-    1. 定义一个类 JDBCUtils
-    2. 提供静态代码块加载配置文件，初始化连接池对象
-    3. 提供方法
-          1. 获取连接方法：通过数据库连接池获取连接
-              2. 释放资源
-                  3. 获取连接池的方法
-  
-  * 代码：工具类 JDBCUtils
-  
-    ```java
-    package cn.itcast.utils;
-    
-    import com.alibaba.druid.pool.DruidDataSourceFactory;
-    
-    import javax.sql.DataSource;
-    import java.io.IOException;
-    import java.sql.Connection;
-    import java.sql.ResultSet;
-    import java.sql.SQLException;
-    import java.sql.Statement;
-    import java.util.Properties;
-    
-    /**
-     * Druid连接池的工具类
-     */
-    public class JDBCUtils {
-    
-        //1.定义成员变量 DataSource
-        private static DataSource ds ;
-    
-        static{
-            try {
-                //1.加载配置文件
-                Properties pro = new Properties();
-                pro.load(JDBCUtils.class.getClassLoader().getResourceAsStream("druid.properties"));
-                //2.获取DataSource
-                ds = DruidDataSourceFactory.createDataSource(pro);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        /**
-         * 获取连接
-         */
-        public static Connection getConnection() throws SQLException {
-            return ds.getConnection();
-        }
-        /**
-         * 释放资源
-         */
-        public static void close(Statement stmt,Connection conn){
-           close(null,stmt,conn);
-        }
-    
-        public static void close(ResultSet rs , Statement stmt, Connection conn){
+```properties
+# druid.properties
+driverClassName=com.mysql.jdbc.Driver
+url=jdbc:mysql:///db3?characterEncoding=UTF-8
+username=root
+password=root
+# 初始化连接数
+initialSize=5
+# 最大连接数
+maxActive=10
+# 超时时间
+maxWait=3000
+```
 
+#### 实现代码
 
-            if(rs != null){
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+```java
+package io.gitee.hek97.datasource.druid;
 
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidDataSourceFactory;
 
-            if(stmt != null){
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-    
-            if(conn != null){
-                try {
-                    conn.close();//归还连接
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    
-        /**
-         * 获取连接池方法
-         */
-    
-        public static DataSource getDataSource(){
-            return  ds;
-        }
-    
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.util.Properties;
+
+public class DruidDemo {
+    public static void main(String[] args) throws Exception {
+        //1. 导入jar包
+        //2. 定义配置文件
+        //3. 加载配置文件
+        Properties pro = new Properties();
+        InputStream is = DruidDemo.class.getClassLoader().getResourceAsStream("druid.properties");
+        pro.load(is);
+        //4. 获取连接池对象
+        DataSource ds = DruidDataSourceFactory.createDataSource(pro);
+        //5. 获取连接
+        Connection conn = ds.getConnection();
+        //6. 打印
+        System.out.println(conn);
     }
-    ```
+}
+```
+
+### 定义工具类
+
+#### 分析
+
+  1. 定义一个类 JDBCUtils；
+  2. 提供静态代码块加载配置文件，初始化连接池对象；
+  3. 提供方法供外部调用。
+        1. 获取连接方法：通过数据库连接池获取连接
+        2. 释放资源
+        3. 获取连接池的方法
+
+#### 实现代码
+
+* 工具类 JDBCUtils
+
+  ```java
+  package io.gitee.hek97.utils;
+  
+  import com.alibaba.druid.pool.DruidDataSourceFactory;
+  
+  import javax.sql.DataSource;
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.sql.Connection;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  import java.util.Properties;
+  
+  public class JDBCUtils {
+      private static DataSource ds;
+      static {
+          try {
+              //1. 加载配置文件
+              Properties pro = new Properties();
+              InputStream rs = JDBCUtils.class.getClassLoader().getResourceAsStream("druid.properties");
+              pro.load(rs);
+              //2. 初始化连接池对象
+              ds= DruidDataSourceFactory.createDataSource(pro);
+          } catch (IOException e) {
+              e.printStackTrace();
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+      }
+  
+      /**
+       * 连接池对象
+       * @return 连接池对象
+       */
+      public static DataSource getDs(){
+          return ds;
+      }
+  
+      /**
+       * 获取连接
+       * @return 连接对象
+       * @throws SQLException
+       */
+      public static Connection getConnection() throws SQLException {
+          return ds.getConnection();
+      }
+      public static void close(PreparedStatement ps,Connection conn){
+          close(null,ps,conn);
+  
+      }
+  
+      /**
+       * 释放资源
+       * @param rs
+       * @param ps
+       * @param conn
+       */
+      public static void close(ResultSet rs, PreparedStatement ps, Connection conn){
+          if(rs!=null){
+              try {
+                  rs.close();
+              } catch (SQLException e) {
+                  e.printStackTrace();
+              }
+          }
+          if(ps!=null){
+              try {
+                  ps.close();
+              } catch (SQLException e) {
+                  e.printStackTrace();
+              }
+          }
+          if(conn!=null){
+              try {
+                  conn.close();
+              } catch (SQLException e) {
+                  e.printStackTrace();
+              }
+          }
+  
+      }
+  }
+  
 
 * 使用工具类 DruidDemo2
 
-      ```java
-      package cn.itcast.datasource.druid;
-      
-      import cn.itcast.utils.JDBCUtils;
-      
-      import java.sql.Connection;
-      import java.sql.PreparedStatement;
-      import java.sql.ResultSet;
-      import java.sql.SQLException;
-      
-      /**
-       * 使用新的工具类
-       */
-      public class DruidDemo2 {
-      
-          public static void main(String[] args) {
-              /*
-               * 完成添加操作：给account表添加一条记录
-               */
-              Connection conn = null;
-              PreparedStatement pstmt = null;
-              try {
-                  //1.获取连接
-                  conn = JDBCUtils.getConnection();
-                  //2.定义sql
-                  String sql = "insert into account values(null,?,?)";
-                  //3.获取pstmt对象
-                  pstmt = conn.prepareStatement(sql);
-                  //4.给？赋值
-                  pstmt.setString(1,"王五");
-                  pstmt.setDouble(2,3000);
-                  //5.执行sql
-                  int count = pstmt.executeUpdate();
-                  System.out.println(count);
-              } catch (SQLException e) {
-                  e.printStackTrace();
-              }finally {
-                  //6. 释放资源
-                  JDBCUtils.close(pstmt,conn);
+  ```java
+  package io.gitee.hek97.datasource.druid;
+  
+  import io.gitee.hek97.utils.JDBCUtils;
+  
+  import javax.sql.DataSource;
+  import java.sql.Connection;
+  import java.sql.PreparedStatement;
+  import java.sql.ResultSet;
+  import java.sql.SQLException;
+  
+  
+  public class DruidDemo2 {
+      public static void main(String[] args){
+          Connection conn = null;
+          PreparedStatement ps=null;
+          ResultSet rs=null;
+          try {
+              //1. 获取连接
+              conn = JDBCUtils.getConnection();
+              //2. 定义SQL
+              String sql ="select * from account";
+              //3. 获取执行SQL对象
+              ps = conn.prepareStatement(sql);
+              //4. 执行SQL
+              rs = ps.executeQuery();
+              //5. 处理结果
+              while (rs.next()){
+                  int id = rs.getInt(1);
+                  String name = rs.getString(2);
+                  int balance = rs.getInt(3);
+                  System.out.println(id+"---"+name+"---"+balance);
               }
+          } catch (SQLException e) {
+              e.printStackTrace();
+          }finally {
+              //6. 释放资源
+              JDBCUtils.close(rs,ps,conn);
           }
-      
       }
-      ```
+  }
+  ```
 
 # Spring JDBC
 
