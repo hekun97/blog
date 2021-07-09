@@ -349,16 +349,17 @@ Spring JDBC是Spring框架对JDBC的简单封装，提供了一个JDBCTemplate�
 
   3. 调用JdbcTemplate的方法来完成CRUD的操作
 
-     * `update()`:执行DML语句。增、删、改语句
-     * `queryForMap()`:查询结果将结果集封装为map集合，将列名作为key，将值作为value 将这条记录封装为一个map集合
-       * 注意：这个方法查询的结果集长度只能是1
-     * `queryForList()`:查询结果将结果集封装为list集合
-       * 注意：将每一条记录封装为一个Map集合，再将Map集合装载到List集合中
-     * `query()`:查询结果，将结果封装为JavaBean对象
-       * query的参数：RowMapper
-         * 一般我们使用BeanPropertyRowMapper实现类。可以完成数据到JavaBean的自动封装
-         * new BeanPropertyRowMapper<类型>(类型.class)
-     * `queryForObject()`：查询结果，将结果封装为对象，一般用于聚合函数的查询
+     * `update()`：执行DML语句。增、删、改语句；
+     * `queryForMap()`：查询结果将结果集封装为map集合，将列名作为key，将值作为value 将这条记录封装为一个map集合
+
+       > 这个方法查询的结果集只能为数据库的1行数据。
+     * `queryForList()`：查询结果将结果集封装为list集合；
+
+       > 将每一条记录封装为一个Map集合，再将Map集合装载到List集合中
+     * `query()`：查询结果，将结果封装为JavaBean对象；
+
+       > 一般我们使用BeanPropertyRowMapper实现类。可以完成数据到JavaBean的自动封装，代码格式：`new BeanPropertyRowMapper<类型>(类型.class)`。
+     * `queryForObject()`：查询结果，将结果封装为对象，一般用于聚合函数的查询。
 
 ## 快速入门
 
@@ -385,9 +386,9 @@ public class JdbcTemplateDemo1 {
 
 ## 进阶练习
 
-练习内容
+### 练习内容
 
-  1. 修改1号数据的 salary 为 10000
+  1. 修改1号数据的 balance 为 10000
   2. 添加一条记录
   3. 删除刚才添加的记录
   4. 查询id为1的记录，将其封装为Map集合
@@ -397,4 +398,112 @@ public class JdbcTemplateDemo1 {
 
 ### 实现代码
 
-JdbcTemplateDemo2 
+```java
+package io.gitee.hek97.datasource.template;
+
+import io.gitee.hek97.domain.Account;
+import io.gitee.hek97.utils.JDBCUtils;
+import org.junit.Test;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+import java.lang.invoke.VarHandle;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 执行DML，DQL语句
+ */
+public class JdbcTemplateDemo2 {
+    //导入jar包
+    //创建template对象
+    private JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
+    
+    //Junit单元测试，可以让方法独立运行
+    //1. 修改1号数据的 balance 为 10000
+    @Test
+    public void test1() {
+        String sql = "update account set balance = ? where id = ?";
+        int count = template.update(sql, 10000, 1);
+        System.out.println(count);
+    }
+
+    //2. 添加一条记录
+    @Test
+    public void test2() {
+        String sql = "insert into account values(null,'麻子',2000)";
+        int count = template.update(sql);
+        System.out.println(count);
+    }
+
+    //3. 删除刚刚添加的记录
+    @Test
+    public void test3() {
+        String sql = "delete from account where id =?";
+        int count = template.update(sql, 4);
+        System.out.println(count);
+    }
+
+    //4. 查询id为1的记录，将其封装为Map集合
+    @Test
+    public void test4() {
+        String sql = "select * from account where id = ?";
+        Map<String, Object> map = template.queryForMap(sql, 1);
+        System.out.println(map);//{id=1, name=张三, balance=3000}
+    }
+
+    //5. 查询所有记录，将其封装为List
+    @Test
+    public void test5() {
+        String sql = "select * from account";
+        List<Map<String, Object>> maps = template.queryForList(sql);
+        System.out.println(maps);
+        for (Map<String, Object> map : maps) {
+            System.out.println(map);
+        }
+    }
+
+    //6.1 查询所有记录，将其封装为Emp对象的List集合，传统方式
+    @Test
+    public void test6_1() {
+        String sql = "select * from account";
+        List<Account> accounts = template.query(sql, new RowMapper<Account>() {
+            @Override
+            public Account mapRow(ResultSet rs, int i) throws SQLException {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int balance = rs.getInt("balance");
+                Account account = new Account();
+                account.setId(id);
+                account.setName(name);
+                account.setBalance(balance);
+                return account;
+            }
+        });
+        System.out.println(accounts);
+    }
+
+    //6.2 查询所有记录，将其封装为Emp对象的List集合，使用new BeanPropertyRowMapper对象简化操作。
+    @Test
+    public void test6_2() {
+        String sql = "select * from account";
+        List<Account> accounts = template.query(sql, new BeanPropertyRowMapper<Account>(Account.class));
+        System.out.println(accounts);
+        for (Account account : accounts) {
+            System.out.println(account);
+        }
+    }
+
+    //7. 查询总记录数
+    @Test
+    public void test7() {
+        String sql = "select count(id) from account";
+        Long count = template.queryForObject(sql, Long.class);
+        System.out.println(count);
+    }
+}
+```
+
