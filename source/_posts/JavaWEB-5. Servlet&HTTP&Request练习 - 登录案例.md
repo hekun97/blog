@@ -43,7 +43,7 @@ cover: https://cdn.pixabay.com/photo/2021/06/11/16/02/clouds-6328911_960_720.jpg
   );
   ```
 
-3. 创建包`cn.itcast.domain`,创建类User
+3. 创建包`cn.itcast.domain`,创建类User，该类为用户的实体类，主要是为了封装user对象，方便调用。
 
   ```java
   package cn.itcast.domain;
@@ -161,7 +161,7 @@ cover: https://cdn.pixabay.com/photo/2021/06/11/16/02/clouds-6328911_960_720.jpg
   }
   ```
 
-5. 创建包cn.itcast.dao,创建类UserDao,提供login方法
+5. 创建包cn.itcast.dao,创建类UserDao,提供login方法，以后只要属于用户类需要操作数据库的方法都可以写在这里，比如注册、登录、查询等操作。
 
   ```java
   package cn.itcast.dao;
@@ -204,7 +204,7 @@ cover: https://cdn.pixabay.com/photo/2021/06/11/16/02/clouds-6328911_960_720.jpg
   }
   ```
 
-6. 编写cn.itcast.web.servlet.LoginServlet类
+6. 编写cn.itcast.web.servlet.LoginServlet类，主要完成逻辑操作，获取页面的数据，然后封装为User对象并调用UserDao中的login()方法，将该方法的返回值进行判断后转发到对应的页面。
 
   ```java
   package cn.itcast.web.servlet;
@@ -332,26 +332,57 @@ cover: https://cdn.pixabay.com/photo/2021/06/11/16/02/clouds-6328911_960_720.jpg
   }
   ```
 
-8. login.html中form表单的action路径的写法
 
-    * 虚拟目录+Servlet的资源路径
 
-9. BeanUtils工具类，简化数据封装
-	* 用于封装JavaBean的
-	1. JavaBean：标准的Java类
-		1. 要求：
-			1. 类必须被public修饰
-			2. 必须提供空参的构造器
-			3. 成员变量必须使用private修饰
-			4. 提供公共setter和getter方法
-		2. 功能：封装数据
+## BeanUtils工具类
 
-	2. 概念：
-		成员变量：
-		属性：setter和getter方法截取后的产物
-			例如：getUsername() --> Username--> username
+用来简化数据封装，封装JavaBean的工具类。
 
-	3. 方法：
-		1. setProperty()
-		2. getProperty()
-		3. populate(Object obj , Map map):将map集合的键值对信息，封装到对应的JavaBean对象中
+### 概念
+
+成员变量：id
+属性：setter和getter方法截取后的产物（`getId() --> Userid--> id`），id
+
+![](https://pic.imgdb.cn/item/60e96d735132923bf8d39166.jpg)
+
+### 方法
+
+1. setProperty()，设置属性，了解即可；
+2. getProperty()，获取属性，了解即可；
+3. populate(Object obj , Map map)：将map集合的键值对信息，封装到对应的JavaBean对象中。
+
+### 快速入门
+
+1. 导入jar包，`commons-beanutils-1.8.0.jar`；
+
+2. 获取所有的request请求参数封装为map集合，代码：`Map<String, String[]> map = req.getParameterMap();`，req为request对象；
+
+3. 使用BeanUtils工具类封装map集合中的请求参数到指定的JavaBean对象中。
+
+   ```java
+   //3.创建User对象
+   User loginUser = new User();
+   //3.2使用BeanUtils封装
+   try {
+       BeanUtils.populate(loginUser,map);
+   } catch (IllegalAccessException e) {
+       e.printStackTrace();
+   } catch (InvocationTargetException e) {
+       e.printStackTrace();
+   }
+   ```
+
+### JavaBean
+
+标准的Java类。
+
+#### 要求
+
+1. 类必须被public修饰
+2. 必须提供空参的构造器
+3. 成员变量必须使用private修饰
+4. 提供公共setter和getter方法
+
+#### 功能
+
+封装数据。

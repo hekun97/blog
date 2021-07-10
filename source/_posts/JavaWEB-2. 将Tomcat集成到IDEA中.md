@@ -71,10 +71,13 @@ cover: https://cdn.pixabay.com/photo/2021/04/22/15/46/landscape-6199355_960_720.
 ### 目录结构
 
 java动态项目web下目录结构：
--- 项目的根目录
-	-- WEB-INF目录：
-		-- web.xml：web项目的核心配置文件
-		-- classes目录：放置字节码文件的目录
-		-- lib目录：放置依赖的jar包
+
+```
+—— 项目的根目录
+	—— WEB-INF目录：
+		—— web.xml：web项目的核心配置文件
+		—— classes目录：放置字节码文件的目录
+		—— libs目录：放置依赖的jar包
+```
 
 ![](https://pic.imgdb.cn/item/60d34dd8844ef46bb223a792.jpg)

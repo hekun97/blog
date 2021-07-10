@@ -36,29 +36,32 @@ HttpServlet  -- 抽象类
 #### 使用步骤
 
 1. 定义类继承HttpServlet
+
 2. 复写doGet/doPost方法
 
-```java
-//为保持简介已去掉导包代码
-@WebServlet("/demo")
-public class ServletDemo extends HttpServlet {
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doPost...");
-    }
+   ```java
+   //为保持简介已去掉导包代码
+   @WebServlet("/demo")
+   public class ServletDemo extends HttpServlet {
+       @Override
+       protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+           System.out.println("doPost...");
+       }
+   
+       @Override
+       protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+           System.out.println("doGet...");
+       }
+   }
+   ```
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doGet...");
-    }
-}
-```
+   
 
 3. 使用doGet方法，默认情况下直接访问该路径就是get请求，触发该方法。
 
 4. 使用doPost方法，最简单的方式为建立一个表单页面(login.html)，然后访问表单的路径(/login.html)，使用post方法将信息提交到/demo路径下。
 
-   ```html
+   ```java
    <!-- web目录下的login.html 表单-->
    <!DOCTYPE html>
    <html lang="en">
@@ -74,6 +77,8 @@ public class ServletDemo extends HttpServlet {
    </body>
    </html>
    ```
+
+   
 
 ## Servlet访问路径
 
@@ -121,7 +126,7 @@ public class ServletDemo extends HttpServlet {
 
   * 请求方式：
 
-    HTTP协议有7种请求方式，常用的有GET和POST2种。
+    HTTP协议有7种请求方式，常用的有GET和POST 2种。
     * GET：
     	1. 请求参数放在请求行中，在url后。类似这种`http://localhost:8080/demo1?username=zhangsan`；
     	
@@ -174,7 +179,7 @@ ServletRequest		--	接口
 	|	继承
 HttpServletRequest	-- 接口
 	|	实现
-org.apache.catalina.connector.RequestFacade//该位置是拓展HttpServletRequest接口中的request方法的位置。
+org.apache.catalina.connector.RequestFacade//该位置是实现HttpServletRequest接口中的request方法的位置。
 ```
 
 tomcat源码下的实现类，打开看源码可以发现继承了HttpServletRequest接口。
