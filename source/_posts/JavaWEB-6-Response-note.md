@@ -109,8 +109,6 @@ Hello,Response!
 
 ## 设置响应体
 
-### 使用步骤
-
 1. 获取输出流；
 	* 字符输出流，使用`PrintWriter getWriter()`方法；
 
@@ -118,28 +116,17 @@ Hello,Response!
 
 2. 使用输出流，将数据输出到客户端浏览器。
 
-## 案例
+## Response的更多使用
 
-通过案例对Response进行入门学习。
+### 重定向 
 
-### 需求分析
-
-1. 完成重定向；
-2. 服务器输出字符数据到浏览器；
-3. 服务器输出字节数据到浏览器；
-4. 输出验证码到浏览器。
-
-### 具体实现
-
-#### 重定向 
-
-##### 概念
+#### 概念
 
 资源跳转的一种方式。
 
 ![](https://pic.imgdb.cn/item/60eacad15132923bf8c60bc6.jpg)
 
-##### 使用
+#### 使用
 
 * 核心代码：
 	
@@ -159,16 +146,16 @@ Hello,Response!
   >
   > 这里需要和请求转发区分开：请求转发的路径不会变，状态码为200，拥有共享域对象，只能在服务器内部进行跳转；重定向的路径会变，状态码为302，没有共享域对象，可跳转服务器内部和外部的资源。
 
-##### 重定向和转发的区别
+#### 重定向和转发的区别
 
-###### 重定向(redirect)
+##### 重定向(redirect)
 
 1. 地址栏发生变化，状态码为302；
 2. 重定向可以访问当前服务器内部和其他站点(服务器外部)的资源；
 3. 重定向是两次请求，有两个request对象，不能使用request对象来共享数据；
 4. 路径需要加虚拟目录。
 
-###### 转发(forward)
+##### 转发(forward)
 
 1. 转发地址栏路径不变，状态码为200；
 2. 转发只能访问当前服务器内部的资源；
@@ -177,28 +164,87 @@ Hello,Response!
 
 > 请求转发的更多解析可到文章servlet&http&request中的<a href="{% post_path 'JavaWEB-4.Servlet&HTTP&Request-note' %}#请求转发">请求转发</a>查看。							
 
-#### 服务器输出字符数据到浏览器
+### 服务器输出字符数据(String)到浏览器
 
-* 步骤：
-	1. 获取字符输出流
-	2. 输出数据
+#### 使用步骤
 
-* 注意：
-	* 乱码问题：
-		1. PrintWriter pw = response.getWriter();获取的流的默认编码是ISO-8859-1
-		2. 设置该流的默认编码
-		3. 告诉浏览器响应体使用的编码
+1. 获取字符输出流
+2. 输出数据
 
-		//简单的形式，设置编码，是在获取流之前设置
-     			response.setContentType("text/html;charset=utf-8");
+> 一般用于服务器输出文本信息、HTML代码块到浏览器。
 
-#### 服务器输出字节数据到浏览器
+#### 乱码问题
 
-* 步骤：
-	1. 获取字节输出流
-	2. 输出数据
+1. `PrintWriter pw = response.getWriter();`获取的流的默认编码是ISO-8859-1；
+2. 设置该流的默认编码；
+3. 告诉浏览器响应体使用的编码。
 
-#### 验证码
+简单的形式设置编码，是在获取流之前设置，使用代码：`response.setContentType("text/html;charset=utf-8");`。
+
+#### 核心代码
+
+```java
+package io.gitee.hek97.web.servlet;
+//去掉了导包的代码
+
+@WebServlet("/responseDemo3")
+public class ResponseDemo3 extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //获取流对象之前，设置流的编码
+        //response.setCharacterEncoding("utf-8");该行可省略，下一行设置响应头中编码的代码会间接设置流的编码。
+        //告诉浏览器，服务器发送的消息体数据的编码，建议浏览器使用该编码解码，这里使用的是设置响应头中编码的方法
+        response.setHeader("content-type","text/html;charset=utf-8");
+        //1.获取字符输出流
+        PrintWriter pw = response.getWriter();
+        //2.输出数据
+        pw.write("你好,response");
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request, response);
+    }
+}
+
+```
+
+### 服务器输出字节数据(Byte)到浏览器
+
+#### 使用步骤
+
+1. 获取字节输出流
+2. 输出数据
+
+> 一般用于从服务器输出图片到浏览器。
+
+#### 核心代码
+
+```java
+package io.gitee.hek97.web.servlet;
+
+//省略导包代码
+
+@WebServlet("/responseDemo4")
+public class ResponseDemo4 extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //设置响应消息编码
+        response.setHeader("content-type","text/html;charset=utf-8");
+        //1.获取字节输出流
+        ServletOutputStream sos = response.getOutputStream();
+        //2.输出数据
+        sos.write("你好".getBytes("utf-8"));
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request, response);
+    }
+}
+```
+
+### 练习：验证码
 
 1. 本质：图片
 2. 目的：防止恶意表单注册
