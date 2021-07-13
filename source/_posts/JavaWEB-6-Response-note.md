@@ -246,8 +246,101 @@ public class ResponseDemo4 extends HttpServlet {
 
 ### 练习：验证码
 
-1. 本质：图片
-2. 目的：防止恶意表单注册
+本质就是一张图片，为了防止恶意表单注册。
+
+#### 使用步骤
+
+1. 在内存中生成一张图片
+2. 美化图片
+3. 输出图片
+
+#### 核心代码
+
+```java
+package io.gitee.hek97.web.servlet;
+
+//去除导包代码
+
+@WebServlet("/demo")
+public class CheckCodeServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int width = 100;
+        int height = 50;
+        //1.创建对象，在内存中存图片（验证码）对象
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        //2.美化图片
+        //2.1填充背景色
+        Graphics g = image.getGraphics();//获取画笔对象
+        g.setColor(Color.PINK);//设置画笔颜色
+        g.fillRect(0,0,width,height);//设置填充范围
+        //2.2画边框
+        g.setColor(Color.BLUE);//设置画笔颜色
+        g.drawRect(0,0,width-1,height-1);//设置边框范围
+        String str ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        //生成随机角标
+        Random ran = new Random();//获取随机数对象
+        for (int i = 1; i <= 4; i++) {
+            int index = ran.nextInt(str.length());//生成随机数
+            char ch = str.charAt(index);//获取相应位置的字符
+            //2.3写验证码
+            g.drawString(ch+"",width/5*i,height/2);
+        }
+        //2.4画干扰线
+        g.setColor(Color.GREEN);//设置画笔颜色
+        //画10条干扰线
+        for (int i = 0; i < 10; i++) {
+            //随机生成坐标点
+            int x1=ran.nextInt(width);
+            int x2=ran.nextInt(width);
+            int y1=ran.nextInt(height);
+            int y2=ran.nextInt(height);
+            //画1条干扰线
+            g.drawLine(x1,x2,y1,y2);
+        }
+        //3.将图片输出到页面展示
+        ImageIO.write(image,"jpg",response.getOutputStream());
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request,response);
+    }
+}
+```
+
+#### 使用代码
+
+在网页中使用验证码，并实现点击图片切换验证码的功能。
+
+```html
+<!--login.html-->
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    window.onload=function () {
+        //1.获取图片对象
+        var img =document.getElementById("checkCode");
+        //2.绑定单击事件
+        img.onclick=function () {
+            //加时间戳
+            var date = new Date().getTime();
+            img.src = "/today/demo?"+date;//时间戳可以防止浏览器认读取本地缓存的图片
+        }
+
+    }
+</script>
+<head>
+    <meta charset="UTF-8">
+    <title>点击图片切换验证码</title>
+</head>
+<body>
+<img id="checkCode" src="/today/demo"/>//点击图片切换验证码
+</body>
+</html>
+```
+
+
 
 ## 相对路径和绝对路径
 
@@ -284,34 +377,172 @@ public class ResponseDemo4 extends HttpServlet {
 ![](https://pic.imgdb.cn/item/60eb0f3d5132923bf825bedb.jpg)
 
 # ServletContext对象
-1. 概念：代表整个web应用，可以和程序的容器(服务器)来通信
-2. 获取：
-	1. 通过request对象获取
-		request.getServletContext();
-	2. 通过HttpServlet获取
-		this.getServletContext();
-3. 功能：
-	1. 获取MIME类型：
-		* MIME类型:在互联网通信过程中定义的一种文件数据类型
-			* 格式： 大类型/小类型   text/html		image/jpeg
+## 概念
 
-		* 获取：String getMimeType(String file)  
-	2. 域对象：共享数据
-		1. setAttribute(String name,Object value)
-		2. getAttribute(String name)
-		3. removeAttribute(String name)
+代表整个web应用，可以和程序的容器(服务器)来通信。
 
-		* ServletContext对象范围：所有用户所有请求的数据
-	3. 获取文件的真实(服务器)路径
-		1. 方法：String getRealPath(String path)  
-			 String b = context.getRealPath("/b.txt");//web目录下资源访问
-	         System.out.println(b);
-	
-	        String c = context.getRealPath("/WEB-INF/c.txt");//WEB-INF目录下的资源访问
-	        System.out.println(c);
-	
-	        String a = context.getRealPath("/WEB-INF/classes/a.txt");//src目录下的资源访问
-	        System.out.println(a);
+## 获取ServletContext对象
+
+1. 通过request对象获取`request.getServletContext();`；
+2. 通过HttpServlet获取`this.getServletContext();`。
+
+> 两个对象获取的ServletContext是没差别的，使用过程中一般通过HttpServlet获取。
+
+## ServletContext对象的功能
+
+主要有获取MIME类型、域对象和获取文件的真实(服务器)路径。
+
+### 具体解析
+
+#### 获取MIME类型
+
+##### 概念
+
+MIME类型是在互联网通信过程中定义的一种文件数据类型，格式为：` 大类型/小类型`，例如：`text/html`，`image/jpeg`。
+
+##### 常用方法
+
+`String getMimeType(String file)  `：获取MIME类型。
+
+##### 核心代码
+
+```java
+package io.gitee.hek97.web.servletcontext;
+
+//去掉导包代码
+
+@WebServlet("/servletContextDemo1")
+public class ServletContextDemo1 extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1.获取ServletContext对象
+        ServletContext context = this.getServletContext();
+        //定义文件名称
+        String filename = "a.jpg";
+        //2.获取MIME类型
+        String mimeType = context.getMimeType(filename);
+        System.out.println(mimeType);//image/jpeg
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request,response);
+    }
+}
+```
+
+#### 域对象
+
+##### 概念
+
+主要用来在服务器内部共享数据。
+
+> 1. 与<a href="{% post_path 'JavaWEB-4.Servlet&HTTP&Request-note' %}#请求转发">请求转发</a>的域对象相比，ServletContext的域对象的范围更大，请求转发的域对象只存在于转发和被转发的请求之前，ServletContext对象范围为所有用户所有请求的数据（不太安全）；
+> 2. ServletContext对象存在生命周期太长，服务器创建便存在，服务器销毁才跟着销毁，所以使用很谨慎，很少使用。
+
+##### 常用方法
+
+1. setAttribute(String name,Object value)：设置域对象；
+2. getAttribute(String name)：获取域对象；
+3. removeAttribute(String name)：移除域对象。
+
+##### 核心代码
+
+```java
+package io.gitee.hek97.web.servletcontext;
+
+//去掉导包代码
+
+@WebServlet("/servletContextDemo2")
+public class ServletContextDemo2 extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1.通过HttpServlet获取ServletContext对象
+        ServletContext context = this.getServletContext();
+        //2.设置数据
+        context.setAttribute("msg","haha");
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request,response);
+    }
+}
+```
+
+```java
+package io.gitee.hek97.web.servletcontext;
+
+//去掉导包代码
+
+@WebServlet("/servletContextDemo3")
+public class ServletContextDemo3 extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1.通过HttpServlet获取ServletContext对象
+        ServletContext context = this.getServletContext();
+        //2.设置数据
+        Object msg = context.getAttribute("msg");
+        System.out.println(msg);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request,response);
+    }
+}
+```
+
+#### 获取文件的真实(服务器)路径
+
+##### 概念
+
+用来获取一些文件的真实路径。
+
+##### 常用方法
+
+String getRealPath(String path) 
+String b = context.getRealPath("/b.txt");//web目录下资源访问
+  System.out.println(b);
+
+ String c = context.getRealPath("/WEB-INF/c.txt");//WEB-INF目录下的资源访问
+ System.out.println(c);
+
+ String a = context.getRealPath("/WEB-INF/classes/a.txt");//src目录下的资源访问
+ System.out.println(a);
+
+##### 核心代码
+
+```java
+package io.gitee.hek97.web.servletcontext;
+
+//去掉导包代码
+
+@WebServlet("/servletContextDemo4")
+public class ServletContextDemo4 extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1.通过HttpServlet获取ServletContext对象
+        ServletContext context = this.getServletContext();
+        //2.获取文件的服务器路径
+        String b = context.getRealPath("/b.txt");//web目录下资源访问
+        System.out.println(b);
+        //C:\Users\HK\IdeaProjects\Test\out\artifacts\Response_war_exploded\b.txt
+        String c = context.getRealPath("/WEB-INF/c.txt");//WEB-INFm
+        System.out.println(c);
+        //C:\Users\HK\IdeaProjects\Test\out\artifacts\Response_war_exploded\WEB-INF\c.txt
+        String a = context.getRealPath("/WEB-INF/classes/a.txt");//src目录下的资源访问
+        System.out.println(a);
+        //C:\Users\HK\IdeaProjects\Test\out\artifacts\Response_war_exploded\WEB-INF\classes\a.txt
+        //src下的文件经过编译后会被放到WEB-INF/classes文件下。
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request,response);
+    }
+}
+```
 
 
 
