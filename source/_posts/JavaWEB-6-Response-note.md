@@ -546,28 +546,120 @@ public class ServletContextDemo4 extends HttpServlet {
 
 
 
-# 案例
-* 文件下载需求
-	1. 页面显示超链接
-	2. 点击超链接后弹出下载提示框
-	3. 完成图片文件下载
+## 案例：文件下载
+### 文件下载需求
 
-* 分析：
-	1. 超链接指向的资源如果能够被浏览器解析，则在浏览器中展示，如果不能解析，则弹出下载提示框。不满足需求
-	2. 任何资源都必须弹出下载提示框
-	3. 使用响应头设置资源的打开方式：
-		* content-disposition:attachment;filename=xxx
+1. 页面显示超链接；
+2. 点击超链接后弹出下载提示框；
+3. 完成图片文件下载。
 
-* 步骤：
-	1. 定义页面，编辑超链接href属性，指向Servlet，传递资源名称filename
-	2. 定义Servlet
-		1. 获取文件名称
-		2. 使用字节输入流加载文件进内存
-		3. 指定response的响应头： content-disposition:attachment;filename=xxx
-		4. 将数据写出到response输出流
+### 分析
 
-* 问题：
-	* 中文文件问题
-		* 解决思路：
-			1. 获取客户端使用的浏览器版本信息
-			2. 根据不同的版本信息，设置filename的编码方式不同
+1. 未设置过的超链接指向的资源如果能够被浏览器解析，则在浏览器中展示，如图片，如果不能解析，则弹出下载提示框，如视频。不满足需求；
+2. 要求任何资源都必须弹出下载提示框；
+3. 使用响应头设置资源的打开方式。核心代码：`content-disposition:attachment;filename=xxx`
+
+### 使用步骤
+
+1. 定义页面，编辑超链接href属性，指向Servlet，传递资源名称filename
+2. 定义Servlet
+	1. 获取文件名称；
+	2. 使用字节输入流加载文件进内存；
+	3. 指定response的响应头： `content-disposition:attachment;filename=xxx`；
+	4. 将数据写出到response输出流。
+
+### 中文文件乱码问题
+
+1. 获取客户端使用的浏览器版本信息；
+2. 根据不同的版本信息，设置filename的编码方式不同。
+
+核心代码
+
+1. 下载的页面；
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <title>下载练习</title>
+   </head>
+   <body>
+   <a href="/today/downloadServlet?filename=2.jpg">图片下载</a>
+   <a href="/today/downloadServlet?filename=九尾.jpg">中文图片下载</a>
+   <a href="/today/downloadServlet?filename=1.avi">视频下载</a>
+   </body>
+   </html>
+   ```
+
+2. 实现的Servlet；
+
+   ```java
+   package io.gitee.hek97.web.download;
+   
+   //省略导包代码
+   
+   @WebServlet("/downloadServlet")
+   public class DownloadServlet extends HttpServlet {
+       @Override
+       protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+           //1.通过获取请求参数，获取文件名称
+           String filename = request.getParameter("filename");
+           //2.使用字节输入流加载文件进内存
+           //2.1找到文件的真实路径
+           ServletContext ServletContext = this.getServletContext();
+           String realPath = ServletContext.getRealPath("/img/" + filename);
+           //2.2用字节流关联
+           FileInputStream fis = new FileInputStream(realPath);
+           //3.设置response的响应头
+           //3.1设置响应头类型content-type
+           String mimeType = ServletContext.getMimeType(filename);//获取文件的类型
+           response.setHeader("content-type",mimeType);
+           //解决中文乱码问题
+           //1.获取user-agent中的浏览器信息
+           String agent = request.getHeader("user-agent");
+           //2.使用工具类解决中文乱码问题，返回设置好格式的字符串
+           filename = DownLoadUtils.getFileName(agent, filename);
+           //3.2设置响应头content-disposition以附件的形式打开，也就是下载
+           response.setHeader("content-disposition","attachment;filename="+filename);
+           //4.将输出流的数据写出到输出流中
+           ServletOutputStream sos = response.getOutputStream();
+           byte[] buff = new byte[1024 * 8];
+           int len =0;
+           while(((len=fis.read(buff))!=-1)){
+               sos.write(buff,0,len);
+           }
+           fis.close();//g
+       }
+   
+       @Override
+       protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+           this.doPost(request,response);
+       }
+   }
+   ```
+
+   
+
+3. 中文乱码的工具类。
+
+   ```java
+   package io.gitee.hek97.web.utils;
+   
+   import java.io.UnsupportedEncodingException;
+   
+   public class DownLoadUtils {
+       public static String getFileName(String agent, String filename) throws UnsupportedEncodingException {
+           // 针对IE或者以IE为内核的浏览器：
+           if (agent.contains("MSIE") || agent.contains("Trident")) {
+               filename = java.net.URLEncoder.encode(filename, "UTF-8");
+           } else {
+               // 非IE浏览器的处理：
+               filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+           }
+           return filename;
+       }
+   }
+   ```
+
+   
