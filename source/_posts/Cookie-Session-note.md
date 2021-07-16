@@ -234,285 +234,392 @@ response.addCookie(c);
 ### 代码实现
 
 ```java
-package cn.itcast.cookie;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-/**
- 在服务器中的Servlet判断是否有一个名为lastTime的cookie
- 1. 有：不是第一次访问
-	 1. 响应数据：欢迎回来，您上次访问时间为:2018年6月10日11:50:20
-	 2. 写回Cookie：lastTime=2018年6月10日11:50:01
- 2. 没有：是第一次访问
-	 1. 响应数据：您好，欢迎您首次访问
-	 2. 写回Cookie：lastTime=2018年6月10日11:50:01
- */
-
+package io.gitee.hek97.cookie;
+//去掉导包代码
 @WebServlet("/cookieTest")
 public class CookieTest extends HttpServlet {
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//设置响应的消息体的数据格式以及编码
-		response.setContentType("text/html;charset=utf*8");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1.设置响应编码
+        response.setContentType("text/html;charset=utf-8");
+        //2.从浏览器获取Cookie的数组
+        Cookie[] cs = request.getCookies();
+        //3.判断数组中是否存在Cookie内容
+        //3.1存在Cookie内容
+        if (cs != null && cs.length > 0) {
+            //4.设置标签判断是否存在名为lastTime的cookie，然后遍历Cookie数组
+            boolean flag=false;
+            for (Cookie c : cs) {
+                //5.判断是否存在名为lastTime的cookie
+                //5.1存在名为lastTime的cookie
+                if (c.getName().equals("lastTime")) {
+                    //标签变为真
+                    flag=true;
+                    //5.1.1输出上次登录时间
+                    response.getWriter().write("欢迎你，你上次登录的时间为：" + URLDecoder.decode(c.getValue()));
+                    //5.1.2调用getCookie()的方法获取经过处理后的当前时间
+                    String nowTime = getCookie();
+                    //5.1.3将当前的时间存到名为lastTime的cookie中，对上次登录的时间进行更新
+                    c.setValue(nowTime);
+                    //5.1.4更新名为lastTime的cookie的值
+                    response.addCookie(c);
+                    //5.1.5停止当前循环
+                    break;
+                }
+            }
+            //5.2如果标签为假，不存在名为lastTime的cookie，用户首次登录
+            if(flag==false){
+                firstTime(response);
+            }
+        }
+        //不存在Cookie内容，用户首次登录
+        else {
+            firstTime(response);
+        }
+    }
 
-		//1.获取所有Cookie
-		Cookie[] cookies = request.getCookies();
-		boolean flag = false;//没有cookie为lastTime
-		//2.遍历cookie数组
-		if(cookies != null && cookies.length > 0){
-			for (Cookie cookie : cookies) {
-				//3.获取cookie的名称
-				String name = cookie.getName();
-				//4.判断名称是否是：lastTime
-				if("lastTime".equals(name)){
-					//有该Cookie，不是第一次访问
-
-					flag = true;//有lastTime的cookie
-
-					//设置Cookie的value
-					//获取当前时间的字符串，重新设置Cookie的值，重新发送cookie
-					Date date  = new Date();
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
-					String str_date = sdf.format(date);
-					System.out.println("编码前："+str_date);
-					//URL编码
-					str_date = URLEncoder.encode(str_date,"utf*8");
-					System.out.println("编码后："+str_date);
-					cookie.setValue(str_date);
-					//设置cookie的存活时间
-					cookie.setMaxAge(60 * 60 * 24 * 30);//一个月
-				response.addCookie(cookie);
-
-					//响应数据
-					//获取Cookie的value，时间
-					String value = cookie.getValue();
-					System.out.println("解码前："+value);
-					//URL解码：
-					value = URLDecoder.decode(value,"utf*8");
-					System.out.println("解码后："+value);
-				response.getWriter().write("<h1>欢迎回来，您上次访问时间为:"+value+"</h1>");
-
-					break;
-
-				}
-			}
-		}		
-		if(cookies == null || cookies.length == 0 || flag == false){
-			//没有，第一次访问
-
-			//设置Cookie的value
-			//获取当前时间的字符串，重新设置Cookie的值，重新发送cookie
-			Date date  = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
-			String str_date = sdf.format(date);
-			System.out.println("编码前："+str_date);
-			//URL编码
-			str_date = URLEncoder.encode(str_date,"utf*8");
-			System.out.println("编码后："+str_date);
-
-			Cookie cookie = new Cookie("lastTime",str_date);
-			//设置cookie的存活时间
-			cookie.setMaxAge(60 * 60 * 24 * 30);//一个月
-			response.addCookie(cookie);
-
-			response.getWriter().write("<h1>您好，欢迎您首次访问</h1>");
-	}
-
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.doPost(request, response);
-	}
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request, response);
+    }
+    /**
+     * 用户首次登录的方法
+     * @param response lastTime的Cookie
+     * @throws IOException
+     */
+    private void firstTime(HttpServletResponse response) throws IOException {
+        //1.输出首次登录内容
+        response.getWriter().write("欢迎你，这是你的首次登录");
+        //2.调用getCookie()的方法获取经过处理后的当前时间
+        String nowTime = getCookie();
+        //3.生成cookie
+        Cookie lastTime = new Cookie("lastTime", nowTime);
+        //4.设置过期时间为一个月
+        lastTime.setMaxAge(60*60*24*30);
+        //5.添加名为lastTime的cookie到浏览器
+        response.addCookie(lastTime);
+    }
+    /**
+     * 获取当前的时间
+     * @return 处理后的当前时间
+     * @throws UnsupportedEncodingException
+     */
+    private String getCookie() throws UnsupportedEncodingException {
+        //1.获取当前时间戳
+        Date date = new Date();
+        //2.对时间进行格式化
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy年MM月dd日 HH:mm:ss");
+        String formatTime = sdf.format(date);
+        //3.将格式化后的时间进行URL编码，防止乱码
+        String nowTime = URLEncoder.encode(formatTime);
+        return nowTime;
+    }
 }
-
 ```
 
 # JSP：入门学习
 
-1. 概念：
-	* Java Server Pages： java服务器端页面
-		1. 可以理解为：一个特殊的页面，**其中既可以指定定义html标签，又可以定义java代码**
-		2. 作用：用于简化书写！！！
+## 概念
+
+`Java Server Pages`(java服务器端页面)可以理解为，一个特殊的页面；**其中既可以指定定义html标签，又可以定义java代码**，作用是用于简化书写，减少写过多的类，并更好的实现页面的交互功能。
+
+## 原理
+
+JSP本质上就是一个Servlet。	
+
+![](https://pic.imgdb.cn/item/60f0f4205132923bf847ca23.jpg)
+
+### 解析
+
+1. 启动一个JavaWEB项目，找到控制台中`Using CATALINA_BASE`中的路径   `C:\Users\HK\AppData\Local\JetBrains\IntelliJIdea2020.1\tomcat\Tomcat_8_5_311_Test`；
+
+   ![](https://pic.imgdb.cn/item/60f0f6765132923bf854f2fa.jpg)
+
+2. 打开该路径，在work路径下可以找到`.jsp`文件被转化的后的`.java`文件和编译后的`.class`文件；
+
+   ![](https://pic.imgdb.cn/item/60f0f8015132923bf85db5fe.jpg)
+
+3. 打开被转化后的`.java`文件，发现该类继承了`org.apache.jasper.runtime.HttpJspBase`类；
+
+   ![](https://pic.imgdb.cn/item/60f0f8f65132923bf8637176.jpg)
+
+4. 打开Tomcat的源码找到该类，可以发现该类继承了HttpServlet，因此JSP本质上就是一个Servlet。
+
+   ![源码中的该类](https://pic.imgdb.cn/item/60f0fa905132923bf86ca0f6.jpg)
+
+   ![继承了HttpServlet](https://pic.imgdb.cn/item/60f0fb025132923bf86f38cf.jpg)
+
+## JSP的脚本
+
+JSP定义Java代码的方式，主要有下面三种：
+
+* `<%  代码 %>`：定义的java代码，相当于在service方法中。service方法中可以定义什么，该脚本中就可以定义什么。
+* `<%! 代码 %>`：定义的java代码，相当于在jsp转换后的java类的成员位置（成员变量、成员方法、静态代码块），比较少用。
+* `<%= 代码 %>`：定义的java代码，会输出到页面上。输出语句中可以定义什么，该脚本中就可以定义什么。
+
+### 代码解析
+
+```jsp
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+  <head>
+    <title>$Title$</title>
+  </head>
+  <body>
+      <%
+      //写入到service方法中
+        System.out.println("hello jsp");
+        int i = 5;
+        String contextPath = request.getContextPath();
+        System.out.print(contextPath);
+      %>
+
+      <%! int i = 3;//相当于声明java的成员变量 %> 
+      
+      <%= i //定义的java代码的值，会输出到页面上，相当于out.print(i) %>
+  </body>
+</html>
+```
+
+## JSP的内置对象
+
+在jsp页面中不需要获取和创建，可以直接使用的对象，一共有9个内置对象。
+
+目前主要学习以下3个：
+1. request
+
+2. response
+
+3. out：字符输出流对象，可以将数据输出到页面上，和`response.getWriter()`类似。
+
+  ```jsp
+  <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+  <html>
+    <head>
+      <title>输出流区别</title>
+    </head>
+    <body>
+    <%!int i =8;//定义成员变量%>
+    <%-- 定义的java代码的值，会输出到页面上，相当于out.print(i) --%>
+    <%= i %//输出成员变量的值>
+    <% out.write("out");%>
+    <% response.getWriter().write("response");%>
+    <%-- 页面上的输出为 response 8 out --%>     
+    </body>
+  </html>
+  ```
+
+  > `response.getWriter()`和`out.write()`的区别主要为，在tomcat服务器真正给客户端做出响应之前，会先找response缓冲区数据，再找out缓冲区数据。因此`response.getWriter()`数据输出永远在`out.write()`之前。在实际使用中为避免混乱一般只用`out.write()`。
+
+## 案例:改造Cookie案例
+
+这种方式的代码很乱，后期会更多学习别的方式来简化。
+
+```java
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.net.URLDecoder" %>
+<%@ page import="java.io.IOException" %>
+<%@ page import="java.io.UnsupportedEncodingException" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>$Title$</title>
+</head>
+<body>
+<%
+    //1.设置响应编码
+    response.setContentType("text/html;charset=utf-8");
+    //2.从浏览器获取Cookie的数组
+    Cookie[] cs = request.getCookies();
+    //3.判断数组中是否存在Cookie内容
+    //3.1存在Cookie内容
+    if (cs != null && cs.length > 0) {
+        //4.设置标签判断是否存在名为lastTime的cookie，然后遍历Cookie数组
+        boolean flag = false;
+        for (Cookie c : cs) {
+            //5.判断是否存在名为lastTime的cookie
+            //5.1存在名为lastTime的cookie
+            if (c.getName().equals("lastTime")) {
+                //标签变为真
+                flag = true;
+                //5.1.1输出上次登录时间
+                %>欢迎你，你上次登录的时间为<%= URLDecoder.decode(c.getValue())%><%
+                //5.1.2调用getCookie()的方法获取经过处理后的当前时间
+                String nowTime = getCookie();
+                //5.1.3将当前的时间存到名为lastTime的cookie中，对上次登录的时间进行更新
+                c.setValue(nowTime);
+                //5.1.4更新名为lastTime的cookie的值
+                response.addCookie(c);
+                //5.1.5停止当前循环
+                break;
+            }
+        }
+        //5.2如果标签为假，不存在名为lastTime的cookie，用户首次登录
+        if (flag == false) {
+            firstTime(response);
+            %>欢迎你，这是你的首次登录<%
+        }
+    }
+    //不存在Cookie内容，用户首次登录
+    else {
+        firstTime(response);
+        %>欢迎你，这是你的首次登录<%
+        }
+%>
+<%!
+    /**
+     * 用户首次登录的方法
+     * @param response lastTime的Cookie
+     * @throws IOException
+     */
+    private void firstTime(HttpServletResponse response) throws IOException {
+        //1.调用getCookie()的方法获取经过处理后的当前时间
+        String nowTime = getCookie();
+        //2.生成cookie
+        Cookie lastTime = new Cookie("lastTime", nowTime);
+        //3.设置过期时间为一个月
+        lastTime.setMaxAge(60 * 60 * 24 * 30);
+        //4.添加名为lastTime的cookie到浏览器
+        response.addCookie(lastTime);
+    }
+%><%!
+    /**
+     * 获取当前的时间
+     * @return 处理后的当前时间
+     * @throws UnsupportedEncodingException
+     */
+    private String getCookie() throws UnsupportedEncodingException {
+        //1.获取当前时间戳
+        Date date = new Date();
+        //2.对时间进行格式化
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern("yyyy年MM月dd日 HH:mm:ss");
+        String formatTime = sdf.format(date);
+        //3.将格式化后的时间进行URL编码，防止乱码
+        String nowTime = URLEncoder.encode(formatTime);
+        return nowTime;
+    }
+%>
+</body>
+</html>
+```
+
+# Session
+
+## 概念
+
+服务器端会话技术，在一次会话的多次请求间共享数据，将数据保存在服务器端的对象中。
+
+## 快速入门
+
+### 使用步骤
+
+1. 获取HttpSession对象；
+
+   `HttpSession session = request.getSession();`
+
+2. 使用HttpSession对象。
+
+   `Object getAttribute(String name)`：获取Session数据；
+
+   `void setAttribute(String name, Object value)`：存储数据；
+
+   `void removeAttribute(String name)`：移除Session。
+
+### 核心代码
+
+1. 获取HttpSession对象：
 	
-2. 原理
+	```java
+	package io.gitee.hek97.session;
+	//去掉导包代码
+	@WebServlet("/sessionDemo1")
+	public class SessionDemo1 extends HttpServlet {
+	    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	        //1.获取session
+	        HttpSession session = request.getSession();
+	        //2.存储数据
+	        session.setAttribute("msg","hello session");
+	    }
 	
-	* JSP本质上就是一个Servlet
-	
-3. `JSP`的脚本：JSP定义Java代码的方式
-	* `<%  代码 %>`：定义的java代码，在service方法中。service方法中可以定义什么，该脚本中就可以定义什么。
-	* `<%! 代码 %>`：定义的java代码，在jsp转换后的java类的成员位置（成员变量、成员方法、静态代码块），比较少用。
-	* `<%= 代码 %>`：定义的java代码，会输出到页面上。输出语句中可以定义什么，该脚本中就可以定义什么。
-	
-	```jsp
-	<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-	<html>
-	  <head>
-	    <title>$Title$</title>
-	  </head>
-	  <body>
-	
-	
-	
-	      <%
-	         //写入到service方法中
-	         
-	        System.out.println("hello jsp");
-	        int i = 5;
-	
-	        String contextPath = request.getContextPath();
-	        System.out.print(contextPath);
-	
-	      %>
-	
-	      <%!
-	        int i = 3;//相当于声明java的成员变量
-	      %>
-	      <%= i %>//out.print(i)
-	
-	
-	      System.out.println("hello jsp");
-	      <h1>hi~ jsp!</h1>
-	
-	      <% response.getWriter().write("response....."); %>
-	  </body>
-	</html>
+	    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	        this.doPost(request, response);
+	    }
+	}
 	```
 	
 	
 	
-4. JSP的内置对象：
-	* 在jsp页面中不需要获取和创建，可以直接使用的对象
-	* jsp一共有9个内置对象。
-	* 今天学习3个：
-		1. request
-		2. response
-		3. out：字符输出流对象。可以将数据输出到页面上。和response.getWriter()类似
-			* response.getWriter()和out.write()的区别：
-				1. 原因：在tomcat服务器真正给客户端做出响应之前，会先找response缓冲区数据，再找out缓冲区数据。
-				2. 结论：response.getWriter()数据输出永远在out.write()之前
+2. 使用HttpSession对象：
+
+   ```java
+   package io.gitee.hek97.session
+   //去掉导包代码
+   @WebServlet("/sessionDemo2")
+   public class SessionDemo2 extends HttpServlet {
+       protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+           //1.获取session
+           HttpSession session = request.getSession();
+           //2.获取数据
+           Object msg = session.getAttribute("msg");
+           System.out.println(msg);
+       }
+   
+       protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+           this.doPost(request, response);
+       }
+   }
+   ```
+
+## 保证获取同一个session对象的原理
+
+Session的实现是依赖于Cookie的。在服务器的一次会话范围内，第一次获取Session对象时，不存在键为JSESSIONID的Cooike，这时会在内存中创建一个新的Session对象，并拥有一个键为JSESSIONID，值为随机数的Cooike对象，然后把该Cookie对象响应给客户端保存，再次获取Session对象时，请求头中存在键为JSESSIONID的Cookie对象，然后服务器会根据该Cookie对象的值获取到第一次使用的Session对象并使用该Session对象，以此保证在同一次会话范围内，获取同一个Session对象。
+
+![](https://pic.imgdb.cn/item/60f13fe85132923bf8710382.jpg)
+
+## 更多知识
+
+1. 当客户端关闭后，服务器不关闭，两次获取session是否为同一个？
+
+  默认情况下不是。如果需要相同，则可以创建Cookie，键为JSESSIONID，设置最大存活时间，让cookie持久化保存。
+
+  ```java
+   Cookie c = new Cookie("JSESSIONID",session.getId());
+   c.setMaxAge(60*60);
+   response.addCookie(c);
+  ```
+
+2. 客户端不关闭，服务器关闭后，两次获取的session是同一个吗？
+
+  不是同一个，但是要确保数据不丢失。tomcat自动完成以下工作：
+  1. session的钝化：
+  	* 在服务器正常关闭之前，将session对象系列化到硬盘上
+  2. session的活化：
+  	* 在服务器启动后，将session文件转化为内存中的session对象即可。
+
+3. session什么时候被销毁？
+	1. 服务器关闭时调用`invalidate() `方法进行销毁session对象。
 	
-5. 案例:改造Cookie案例
-
-# Session：主菜
-
-1. 概念：服务器端会话技术，在一次会话的多次请求间共享数据，将数据保存在服务器端的对象中。HttpSession
-2. 快速入门：
-	1. 获取HttpSession对象：
+	3. session默认失效时间为30分钟，可修改tomcat服务器安装目录下的/conf/web.xml文件，修改如下代码：
 		
 		```java
-		//SessionDemo1
-		package cn.itcast.session;
-		
-		import javax.servlet.ServletException;
-		import javax.servlet.annotation.WebServlet;
-		import javax.servlet.http.HttpServlet;
-		import javax.servlet.http.HttpServletRequest;
-		import javax.servlet.http.HttpServletResponse;
-		import javax.servlet.http.HttpSession;
-		import java.io.IOException;
-		
-		@WebServlet("/sessionDemo1")
-		public class SessionDemo1 extends HttpServlet {
-		    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		        //使用session共享数据
-		
-		        //1.获取session
-		        HttpSession session = request.getSession();
-		        //2.存储数据
-		        session.setAttribute("msg","hello session");
-		    }
-		
-		    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		        this.doPost(request, response);
-		    }
-		}
-		
-		```
-		
-		
-		
-	2. 使用HttpSession对象：
-	
-	  ```java
-	  //SessionDemo2
-	  import javax.servlet.ServletException;
-	  import javax.servlet.annotation.WebServlet;
-	  import javax.servlet.http.HttpServlet;
-	  import javax.servlet.http.HttpServletRequest;
-	  import javax.servlet.http.HttpServletResponse;
-	  import javax.servlet.http.HttpSession;
-	  import java.io.IOException;
-	  
-	  @WebServlet("/sessionDemo2")
-	  public class SessionDemo2 extends HttpServlet {
-	      protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	          //使用session获取数据
-	  
-	          //1.获取session
-	          HttpSession session = request.getSession();
-	          //2.获取数据
-	          Object msg = session.getAttribute("msg");
-	          System.out.println(msg);
-	      }
-	  
-	      protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	          this.doPost(request, response);
-	      }
-	  }
-	  ```
-	
-3. 原理
-	
-	* Session的实现是依赖于Cookie的。
-	
-	![Session原理](Cookie-Session-note\Session原理.bmp)
-4. 细节：
-	1. 当客户端关闭后，服务器不关闭，两次获取session是否为同一个？
-		* 默认情况下。不是。
-		* 如果需要相同，则可以创建Cookie,键为JSESSIONID，设置最大存活时间，让cookie持久化保存。
-				 Cookie c = new Cookie("JSESSIONID",session.getId());
-	         c.setMaxAge(60*60);
-	         response.addCookie(c);
+	   //apache-tomcat-8.5.31/conf/web.xml
+	   <session*config>
+	   	<session*timeout>30</session*timeout>
+	   </session*config>
+	   ```
 
-	2. 客户端不关闭，服务器关闭后，两次获取的session是同一个吗？
-		* 不是同一个，但是要确保数据不丢失。tomcat自动完成以下工作
-			1. session的钝化：
-				* 在服务器正常关闭之前，将session对象系列化到硬盘上
-			2. session的活化：
-				* 在服务器启动后，将session文件转化为内存中的session对象即可。
-		
-	3. session什么时候被销毁？
-		1. 服务器关闭
-		
-		2. session对象调用`invalidate() `。
-		
-		3. session默认失效时间 30分钟
-				选择性配置修改	
-			
-		   ```java
-		   //apache-tomcat-8.5.31/conf/web.xml
-		   <session*config>
-		   	<session*timeout>30</session*timeout>
-		   </session*config>
-		   ```
-	
- 5. session的特点
-	 1. session用于存储一次会话的多次请求的数据，存在服务器端
-	 2. session可以存储任意类型，任意大小的数据
+## session的特点
 
- 6. session与Cookie的区别：
-	 1. session存储数据在服务器端，Cookie在客户端
-	 2. session没有数据大小限制，Cookie有
-	 3. session数据安全，Cookie相对于不安全
+1. session用于存储一次会话范围内多次请求的数据，存在服务器端；
+ 2. session可以存储任意类型，任意大小的数据。
+
+## session与Cookie的区别
+
+1. session存储数据在服务器端，Cookie在客户端；
+ 2. session没有数据大小限制，Cookie有。
+ 3. session数据安全，Cookie相对于不安全。
 
 # 案例：验证码
 
