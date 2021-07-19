@@ -574,7 +574,7 @@ JSP定义Java代码的方式，主要有下面三种：
 
 ## 保证获取同一个session对象的原理
 
-Session的实现是依赖于Cookie的。在服务器的一次会话范围内，第一次获取Session对象时，不存在键为JSESSIONID的Cooike，这时会在内存中创建一个新的Session对象，并拥有一个键为JSESSIONID，值为随机数的Cooike对象，然后把该Cookie对象响应给客户端保存，再次获取Session对象时，请求头中存在键为JSESSIONID的Cookie对象，然后服务器会根据该Cookie对象的值获取到第一次使用的Session对象并使用该Session对象，以此保证在同一次会话范围内，获取同一个Session对象。
+Session的实现是依赖于Cookie的。在服务器的一次会话范围内，第一次获取Session对象时，不存在键为JSESSIONID的Cooike，这时会在内存中创建一个新的Session对象，并拥有一个键为JSESSIONID，值为随机数的Cooike对象，然后把该Cookie对象响应给客户端保存，再次获取Session对象时，客户端发送的请求头中存在键为JSESSIONID的Cookie对象，然后服务器会根据该Cookie对象的值获取到第一次使用的Session对象并使用该Session对象，以此保证在同一次会话范围内，获取同一个Session对象。
 
 ![](https://pic.imgdb.cn/item/60f13fe85132923bf8710382.jpg)
 
@@ -592,23 +592,28 @@ Session的实现是依赖于Cookie的。在服务器的一次会话范围内，�
 
 2. 客户端不关闭，服务器关闭后，两次获取的session是同一个吗？
 
-  不是同一个，但是要确保数据不丢失。tomcat自动完成以下工作：
-  1. session的钝化：
-  	* 在服务器正常关闭之前，将session对象系列化到硬盘上
-  2. session的活化：
-  	* 在服务器启动后，将session文件转化为内存中的session对象即可。
+   - 不是同一个，但是要确保数据不丢失。tomcat自动完成以下工作：
+
+     1. session的钝化：
+
+       在服务器正常关闭之前，将session对象序列化到硬盘上。
+
+     2. session的活化：
+
+       在服务器启动后，将session文件转化为内存中的session对象即可。
+     
+     > 只有单独使用tomcat服务器才起作用，在idea中不能完成session的活化。
 
 3. session什么时候被销毁？
-	1. 服务器关闭时调用`invalidate() `方法进行销毁session对象。
-	
-	3. session默认失效时间为30分钟，可修改tomcat服务器安装目录下的/conf/web.xml文件，修改如下代码：
-		
-		```java
-	   //apache-tomcat-8.5.31/conf/web.xml
-	   <session*config>
-	   	<session*timeout>30</session*timeout>
-	   </session*config>
-	   ```
+
+   服务器关闭时调用`invalidate() `方法进行销毁session对象。session默认失效时间为30分钟，可修改tomcat服务器安装目录下的/conf/web.xml文件，修改如下代码：
+
+```java
+ //apache-tomcat-8.5.31/conf/web.xml
+ <session*config>
+ 	<session*timeout>30</session*timeout>
+ </session*config>
+```
 
 ## session的特点
 
