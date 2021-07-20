@@ -8,8 +8,6 @@ category:
 type: artitalk
 cover: https://cdn.pixabay.com/photo/2021/07/02/09/39/cockpit-6381367_1280.jpg
 
-
-
 ---
 
 # HTTP协议

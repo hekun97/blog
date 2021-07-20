@@ -1,3 +1,15 @@
+---
+title: Cookie-JSP-Session
+date: 2021-07-120 17:26:52
+tags: 
+- Java Cookie JSP Session
+category:
+- JavaWEB
+type: artitalk
+cover: https://cdn.pixabay.com/photo/2021/07/02/09/39/cockpit-6381367_1280.jpg
+
+---
+
 # 会话技术
 
 ## 会话的概念
