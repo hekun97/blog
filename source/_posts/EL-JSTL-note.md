@@ -1,38 +1,72 @@
-# JSP
+---
+title: JSP进阶-MVC-EL表达式-JSTL
+date: 2021-07-21 10:14:52
+tags: 
+- Java JSP MVC EL JSTL
+category:
+- JavaWEB
+type: artitalk
+cover: https://cdn.pixabay.com/photo/2021/07/02/09/39/cockpit-6381367_1280.jpg
+---
 
-## 指令
+# JSP进阶
 
-  * 作用：用于配置JSP页面，导入资源文件 
-  * 格式：`<%@ 指令名称 属性名1=属性值1 属性名2=属性值2 ... %>`
-  * 分类（三类）：
-    1. `page`： 配置`JSP`页面的
-    	* `contentType`：等同于`response.setContentType()`
-    		1. 设置响应体的`mime`类型以及字符集
-    		2. 设置当前`jsp`页面的编码（只能是高级的IDE才能生效，如果使用低级工具，则需要设置`pageEncoding`属性设置当前页面的字符集）
-    		3. 例子：`<%@ page contentType="text/html;charset=UTF-8" language="java" %>`
-    	* `import`：导包
-    	  * 例子：`<%@ page import="java.util.List" %>`
-    	* `errorPage`：当前页面发生异常后，会自动跳转到指定的错误页面
-    	* `isErrorPage`：标识当前页面是否是错误页面。
-    		* `true`：是，可以使用内置对象exception
-    		* `false`：否。默认值。不可以使用内置对象`exception`
-    2. `include`	： 页面包含的。导入页面的资源文件
-    	* 例子：`<%@include file="top.jsp"%>`
-    3. `taglib`	： 导入资源（标签库）
-       1. `prefix`：前缀，自定义的
-       2. 例子：`<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>`
+<a href="{% post_path 'JavaWEB-7-Cookie-JSP-Session' %}#JSP入门">JSP入门</a>学习可在之前文章回顾。
 
-## 注释
+## JSP的指令
+
+### 作用
+
+用于配置JSP页面，导入资源文件。
+
+### 格式
+
+`<%@ 指令名称 属性名1=属性值1 属性名2=属性值2 ... %>`，实例：`<%@ page contentType="text/html;charset=UTF-8" language="java" %>`。
+
+### 指令名称分类
+
+共三类，包括page、include和taglib。
+
+#### page
+
+ 配置JSP页面的，以下为page指令常用的属性名：
+
+1. contentType：等同于`response.setContentType()`
+	* 设置响应体的mime类型以及字符集；
+	* 设置当前jsp页面的编码（只能是高级的IDE才能生效，如果使用低级工具，则需要设置pageEncoding属性设置当前页面的字符集）；
+	* 例子：`<%@ page contentType="text/html;charset=UTF-8" language="java" %>`。
+2. import：导入java代码需使用的包
+   - 例子：`<%@ page import="java.util.List" %>`。
+
+3. errorPage：当前页面发生异常后，会自动跳转到指定的错误页面。
+4. isErrorPage：标识当前页面是否是错误页面。
+	* true：是，可以使用内置对象exception；
+	* false：否。默认值。不可以使用内置对象exception。
+
+#### include
+
+导入页面的资源文件，例子：`<%@include file="top.jsp"%>`。
+
+#### taglib
+
+导入资源（标签库），例子：`<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>`。
+
+> 这里的prefix表示之后使用该标签库的前缀，是自定义的。
+
+## JSP的注释
 
 1. html注释：
-	`<!-- -->`:只能注释html代码片段
-2. jsp注释：推荐使用
-	`<%-- --%>`：可以注释所有
+	`<!-- -->`：只能注释html代码片段。
+2. jsp注释：
+	`<%-- --%>`：可以注释所有，包括java和html等，一般推荐使用这种方式。
 
-## 内置对象
+## JSP的内置对象
 
-1. 在jsp页面中不需要创建，直接使用的对象
-2. 一共有9个：
+在jsp页面中不需要创建，直接使用的对象。
+
+### 9个内置对象
+
+JSP的内置对象共9个，如下表：
 
 | 变量名      | 真实类型            | 作用                                                     |
 | ----------- | ------------------- | -------------------------------------------------------- |
@@ -49,24 +83,29 @@
 
   	 
 
-# MVC：开发模式	
+# MVC
 
-## `jsp`演变历史
+是一种常用的开发模式。
 
-1. 早期只有`servlet`，只能使用`response`输出标签数据，非常麻烦
-2. 后来使用`jsp`，简化了`Servlet`的开发，如果过度使用`jsp`，在`jsp`中即写大量的`java`代码，又写`html`代码，造成难于维护，难于分工协作
-3. 再后来，`java`的`web`开发，借鉴`mvc`开发模式，使得程序的设计更加合理性	
+## jsp演变历史
 
-## `MVC`
+1. 早期只有servlet，只能使用response输出标签数据，非常麻烦；
+2. 后来使用jsp，简化了Servlet的开发，但是过度使用jsp，在jsp中即写大量的java代码，又写html代码，会造成代码难于维护，不利于分工协作；
+3. 再后来，java的web开发，借鉴mvc开发模式，使得程序的设计更加合理性	。
+
+## MVC的概念
 
 1. `M`：`Model`，模型。`JavaBean`
-	* 完成具体的业务操作，如：查询数据库，封装对象
+
+  用于完成具体的业务操作，如：查询数据库，封装对象。
 2. `V`：`View`，视图。`JSP`
-	* 展示数据
+
+  用于展示数据给用户。
 3. `C`：`Controller`，控制器。`Servlet`
-	* 获取用户的输入
-	* 调用模型
-	* 将数据交给视图进行展示
+	
+	* 获取用户的输入；
+	* 调用模型；
+	* 将数据交给视图进行展示。
 
 ## MVC的优缺点
 
@@ -78,160 +117,222 @@
 
 # EL表达式
 
-1. 概念：`Expression Language `（表达式语言）
+## 概念
 
-2. 作用：替换和简化`jsp`页面中`java`代码的编写
+`Expression Language `（表达式语言）。
 
-3. 语法：`${表达式}`
+## 作用
 
-4. 注意：
-	* jsp默认支持el表达式的。如果要忽略el表达式
-		1. 设置`jsp`中`page`指令中：`isELIgnored="true" `忽略当前jsp页面中所有的el表达式
-		2. `\\${表达式}` ：忽略当前这个el表达式
+替换和简化`jsp`页面中`java`代码的编写
+
+## 语法格式
+
+格式为：`${表达式}`。
+
+> jsp默认支持el表达式的，如果要忽略el表达式：
+> 1. 设置`jsp`中`page`指令中：`isELIgnored="true" `忽略当前jsp页面中所有的el表达式；
+> 2. `\\${表达式}` ：忽略当前这个el表达式。
+
+## 使用
+
+### 用于运算
+
+包括算数运算符、比较运算符、逻辑运算符、空运算符。具体如下：
+
+1. 算数运算符：` + - * /(div) %(mod)`
+2. 比较运算符： `> < >= <= == !=`
+3. 逻辑运算符：` &&(and) ||(or) !(not)`
+4. 空运算符： `empty`
+
+  用于判断字符串、集合、数组对象是否为`null`或者长度是否为0。解析如下：
+
+  * `${empty list}`：表示判断字符串、集合、数组对象是否为`null`或者长度为0；
+  * `${not empty str}`：表示判断字符串、集合、数组对象是否不为`null `并且 长度>0。
+
+### 获取域对象中的值
+
+el表达式只能从域对象中获取值。具体如下：
+
+1. ${域名称.键名}：从指定域中获取指定键的值
+	* 域名称：
+		1. pageScope		    --> pageContext
+		2. requestScope 	   --> request
+		3. sessionScope 	   --> session
+		4. applicationScope   --> application（ServletContext）
+	* 示例：在request域中存储了`name=张三`；获取：`${requestScope.name}`。
 	
-5. 使用：
-	1. 运算：
-		* 运算符：
-			1. 算数运算符：` + - * /(div) %(mod)`
-			2. 比较运算符： `> < >= <= == !=`
-			3. 逻辑运算符：` &&(and) ||(or) !(not)`
-			4. 空运算符： `empty`
-				* 功能：用于判断字符串、集合、数组对象是否为`null`或者长度是否为0
-				* `${empty list}`:判断字符串、集合、数组对象是否为`null`或者长度为0
-				* `${not empty str}`:表示判断字符串、集合、数组对象是否不为`null `并且 长度>0
-	2. 获取值
-		1. el表达式只能从域对象中获取值
-		2. 语法：
-			1. ${域名称.键名}：从指定域中获取指定键的值
-				* 域名称：
-					1. `pageScope`		--> `pageContext`
-					2. `requestScope `	--> `request`
-					3. `sessionScope `	--> `session`
-					4. `applicationScope `--> `application（ServletContext）`
-				* 举例：在`request`域中存储了`name=张三`
-				* 获取：`${requestScope.name}`
-				
-			2. `${键名}`：表示依次从最小的域中查找是否有该键对应的值，直到找到为止。
-			
-			   例：`${name}`，先到`pageContext`中找是否有`name`，再到`request`中去找，直到找到为止。
+2. `${键名}`：表示依次从最小的域中查找是否有该键对应的值，直到找到为止。
 
-			3. 获取对象、List集合、Map集合的值
-  6. 对象：`${域名称.键名.属性名}`
-         本质上会去调用对象的getter方法
+   例：`${name}`，先到pageContext中找是否有name，再到request中去找，直到找到为止。
 
-        1. List集合：
-           * `${域名称.键名[索引]}`
-        2. Map集合：
-           * `${域名称.键名.key名称}`
-           * `${域名称.键名["key名称"]`
+   > 上述的域名称顺序也是默认查找的顺序。
 
-        ```jsp
-        <!-- el3.jsp -->
-        <%@ page import="cn.itcast.domain.User" %>
-        <%@ page import="java.util.*" %>
-        <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-        <html>
-        <head>
-            <title>el获取数据</title>
-        </head>
-        <body>
-        
-            <%
-                User user = new User();
-                user.setName("张三");
-                user.setAge(23);
-                user.setBirthday(new Date());
-        
-                request.setAttribute("u",user);
-        
-                List list = new ArrayList();
-                list.add("aaa");
-                list.add("bbb");
-                list.add(user);
-        
-                request.setAttribute("list",list);
-        
-        
-                Map map = new HashMap();
-                map.put("sname","李四");
-                map.put("gender","男");
-                map.put("user",user);
-        
-                request.setAttribute("map",map);
-        
-            %>
-        
-        <h3>el获取对象中的值</h3>
-        ${requestScope.u}<br>
-        
-        <%--
-            * 通过的是对象的属性来获取
-                * setter或getter方法，去掉set或get，在将剩余部分，首字母变为小写。
-                * setName --> Name --> name
-        --%>
-        
-            ${requestScope.u.name}<br>
-            ${u.age}<br>
-            ${u.birthday}<br>
-            ${u.birthday.month}<br>
-        
-            ${u.birStr}<br>
-        
-            <h3>el获取List值</h3>
-            ${list}<br>
-            ${list[0]}<br>
-            ${list[1]}<br>
-            ${list[10]}<br>
-        
-            ${list[2].name}
-        
-            <h3>el获取Map值</h3>
-            ${map.gender}<br>
-            ${map["gender"]}<br>
-            ${map.user.name}
-        
-        </body>
-        </html>
-        
-        ```
+### 获取对象、List集合、Map集合的值
 
-        
+可获取对象、List集合、Map集合的值，具体如下：
 
-        1. 隐式对象：
+ 1. 对象：`${域名称.键名.属性名}`
 
-           * el表达式中有11个隐式对象
+    > 本质上会去调用对象的getter方法
 
-           * pageContext：
+ 2. List集合：`${域名称.键名[索引]}`
 
-             1. 获取jsp其他八个内置对象
-                `${pageContext.request.contextPath}`：动态获取虚拟目录
+ 3. Map集合：
+    * `${域名称.键名.key名称}`
+    * `${域名称.键名["key名称"]`
 
-                ```jsp
-                <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-                <html>
-                <head>
-                    <title>el隐式对象</title>
-                </head>
-                <body>
-                
-                
-                    ${pageContext.request}<br>
-                    <h4>在jsp页面动态获取虚拟目录</h4>
-                    ${pageContext.request.contextPath}
-                    <from action = "${pageContext.request.contextPath}/loginServlet">
-                        使用示例
-                    </from>
-                
-                <%
-                    response.sendRedirect(request.getContextPath()+"/day17");
-                
-                %>
-                </body>
-                </html>
-                
-                ```
+代码演示如下：
 
-                
+1. User类型的JavaBean：
+
+   ```java
+   package cn.itcast.domain;
+   
+   import java.text.SimpleDateFormat;
+   import java.util.Date;
+   
+   public class User {
+       private String name;
+       private int age;
+       private Date birthday;
+   
+       public User(String name, int age, Date birthday) {
+           this.name = name;
+           this.age = age;
+           this.birthday = birthday;
+       }
+   
+       public User() {
+       }
+   
+       public String getBirStr(){
+           if(birthday != null){
+               //1.格式化日期对象
+               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+               //2.返回字符串即可
+               return sdf.format(birthday);
+           }else{
+               return "";
+           }
+       }
+   
+   
+       public String getName() {
+           return name;
+       }
+   
+       public void setName(String name) {
+           this.name = name;
+       }
+   
+       public int getAge() {
+           return age;
+       }
+   
+       public void setAge(int age) {
+           this.age = age;
+       }
+   
+       public Date getBirthday() {
+           return birthday;
+       }
+   
+       public void setBirthday(Date birthday) {
+           this.birthday = birthday;
+       }
+   }
+   ```
+
+2. JSP中EL表达式的使用：
+
+   ```jsp
+   <%@ page import="cn.itcast.domain.User" %>
+   <%@ page import="java.util.*" %>
+   <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+   <html>
+   <head>
+       <title>el获取数据</title>
+   </head>
+   <body>
+       <%	//1.设置对象
+           User user = new User();//获取JavaBean的User对象
+       	//设置user对象的值
+           user.setName("张三");
+           user.setAge(23);
+           user.setBirthday(new Date());
+           request.setAttribute("u",user);//共享数据
+   		//2.设置List集合
+           List list = new ArrayList();
+           list.add("aaa");
+           list.add("bbb");
+           list.add(user);
+           request.setAttribute("list",list);
+   		//3.设置Map集合
+           Map map = new HashMap();
+           map.put("sname","李四");
+           map.put("gender","男");
+           map.put("user",user);
+           request.setAttribute("map",map);
+       %>
+   
+       	<h3>1.el获取对象中的值</h3>
+   	<!--
+           通过的是对象中属性来获取。
+           setter或getter方法，去掉set或get，在将剩余部分，首字母变为小写。
+           过程：setName -- Name -- name
+   	-->
+           ${requestScope.u.name}<br>
+       	<!-- 通过默认顺序查找 -->
+           ${u.age}<br>
+           ${u.birthday}<br>
+           ${u.birthday.month}<br><!-- u.birthday是Date类型，可以调用GetMonth方法返回月份 -->
+       	${u.birStr}<br>
+   
+           <h3>2.el获取List集合中的值</h3>
+           ${list}<br>
+           ${list[0]}<br>
+           ${list[1]}<br>
+           ${list[10]}<br>
+       	${list[2].name}<!-- list[2]存储的User类型的user，可以调用GetName方法返回姓名-->
+   
+           <h3>3.el获取Map集合中的值</h3>
+           ${map.gender}<br>
+           ${map["gender"]}<br>
+           ${map.user.name}<!--map.user存储的Uesr类型的user，可以调用GetName方法返回姓名-->
+   </body>
+   </html>
+   ```
+
+## 隐式对象
+
+### pageContext
+
+用于获取jsp其他八个内置对象。常用的有`${pageContext.request.contextPath}`：动态获取虚拟目录。
+
+```jsp
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>el隐式对象</title>
+</head>
+<body>
+
+    ${pageContext.request}<br><!--获取request对象-->
+    ${pageContext.request.contextPath}<!--pageContext获取request对象后，使用getContextpath()方法实现在jsp页面动态获取虚拟目录-->
+    <h4>动态获取虚拟目录</h4>
+    <from action = "${pageContext.request.contextPath}/loginServlet">
+        使用示例
+    </from>
+<%
+    response.sendRedirect(request.getContextPath()+"资源路径");//java代码重定向动态获取虚拟目录
+
+%>
+</body>
+</html>
+
+```
+
+> el表达式中有11个隐式对象，将在后面进行学习。
 
 # JSTL
 
@@ -244,7 +345,7 @@
 3. 使用步骤：
   1. 导入`jstl`相关`jar`包
 
-     ![JSTL导jar包](https://raw.githubusercontent.com/hekun97/picture/main/typora202107/20/165742-172097.png)
+     ![JSTL导jar包](https://raw.githubusercontent.com/hekun97/picture/main/typora202107/21/170931-394261.png)
 
   2. 引入标签库：
 

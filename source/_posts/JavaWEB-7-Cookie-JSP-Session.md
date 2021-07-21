@@ -1,6 +1,6 @@
 ---
 title: Cookie-JSP-Session
-date: 2021-07-120 17:26:52
+date: 2021-07-20 17:26:52
 tags: 
 - Java Cookie JSP Session
 category:
@@ -328,7 +328,7 @@ public class CookieTest extends HttpServlet {
 }
 ```
 
-# JSP：入门学习
+# JSP入门
 
 ## 概念
 
