@@ -102,10 +102,11 @@ JSP的内置对象共9个，如下表：
 
   用于展示数据给用户。
 3. `C`：`Controller`，控制器。`Servlet`
-	
 	* 获取用户的输入；
 	* 调用模型；
 	* 将数据交给视图进行展示。
+
+![](https://pic.imgdb.cn/item/60f9140d5132923bf8747659.jpg)
 
 ## MVC的优缺点
 
@@ -336,198 +337,290 @@ el表达式只能从域对象中获取值。具体如下：
 
 # JSTL
 
-1. 概念：`JavaServer Pages Tag Library` (`JSP`标准标签库) 
-	
-	* 是由`Apache`组织提供的开源的免费的`jsp`标签
-	
-2. 作用：用于简化和替换`jsp`页面上的`java`代码		
+## 概念
 
-3. 使用步骤：
-  1. 导入`jstl`相关`jar`包
+`JavaServer Pages Tag Library` (JSP标准标签库) ，是由Apache组织提供的开源的免费的jsp标签。
 
-     ![JSTL导jar包](https://raw.githubusercontent.com/hekun97/picture/main/typora202107/21/170931-394261.png)
+## 作用
 
-  2. 引入标签库：
+用于简化和替换jsp页面上的java代码		
 
-     1. `taglib`指令： `<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>`
+## 使用步骤
 
-  3. 使用标签	
+  1. 导入jstl相关jar包；
 
-4. 常用的`JSTL`标签
+     ![JSTL导jar包](https://raw.githubusercontent.com/hekun97/picture/main/img/JSTL%E5%AF%BCjar%E5%8C%85.png)
 
-   1. `if`:相当于`java`代码的`if`语句
+  2. 在JSP页面中引入标签库：taglib指令： `<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>`；
 
-      1. 属性：
+  3. 使用标签。
 
-         1. `test `必须属性，接受`boolean`表达式
+## 常用的JSTL标签
 
-            1.  如果表达式为`true`，则显示if标签体内容，如果为`false`，则不显示标签体内容
+### if
 
-               ```jsp
-               <c:if test="true">
-                   <h1>我是真...</h1>
-               </c:if>
-               ```
+#### 概念
 
-            2. 一般情况下，`test`属性值会结合`el`表达式一起使用
+相当于java代码的if语句。
 
-               ```jsp
-               <%
-                   //判断request域中的一个list集合是否为空，如果不为null则显示遍历集合
-               
-                   List list = new ArrayList();
-                   list.add("aaaa");
-                   request.setAttribute("list",list);
-               %>
-               
-               <c:if test="${not empty list}">
-                   遍历集合...
-               
-               </c:if>
-               ```
+#### 使用
 
-            3. 注意：
+if标签的属性值test为必须填的属性，接受boolean表达式。以下为使用的注意事项：
 
-                 `c:if`标签没有`else`情况，想要`else`情况，则可以在定义一个`c:if`标签
+1.  如果表达式为true，则显示if标签体内容，如果为false，则不显示标签体内容
 
-               ```jsp
-               <%
-                   //在域中存入一个数字
-               
-                   request.setAttribute("number",4);
-               %>
-               <c:if test="${number % 2 != 0}">
-               
-                       ${number}为奇数
-               
-               </c:if>
-               
-               <c:if test="${number % 2 == 0}">
-               
-                   ${number}为偶数
-               
-               </c:if>
-               ```
+   ```jsp
+   <c:if test="true">
+       <h1>我是真...</h1>
+   </c:if>
+   ```
 
-   2. `choose`:相当于java代码的switch语句
+2. 一般情况下，test属性值会结合el表达式一起使用
 
-      ```jsp
-      <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-      
-      <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-      
-      <html>
-      <head>
-          <title>choose标签</title>
-      </head>
-      <body>
-      
-          <%--
-              完成数字编号对应星期几案例
-                  1.域中存储一数字
-                  2.使用choose标签取出数字         相当于switch声明
-                  3.使用when标签做数字判断         相当于case
-                  4.otherwise标签做其他情况的声明  相当于default
-          --%>
-      
-          <%
-              request.setAttribute("number",51);
-          %>
-      
-          <c:choose>
-              <c:when test="${number == 1}">星期一</c:when>
-              <c:when test="${number == 2}">星期二</c:when>
-              <c:when test="${number == 3}">星期三</c:when>
-              <c:when test="${number == 4}">星期四</c:when>
-              <c:when test="${number == 5}">星期五</c:when>
-              <c:when test="${number == 6}">星期六</c:when>
-              <c:when test="${number == 7}">星期天</c:when>
-      
-              <c:otherwise>数字输入有误</c:otherwise>
-          </c:choose>
-      
-      </body>
-      </html>
-      ```
+   ```jsp
+   <%
+       //判断request域中的一个list集合是否为空，如果不为null则显示遍历集合
+       List list = new ArrayList();
+       list.add("aaaa");
+       request.setAttribute("list",list);
+   %>
+   
+   <c:if test="${not empty list}">
+       遍历集合...
+   </c:if>
+   ```
+   
+3. `c:if`标签没有else情况，想要else情况，则可以在定义一个`c:if`标签
 
-      
+     ```jsp
+   <%
+       //在域中存入一个数字
+       request.setAttribute("number",4);
+   %>
+   <c:if test="${number % 2 != 0}">
+           ${number}为奇数
+   </c:if>
+   
+   <c:if test="${number % 2 == 0}">
+       ${number}为偶数
+   </c:if>
+   ```
 
-   3. `foreach`:相当于`java`代码的`for`语句	
+### choose
 
-      1. 完成重复的操作
-         `for(int i = 0; i < 10; i ++){	}`
+#### 概念
 
-         * 属性：
-           `begin`：开始值
-           `end`：结束值
-           `var`：临时变量
-           `step`：步长
-           `varStatus`:循环状态对象
-              `index`:容器中元素的索引，从0开始
-              `count`:循环次数，从1开始
+相当于java代码的switch语句
 
-         ```jsp
-         <c:forEach begin="1" end="10" var="i" step="1" varStatus="s">
-             临时变量：${i} <h3>索引：${s.index}<h3> <h4> 循环次数：${s.count} </h4><br>
-         </c:forEach>
-         ```
+#### 使用
 
-      2. 遍历容器
-           `List<User> list;  for(User user : list){  }`
+这里以一个小案例（完成数字编号对应星期几）来学习choose标签的使用。
 
-           * 属性：
-             `items`:容器对象
-             `var`:容器中元素的临时变量
-             `varStatus`:循环状态对象
-                 `index`:容器中元素的索引，从0开始
-                 `count`:循环次数，从1开始
+##### 完成步骤
 
-           ```jsp
-             <c:forEach items="${list}" var="str" varStatus="s">
-             
-                     索引：${s.index} 循环次数：${s.count} 临时变量：${str}<br>
-             
-             </c:forEach>
-           ```
+1. 域中存储一数字；
+2. 使用choose标签取出数字，相当于switch声明；
+3. 使用when标签做数字判断，相当于case；
+4. otherwise标签做其他情况的声明，相当于default。
 
-5. 练习：
-	
-	* 需求：在request域中有一个存有User对象的List集合。需要使用jstl+el将list集合数据展示到jsp页面的表格table中
+##### 实现代码
+
+```jsp
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><!--引入JSTL标签库-->
+
+<html>
+<head>
+    <title>choose标签</title>
+</head>
+<body>
+    <%
+        request.setAttribute("number",51);//1.域中存储一数字
+    %>
+    <c:choose><%--2.使用choose标签取出数字，相当于switch声明--%>
+        <c:when test="${number == 1}">星期一</c:when><%--3.使用when标签做数字判断，相当于case--%>
+        <c:when test="${number == 2}">星期二</c:when>
+        <c:when test="${number == 3}">星期三</c:when>
+        <c:when test="${number == 4}">星期四</c:when>
+        <c:when test="${number == 5}">星期五</c:when>
+        <c:when test="${number == 6}">星期六</c:when>
+        <c:when test="${number == 7}">星期天</c:when>
+		<%--4.otherwise标签做其他情况的声明，相当于default--%>
+        <c:otherwise>数字输入有误</c:otherwise>
+    </c:choose>
+</body>
+</html>
+```
+
+### foreach
+
+#### 概念
+
+相当于java代码的for语句，可完成重复的操作和遍历容器。
+
+#### 使用	
+
+##### 完成重复的操作
+
+java的代码为`for(int i = 0; i < 10; i ++){	}`，在JSTL中需对foreach标签的如下属性进行配置：
+
+1. begin：开始值
+2. end：结束值
+3. var：临时变量
+4. step：步长
+5. varStatus：循环状态对象
+   - index：容器中元素的索引，从0开始
+   - count：循环次数，从1开始
+
+```jsp
+<c:forEach begin="1" end="10" var="i" step="1" varStatus="s">
+    <h3> 索引：${s.index}<h3> <h4> 循环次数：${s.count} </h4> 临时变量：${i} <br>
+</c:forEach>
+```
+
+##### 遍历容器
+
+java代码：`List<User> list = new List();  for(User user : list){  }`，在JSTL中需对foreach标签的如下属性进行配置：
+
+1. items：容器对象
+2. var：容器中元素的临时变量
+3. varStatus：循环状态对象
+   - index：容器中元素的索引，从0开始
+   - count：循环次数，从1开始
+
+```jsp
+  <c:forEach items="${list}" var="str" varStatus="s">
+       索引：${s.index} 循环次数：${s.count} 临时变量：${str}<br>
+  </c:forEach>
+```
+
+## 练习
+
+### 需求
+
+在request域中有一个存有User对象的List集合。需要使用jstl+el将list集合数据展示到jsp页面的表格table中。
+
+### 实现代码
+
+实现代码只展示jsp页面的代码，另外需要的User类就是封装用户数据的JavaBean这里不进行展示。
+
+```jsp
+<%@ page import="io.gitee.hek97.domain.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%--1.导入jstl的相关jar包并引入jstl标签库--%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<html>
+<head>
+  <title>JSP+JSTL+EL获取User对象的值</title>
+</head>
+<body>
+<%
+  List<User> users = new ArrayList<>();
+  //第一名人员信息
+  User user1 = new User();
+  user1.setId(1001);
+  user1.setUsername("张三");
+  user1.setPassword("123");
+  //第二名人员信息
+  User user2 = new User();
+  user2.setId(1002);
+  user2.setUsername("李四");
+  user2.setPassword("456");
+  //将user添加到List集合中
+  users.add(user1);
+  users.add(user2);
+  //将信息存储到共享域中
+  request.setAttribute("users",users);
+%>
+<%--视图V:表格展示--%>
+<table border="1">
+ <%--表头--%>
+  <tr>
+    <th>索引</th>
+    <th>循环次数</th>
+    <th>用户id</th>
+    <th>用户名</th>
+    <th>用户密码</th>
+  </tr>
+<%--表体--%>
+  <%--遍历users集合容器--%>
+  <c:forEach items="${users}" var="user" varStatus="s">
+    <tr>
+      <td>${s.index}</td>
+      <td>${s.count}</td>
+      <td>${user.id}</td>
+      <td>${user.username}</td>
+      <td>${user.password}</td>
+    </tr>
+  </c:forEach>
+</table>
+</body>
+</html>
+```
+
+### 效果展示
+
+![](https://raw.githubusercontent.com/hekun97/picture/main/img/60f9128a5132923bf86dd021.jpg)
 
 # 三层架构：软件设计架构
 
-1. 界面层(表示层)：用户看的得界面。用户可以通过界面上的组件和服务器进行交互
-2. 业务逻辑层：处理业务逻辑的。
+1. 界面层(表示层)：用户看的得界面。用户可以通过界面上的组件和服务器进行交互；
+2. 业务逻辑层：处理业务逻辑的；
 3. 数据访问层：操作数据存储文件。
+
+![三层架构](https://raw.githubusercontent.com/hekun97/picture/main/img/%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84.bmp)
 
 # 案例：用户信息列表展示
 
-1. 需求：用户信息的增删改查操作
-2. 设计：
-	1. 技术选型：Servlet+JSP+MySQL+JDBCTempleat+Duird+BeanUtilS+tomcat
-	
-	2. 数据库设计：
-		
-		```mysql
-		create database day17; -- 创建数据库
-		use day17; 			   -- 使用数据库
-		create table user(   -- 创建表
-			id int primary key auto_increment,
-			name varchar(20) not null,
-			gender varchar(5),
-			age int,
-			address varchar(32),
-			qq	varchar(20),
-			email varchar(50)
-		);	
-		```
-	
-3. 开发：
-	1. 环境搭建
-		1. 创建数据库环境
-		2. 创建项目，导入需要的jar包
+## 需求
 
-	2. 编码
-4. 测试
-5. 部署运维
+用户信息的增删改查操作。
+
+## 设计
+
+1. 技术选型：Servlet+JSP+MySQL+JDBCTempleat+Duird+BeanUtilS+tomcat
+
+2. 数据库设计：
+	
+	```mysql
+	create database today; -- 创建数据库
+	use today; 			   -- 使用数据库
+	create table user(   -- 创建表
+		id int primary key auto_increment,
+		name varchar(20) not null,
+		gender varchar(5),
+		age int,
+		address varchar(32),
+		qq	varchar(20),
+		email varchar(50)
+	);	
+	```
+
+3. 列表查询设计：
+
+   ![列表查询分析](https://raw.githubusercontent.com/hekun97/picture/main/img/%E5%88%97%E8%A1%A8%E6%9F%A5%E8%AF%A2%E5%88%86%E6%9E%90.bmp)
+
+## 开发
+
+1. 环境搭建
+	1. 创建数据库环境；
+	2. 创建项目，导入需要的jar包，如下：
+	   - JSP页面中JSTL标签库所需jar包：`javax.servlet.jsp.jstl.jar`、`jstl-impl.jar`；
+	   - MySQL的数据库驱动jar包：`mysql-connector-java-5.1.18-bin.jar`；
+	   -  JDBCtemplate的jar包：`commons-logging-1.1.1.jar`、`spring-beans-4.2.4.RELEASE.jar`、`spring-core-4.2.4.RELEASE.jar`、`spring-jdbc-4.2.4.RELEASE.jar`、`spring-tx-4.2.4.RELEASE.jar`；
+	   -  Duird数据库连接池所需jar包：`druid-1.0.9.jar`；
+	   -  用来把请求头数据封装到JavaBean·的jar包：`commons-beanutils-1.8.3.jar`；
+	   -  可作为Duird后续切换使用的c3p0数据库连接池jar包：`c3p0-0.9.1.2.jar`。
+	3. 导入资料文件中的页面文件夹内的HTML等文件。
+	
+2. 编码
+
+## 测试
+
+## 部署运维
 
