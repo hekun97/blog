@@ -481,7 +481,23 @@ Git的版本回退速度非常快，因为Git在内部有个指向当前版本�
    https://github.com/hekun97/learngit.git # https协议
    ```
 
+## 删除远程库
 
+如果添加的时候地址写错了，或者就是想删除远程库，可以用`git remote rm <name>`命令。使用前，建议先用`git remote -v`查看远程库信息：
+
+```bash
+$ git remote -v
+origin  git@github.com:michaelliao/learn-git.git (fetch)
+origin  git@github.com:michaelliao/learn-git.git (push)
+```
+
+然后，根据名字删除，比如删除`origin`：
+
+```bash
+$ git remote rm origin
+```
+
+此处的“删除”其实是解除了本地和远程的绑定关系，并不是物理上删除了远程库。远程库本身并没有任何改动。要真正删除远程库，需要登录到GitHub，在后台页面找到删除按钮再删除。
 
 # 分支管理
 
@@ -691,7 +707,6 @@ Deleted branch feature1 (was 14096d0).
 > 解决冲突就是把Git合并失败的文件手动编辑为我们希望的内容，再提交。
 >
 > 用`git log --graph`命令可以看到分支合并图。
->
 
 ## 分支管理策略
 
@@ -1151,7 +1166,6 @@ To github.com:michaelliao/learngit.git
 > - 在本地创建和远程分支对应的分支，使用`git checkout -b branch-name origin/branch-name`，本地和远程分支的名称最好一致；
 > - 建立本地分支和远程分支的关联，使用`git branch --set-upstream branch-name origin/branch-name`；
 > - 从远程抓取分支，使用`git pull`，如果有冲突，要先处理冲突。
->
 
 ## rebase
 
