@@ -337,7 +337,7 @@ public class DruidDemo {
 
 Spring JDBC是Spring框架对JDBC的简单封装，提供了一个JDBCTemplate对象简化JDBC的开发。
 
-> 主要作用是简化代码。
+> 主要作用是简化代码，我们只需要通过C3P0或者Druid获取到数据库连接池(ds)，然后通过JdbcTemplate对象来执行SQL语句，至于获取数据库连接对象(conn)、获取执行对象(Statement或PreparedStatement )、归还资源(close)由Spring JDBC框架去实现。
 
 ## 使用步骤
 
