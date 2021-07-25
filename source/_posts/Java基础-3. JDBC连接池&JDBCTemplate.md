@@ -449,12 +449,19 @@ public class JdbcTemplateDemo2 {
         System.out.println(count);
     }
 
-    //4. 查询id为1的记录，将其封装为Map集合
+    //4.1 查询id为1的记录，将其封装为Map集合
     @Test
     public void test4() {
         String sql = "select * from account where id = ?";
         Map<String, Object> map = template.queryForMap(sql, 1);
         System.out.println(map);//{id=1, name=张三, balance=3000}
+    }
+    //4.2 查询id为1的记录，将其封装为Account对象
+    @Test
+    public void test44() {
+        String sql = "select * from account where id = ?";
+        Account account = template.queryForObject(sql, new BeanPropertyRowMapper<Account>(Account.class),1);
+        System.out.println(account);//Account{id=1, name='张三', balance=500}
     }
 
     //5. 查询所有记录，将其封装为List
