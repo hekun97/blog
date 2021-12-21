@@ -19,7 +19,7 @@ cover: https://cdn.pixabay.com/photo/2020/12/15/06/28/pier-5832800_960_720.jpg
 
 其实是官方（sun公司）定义的一套操作所有关系型数据库的规则，即接口。各个数据库厂商去实现这套接口，提供数据库驱动jar包。我们可以使用这套接口（JDBC）编程，真正执行的代码是驱动jar包中的实现类。
 
-![](https://pic.imgdb.cn/item/60dc89fe5132923bf8dea0cb.jpg)
+![](https://gitee.com/hek97/picture/raw/master/img/60dc89fe5132923bf8dea0cb.jpg)
 
 # 快速入门
 
@@ -27,7 +27,13 @@ cover: https://cdn.pixabay.com/photo/2020/12/15/06/28/pier-5832800_960_720.jpg
 
 ## 数据库表信息
 
-![](https://pic.imgdb.cn/item/60ded5f45132923bf8d0f509.jpg)
+![](https://gitee.com/hek97/picture/raw/master/img/60ded5f45132923bf8d0f509-20211221092613707.jpg)
+
+## 数据库连接jar包
+
+首先先创建lib目录，然后把相关连接jar包加入进去，再把jar包添加到当前模块的库中。
+
+![image-20211220230158908](https://gitee.com/hek97/picture/raw/master/img/image-20211220230158908.png)
 
 ## 详细代码
 
@@ -97,7 +103,7 @@ public class JdbcDemo1 {
 ```
 > mysql5之后的驱动jar包可以省略注册驱动的步骤，也就是快速入门的第1步可以省略。是因为mysql5之后的驱动jar包将该步骤给写到文件里了，使用时，会自动读取该文件去注册驱动。
 >
-> ![](https://pic.imgdb.cn/item/60ddd7525132923bf83d1c29.jpg)
+> ![](https://gitee.com/hek97/picture/raw/master/img/60ddd7525132923bf83d1c29.jpg)
 
 #### 获取数据库连接
 
@@ -260,7 +266,7 @@ public class JdbcDemo2 {
 
 ### 使用解析
 
-![](https://pic.imgdb.cn/item/60df33f05132923bf80ff997.jpg)
+![](https://gitee.com/hek97/picture/raw/master/img/60df33f05132923bf80ff997.jpg)
 
 #### boolean next()
 
@@ -328,7 +334,7 @@ while(rs.next()){
 
    > 工具类一般使用静态方法，以便后续调用。
 
-   ![目录结构](https://pic.imgdb.cn/item/60e2b7235132923bf805c459.jpg)
+   ![目录结构](https://gitee.com/hek97/picture/raw/master/img/60e2b7235132923bf805c459.jpg)
 
 ## 代码实现
 
@@ -336,7 +342,7 @@ while(rs.next()){
 
 1. 数据库表
 
-   ![](https://pic.imgdb.cn/item/60ded5f45132923bf8d0f509.jpg)
+   ![](https://gitee.com/hek97/picture/raw/master/img/60ded5f45132923bf8d0f509.jpg)
 
 2. 配置文件：[jdbc.properties](https://github.com/hekun97/JavaCode/blob/master/Test/JDBC/src/jdbc.properties)
 
