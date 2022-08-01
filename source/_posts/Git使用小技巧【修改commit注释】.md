@@ -1,3 +1,15 @@
+---
+title: Git使用小技巧【修改commit注释】
+date: 2022-08-01 12:43:21
+tags: 
+- Git
+category:
+- Git
+type: artitalk
+cover: https://cdn.pixabay.com/photo/2022/05/18/12/04/flower-7205105_1280.jpg
+
+---
+
 # Git使用小技巧【修改commit注释】
 
 通常有些朋友在 `git  commit -m "xxxx" file.c` 后，觉得注释的内容描述不够精准，
