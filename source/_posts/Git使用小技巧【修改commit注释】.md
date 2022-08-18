@@ -42,12 +42,12 @@ cover: https://cdn.pixabay.com/photo/2022/05/18/12/04/flower-7205105_1280.jpg
 2. `pick` 改成 `edit`                  【输入 i 编辑模式，只需要将你需要修改的注释前的pick 改为 edit 即可】
 3. `Esc`                                       【退出编辑模式】
 4. `:wq`                                        【保存退出】
-5. `git commit --amend`              【同上有提示，第一行进行你真正需要的修改, 修改完后，保存退出】
+5. `git commit --amend`              【同上有提示，第一行进行你真正需要的修改, 修改完后，直接输入`:wq`保存退出】
 6. `git rebase --continue`            【退出后，输入最后一步】
 
 图文步骤如下：
 
-1. git rebase -i HEAD~2 会出现此界面
+1. `git rebase -i HEAD~2` 会出现此界面
 
    ![image-20220801115108768](https://cdn.jsdelivr.net/gh/hekun97/picture/Git_notes/image-20220801115108768.png)
 
@@ -55,7 +55,7 @@ cover: https://cdn.pixabay.com/photo/2022/05/18/12/04/flower-7205105_1280.jpg
 
    ![img](https://cdn.jsdelivr.net/gh/hekun97/picture/Git_notes/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpYW95dWxpa2U=,size_16,color_FFFFFF,t_70-20220801113531370.png)
 
-3. 会出现，非分支，正变基的分支，别害怕，继续往下 git commit --amend
+3. 会出现，非分支，正变基的分支，别害怕，继续往下 `git commit --amend`
 
    ![img](https://cdn.jsdelivr.net/gh/hekun97/picture/Git_notes/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpYW95dWxpa2U=,size_16,color_FFFFFF,t_70-20220801113534544-20220801115001018.png)
 
@@ -63,11 +63,11 @@ cover: https://cdn.pixabay.com/photo/2022/05/18/12/04/flower-7205105_1280.jpg
 
    ![img](https://cdn.jsdelivr.net/gh/hekun97/picture/Git_notes/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpYW95dWxpa2U=,size_16,color_FFFFFF,t_70-20220801114957165.png)
 
-5. 最后一步, git rebase --continue, 修改完成啦
+5. 最后一步, `git rebase --continue`, 修改完成啦
 
    ![img](https://cdn.jsdelivr.net/gh/hekun97/picture/Git_notes/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hpYW95dWxpa2U=,size_16,color_FFFFFF,t_70-20220801114953877.png)
 
-6. git log 可以查看已经修改成功了
+6. `git log` 可以查看已经修改成功了
 
    ![img](https://cdn.jsdelivr.net/gh/hekun97/picture/Git_notes/20210728123421918.png)
 
