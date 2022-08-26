@@ -207,6 +207,14 @@ nothing to commit, working tree clean
 $ git checkout --readme.txt
 ```
 
+### 放弃所有工作区的修改
+
+```shell
+$ git checkout .
+```
+
+该命令会删掉工作区所有的修改。
+
 ###  撤销暂存区的修改
 
 1. 发现添加内容有错误，已添加（add）到暂存区，还未进行提交（commit）到版本库。
