@@ -20,7 +20,7 @@ cover: https://cdn.pixabay.com/photo/2017/06/12/04/21/database-2394312_960_720.j
 
 其包括：
 
-1. 数据控制语言（`DCL`）(`Data Control Language`)
+1. 数据控制语言（`DCL`）(`Data Control Language`)【使用最少】
 
    是用来设置或更改数据库用户或角色权限的语句，包括（`grant`,`deny`,`revoke`等）语句。在默认状态下，只有`sysadmin`,`dbcreator`,`db_owner`或`db_securityadmin`等人员才有权力执行`DCL`
 
@@ -28,7 +28,7 @@ cover: https://cdn.pixabay.com/photo/2017/06/12/04/21/database-2394312_960_720.j
 
    `DDL`允许用户定义数据，也就是创建表、删除表、修改表结构这些操作。通常，`DDL`由数据库管理员执行。
 
-3. 数据查询语言（`DQL`）(`Data Query Language`)
+3. 数据查询语言（`DQL`）(`Data Query Language`)【使用最多，其中的联合查询内容最重要】
 
    `DQL`允许用户查询数据，这也是通常最频繁的数据库日常操作
 
@@ -36,11 +36,17 @@ cover: https://cdn.pixabay.com/photo/2017/06/12/04/21/database-2394312_960_720.j
 
    `DML`为用户提供添加、删除、更新数据的能力，这些是应用程序对数据库的日常操作。
 
+## 语法特点
+
+SQL语言关键字不区分大小写！！！但是，针对不同的数据库，对于表名和列名，有的数据库区分大小写，有的数据库不区分大小写。同一个数据库，有的在`Linux`上区分大小写，有的在`Windows`上不区分大小写。
+
+所以，本教程约定：SQL关键字总是大写，以示突出，表名和列名均使用小写。
+
 ## 对数据库的操作
 
 ### 创建数据库
 
-```mysql
+```sql
 CREATE DATABASE 数据库名;
 ```
 
@@ -56,8 +62,8 @@ CREATE DATABASE 数据库名;
 
 本文以`SQLyog`软件为例，创建数据库如下：
 
-```mysql
-CREATE DATABASE test_sql
+```sql
+CREATE DATABASE test_sql;
 ```
 
 ![](https://pic.downk.cc/item/5e8585d1504f4bcb04ce88cd.jpg)
@@ -68,25 +74,25 @@ CREATE DATABASE test_sql
 
 查看当前有几个数据库可供连接。
 
-```mysql
+```sql
 SHOW DATABASES;
 ```
 
 ### 连接数据库
 
-```mysql
+```sql
 USE test_sql;
 ```
 
 ### 查看当前连接数据库
 
-```mysql
+```sql
 SELECT DATABASE();
 ```
 
 ### 删除数据库
 
-```mysql
+```sql
 DROP DATABASE test_sql;
 ```
 
@@ -96,35 +102,50 @@ DROP DATABASE test_sql;
 
 ### 整数数据类型
 
-- `INT` 大小：4字节
-
-- `BIGINT `大小：8字节
+| **名称** | **类型** | **说明**                          |
+| -------- | -------- | --------------------------------- |
+| `INT`    | 整型     | 4字节整数类型，范围约`+/-21亿`    |
+| `BIGINT` | 长整型   | 8字节整数类型，范围约`+/-922亿亿` |
 
 ### 浮点数据类型
 
-- `FLOAT `或`REAL`大小：4字节，精度：7位小数
-- `DOUBLE `大小：8字节，精度：15位小数
+| **名称** | **类型** | **说明**                        |
+| -------- | -------- | ------------------------------- |
+| `FLOAT`或`REAL`                                             | 浮点型         | 4字节浮点数，范围约`+/-1038`，精度7位小数                    |
+| `DOUBLE`                                                     | 浮点型         | 8字节浮点数，范围约`+/-10308`，精度15位小数                  |
 
-### 高进度小数
+> 因为不精准，因此不能使用在货币这类严格要求准确的位置，通常我们更经常使用整数类型用来计算货币。
 
-- DECIMAL(M,N)：由用户指定精度的小数，例如，DECIMAL(20,10)表示一共20位，其中小数10位，通常用于财务计算。
+### 高精度小数
+
+| **名称** | **类型** | **说明**                        |
+| -------- | -------- | ------------------------------- |
+| `DECIMAL(M,N)`                                               | 高精度小数     | 由用户指定精度的小数，例如，`DECIMAL(20,10)`表示一共20位，其中小数10位，通常用于财务计算 |
 
 ### 字符串数据类型
 
-- `CHAR(N)`：定长字符串，存储指定长度的字符串，例如，`CHAR(100)`总是存储100个字符的字符串。
--  `VARCHAR (N)`范围：0-65535， 变长字符串，存储可变长度的字符串，例如，`VARCHAR(100)`可以存储0~100个字符的字符串
+| **名称** | **类型** | **说明**                        |
+| -------- | -------- | ------------------------------- |
+| `CHAR(N)`                                                    | 定长字符串     | 存储指定长度的字符串，例如，`CHAR(100)`总是存储100个字符的字符串 |
+| `VARCHAR(N)`                                                 | 变长字符串     | 存储可变长度的字符串，例如，`VARCHAR(100)`可以存储0~100个字符的字符串 |
 
 ### 布尔类型
 
-- `BOOLEAN`：布尔类型，存储`True`或者`False`。
+| **名称** | **类型** | **说明**                        |
+| -------- | -------- | ------------------------------- |
+| `BOOLEAN`                                                    | 布尔类型       | 存储True或者False                                            |
 
 ### 日期数据类型
 
-- `DATE `：日期类型， 格式：`YYYY`，存储日期，例如，`2018-06-22`
-- `TIME`：时间类型，存储时间，例如，`12:20:59`
-- `DATETIME `：日期和时间类型，格式：`YYYY-MM-DD HH-`，存储日期+时间，例如，`2018-06-22 12:20:59`
+| **名称** | **类型** | **说明**                        |
+| -------- | -------- | ------------------------------- |
+| `DATE`                                                       | 日期类型       | 存储日期，例如，2018-06-22                                   |
+| `TIME`                                                       | 时间类型       | 存储时间，例如，12:20:59                                     |
+| `DATETIME`                                                   | 日期和时间类型 | 存储日期+时间，例如，2018-06-22 12:20:59                     |
 
-## 对表的操作
+## 对表的操作(`DDL`)
+
+也就是前面说的 数据定义语言（`DDL`）(`Data Definition Language`)。
 
 数据库中对表的操作有：
 
@@ -142,13 +163,13 @@ DROP DATABASE test_sql;
 
 ### 创建表
 
-```mysql
+```sql
 CREATE TABLE < 表名 > (< 列名 > < 列的数据类型 > [<列的约束>]);
 ```
 
 如：
 
-```mysql
+```sql
 CREATE TABLE t_student(
   student_name VARCHAR(10),
   student_birthday DATETIME,
@@ -171,7 +192,7 @@ CREATE TABLE t_student(
 
 ### 查看表的数量
 
-```mysql
+```sql
 SHOW TABLES;
 ```
 
@@ -179,13 +200,13 @@ SHOW TABLES;
 
 如果你想要知道一个表的结构，可以使用`DESCRIBE`命令；它显示表中每个列的信息：
 
-```mysql
+```sql
 DESCRIBE t_student;
 ```
 
 ### 删除表
 
-```mysql
+```sql
 DROP TABLE t_student;
 ```
 
@@ -193,7 +214,7 @@ DROP TABLE t_student;
 
 #### 同时复制表的结构和内容
 
-```mysql
+```sql
 CREATE TABLE copy_student
 SELECT
   *
@@ -201,11 +222,12 @@ FROM t_student;
 ```
 
 如此我们便复制了一张名为`copy_student`的表，它包括`t_student`表中的内容与结构。
-<font color="red">注意：复制表的同时表的约束并不能复制过来。</font>
+
+> <font color="red">注意：复制表的同时表的约束并不能复制过来。</font>
 
 ### 只复制表结构而不复制表内容
 
-```mysql
+```sql
 CREATE TABLE copy_student
 SELECT
   *
@@ -220,7 +242,7 @@ WHERE
 
 #### 添加新列
 
-```mysql
+```sql
 ALTER TABLE t_student
 ADD
   student_address VARCHAR(50);
@@ -230,19 +252,19 @@ ADD
 
 #### 更改列
 
-```mysql
+```sql
 ALTER TABLE t_student
 CHANGE
   student_birthday student_age INT;
 ```
 
-这里我们把学生生日列改为学生年龄列，`CHANGE`后第一个为旧列名，第二个为新列名。
+这里我们把学生生日列（`student_birthday`）改为学生年龄列（`student_age`），`CHANGE`后第一个为旧列名，第二个为新列名。
 
 ![](https://pic.downk.cc/item/5e85867c504f4bcb04cf0e43.jpg)
 
 #### 删除列
 
-```mysql
+```sql
 ALTER TABLE t_student
 DROP COLUMN
   student_score;
@@ -270,11 +292,11 @@ DROP COLUMN
 
 ### 实体完整性--主键约束
 
-`PRIMARY KEY`
+关键字：`PRIMARY KEY`
 
 主键列不能为空也不能重复，通常加在表的id列中。
 
-```mysql
+```sql
 CREATE TABLE t_student(
   student_id INT PRIMARY KEY,
   student_name VARCHAR(10),
@@ -286,11 +308,11 @@ CREATE TABLE t_student(
 
 ### 实体完整性--唯一约束
 
-`UNIQUE`
+关键字：`UNIQUE`
 
 唯一约束是指给定列的值必须唯一，与主键约束不同的是它可以为空。通常加在表中不能重复的信息中，如电话号码。
 
-```mysql
+```sql
 CREATE TABLE t_student(
   student_id INT PRIMARY KEY,
   student_name VARCHAR(10),
@@ -302,11 +324,11 @@ CREATE TABLE t_student(
 
 ### 域完整性--非空约束
 
-`NOT NULL`
+关键字：`NOT NULL`
 
 非空约束可以加在诸如姓名等列上。
 
-```mysql
+```sql
 CREATE TABLE t_student(
   student_id INT PRIMARY KEY,
   student_name VARCHAR(10) NOT NULL,
@@ -318,13 +340,13 @@ CREATE TABLE t_student(
 
 ### 域完整性--默认约束
 
-设定默认值后，可以在添加此列时不指定值,数据库会自动填充设定的默认值。
+关键字：`DEFAULT`
 
-`DEFAULT`
+设定默认值后，可以在添加此列时不指定值,数据库会自动填充设定的默认值。
 
 现给学生表加入性别列，默认值设为“男”，这样添加新的学生信息时如果没有填写具体的性别均会默认为男性：  
 
-```mysql
+```sql
 CREATE TABLE t_student(
   student_id INT PRIMARY KEY,
   student_name VARCHAR(10) NOT NULL,
@@ -339,13 +361,13 @@ CREATE TABLE t_student(
 
 ### 引用完整性--外键约束
 
-外键约束是指在外键关联主键上强制加上一个约束，如果违反该约束，则不允许该条数据的修改。
+外键约束是指在外键关联主键上强制加上一个约束，如果违反该约束，则不允许该条数据的修改。可以通过两种方式创建，第一种是在创建表的同时创建约束，第二种是已经创建表后，再来创建约束。
 
-#### 创建表时，同时创建约束
+#### 1.创建表时，同时创建约束
 
 创建主表--班级表：
 
-```mysql
+```sql
 CREATE TABLE t_class(
   class_id INT PRIMARY KEY,
   class_name VARCHAR(20) UNIQUE NOT NULL
@@ -354,7 +376,7 @@ CREATE TABLE t_class(
 
 创建从表--学生表，并设置外键约束：
 
-```mysql
+```sql
 CREATE TABLE t_student(
   student_id INT PRIMARY KEY,
   s_c_id INT,
@@ -368,19 +390,33 @@ CREATE TABLE t_student(
 
 上面的第8行代码就是创建外键约束的方法，个人认为也是`SQL`语句中最难记的。
 
-#### 已创建表后，追加外键约束
+#### 2.已创建表后，追加外键约束
 
-```mysql
+```sql
 ALTER table t_student
 ADD
   CONSTRAINT fk_class_id FOREIGN KEY(s_c_id) REFERENCES t_class(class_id);
 ```
 
-#### 删除外键约束
+这里值得注意的是，在追加约束时，如果我们已创建好的表中有不符合约束条件的数据，那么将会报错约束冲突，可以通过添加语句`WITH NOCHECK`解决，这样就只会对后面新加的数据进行校验，而前面已有的数据忽略不管。
 
-```mysql
-ALTER TABLE person drop FOREIGN KEY fk_class_id;
+上述语句可修改为如下：
+
+```sql
+ALTER table t_student WITH NOCHECK
+ADD
+  CONSTRAINT fk_class_id FOREIGN KEY(s_c_id) REFERENCES t_class(class_id);
 ```
+
+由于外键约束会降低数据库的性能，大部分互联网应用程序为了追求速度，并不设置外键约束，而是仅靠应用程序自身来保证逻辑的正确性。这种情况下，`s_c_id`仅仅是一个普通的列，只是它起到了外键的作用而已。
+
+#### 3.删除外键约束
+
+```sql
+ALTER TABLE t_student drop FOREIGN KEY fk_class_id;
+```
+
+> 注意：删除外键约束并没有删除外键这一列，只是去除外键将这一列（`s_c_id`）变为一个普通的列。删除列是通过`DROP COLUMN ...`实现的。
 
 # 数据修改、数据查询（二）
 
@@ -390,7 +426,7 @@ ALTER TABLE person drop FOREIGN KEY fk_class_id;
 
 ![](https://pic.downk.cc/item/5e858868504f4bcb04d08c36.jpg)
 
-## 数据修改
+## 数据修改(DML)
 
 * 添加新数据
 * 更改数据
@@ -398,7 +434,7 @@ ALTER TABLE person drop FOREIGN KEY fk_class_id;
 
 ### 添加新数据：
 
-```mysql
+```sql
 INSERT INTO < 表名 > 
   (< 列名列表 >)
 VALUES
@@ -407,7 +443,7 @@ VALUES
 
 **如：**
 
-```mysql
+```sql
 INSERT INTO t_student (
     student_id,
     student_name,
@@ -421,7 +457,7 @@ VALUES
 ![](https://pic.downk.cc/item/5e85889d504f4bcb04d0b802.jpg)
 其中列名可以省略，省略之后要求插入的值必须与列一一对应：
 
-```mysql
+```sql
 INSERT INTO t_student
 VALUES
   (2, '王二', 20, '男');
@@ -431,7 +467,7 @@ VALUES
 
 **多行数据添加：**
 
-```mysql
+```sql
 INSERT INTO t_student
 VALUES
   (3, '张三', 22, '男'),
@@ -443,7 +479,7 @@ VALUES
 
 ### 更改数据：
 
-```mysql
+```sql
 UPDATE 表名
 SET
   列1 = 新值1,
@@ -454,7 +490,7 @@ WHERE
 
 假如要修改李四的年龄为21岁
 
-```mysql
+```sql
 UPDATE t_student
 SET
   student_age = 21
@@ -468,7 +504,7 @@ WHERE
 
 ###  删除数据（行）
 
-```mysql
+```sql
 DELETE FROM 表名
 WHERE
   过滤条件
@@ -476,7 +512,7 @@ WHERE
 
 现要删除20到22岁的学生信息：
 
-```mysql
+```sql
 DELETE FROM t_student
 WHERE
   student_age BETWEEN 20
@@ -489,122 +525,61 @@ WHERE
 
 删除除了`DELETE`还有一种方法`TRUNCATE`，写法：
 
-```mysql
-TRUNCATE TABLE 表名
+```sql
+TRUNCATE TABLE 表名;
 ```
 
 **二者区别在于：**
 `DELETE`会记录日志，意味着删除后的数据还可以恢复，但是效率低。`TRUNCATE`不会记录日志，删除后的数据不能恢复，但是效率高。需要注意的是，`TRUNCATE`不能用于有外键约束引用的表。
 
-## 查询操作
+## 查询操作(DQL)
 
-分类：
+### 基本查询
 
-- 投影操作
-  指定查询结果中能显示哪些列
+要查询数据库表的数据，我们使用如下的SQL语句：
 
-- 选择操作
-  指定哪些行出现在结果中
-
-- 排序操作
-  指定查询的结果以什么样的顺序显示
-
-### 投影操作
-
-```mysql
-SELECT
-  列1,
-  列2
-FROM 表名
+```sql
+SELECT * FROM <表名>;
 ```
 
-多个列中间用逗号隔开，如果选择所有列可以用`*`号简写。
+要查询`t_students`表的所有行，我们用如下SQL语句：
 
-还是此表：
-
-![](https://pic.downk.cc/item/5e858953504f4bcb04d15f04.jpg)
-
-现在只想要查看姓名和年龄列：
-
-```mysql
-SELECT
-  student_name,
-  student_age
-FROM t_student;
+```sql
+SELECT * FROM t_students;
 ```
 
-![](https://pic.downk.cc/item/5e858b21504f4bcb04d2a9a9.jpg)
+其中`SELECT`是关键字，表示将要执行一个查询，`*`表示“所有列（字段）”，`FROM`表示将要从哪个表查询，本例中是`t_students`表。
 
-注意这里不是把其他列删除了，而是只显示我们想看见的部分。
+该SQL将查询出`t_students`表的所有数据。
 
-```mysql
-SELECT
-  CONCAT(student_name, '——', student_age) '组合值'
-FROM t_student;
+再来看一条查询语句。
+
+```sql
+SELECT 100+200;
 ```
 
-`CONCAT`，可以将列与列之间用想要的符号连接起来：  
+上述查询会直接计算出表达式的结果`300`。虽然`SELECT`可以用作计算，但它并不是SQL的强项。但是，不带`FROM`子句的`SELECT`语句有一个有用的用途，就是用来判断当前到数据库的连接是否有效。许多检测工具会执行一条`SELECT 1;`来测试数据库连接。
 
-![](https://pic.downk.cc/item/5e858b6d504f4bcb04d2e262.jpg)
-
-#### 排除重复——DISTINCT
-
-现给原表加入一班级列：
-
-![](https://pic.downk.cc/item/5e858baa504f4bcb04d30d15.jpg)
-
-按照之前方法查询班级列得到：
-
-![](https://pic.downk.cc/item/5e858bba504f4bcb04d31704.jpg)
-
-但是我们只想查看具体有哪些班级，这里就需要用到去重，也就是`DISTINCT`。
-
-```mysql
-SELECT
-  DISTINCT student_class
-FROM t_student;
+```sql
+SELECT 1;
 ```
 
-![](https://pic.downk.cc/item/5e858bd7504f4bcb04d32e9b.jpg)
+这也是我们在使用大部分数据库连接软件测试连接时使用的语句。
 
-#### 返回限定行数的查询——`LIMIT`
+![image-20220908003854140](https://cdn.jsdelivr.net/gh/hekun97/picture/Git_notes/image-20220908003854140.png)
 
-`LIMIT`后面参数为1或2个：
+### 条件查询
 
-`LIMIT N `表示从第一行开始返回`N`行结果，`LIMIT i,N `表示从第`i+1`行开始返回`N`行结果。
+也就是执行选择操作，关键字是：`WHERE`
 
-例：
-
-```mysql
-SELECT
-  *
-FROM t_student
-LIMIT
-  3;
-```
-
-![](https://pic.downk.cc/item/5e858c13504f4bcb04d35ddb.jpg)
-
-```mysql
-SELECT
-  *
-FROM t_student
-LIMIT
-  2, 3;
-```
-
-![](https://pic.downk.cc/item/5e858c21504f4bcb04d36847.jpg)
-
-<font color="red">注：`LIMIT`很重要，它是之后做数据表格分页的关键。</font>
-
-### 条件查询：选择操作——WHERE
+指定哪些行出现在结果中
 
 * 单条件选择
 * 多条件选择
 
-**单条件选择标准结构：**
+1.**单条件选择标准结构：**
 
-```mysql
+```sql
 SELECT
   列1,
   列2
@@ -615,28 +590,58 @@ WHERE
 
 关系运算符包括：`>  >=  <  <=  =  !=`
 
-**多条件选择标准结构：**
+2.**多条件选择标准结构：**
 
-```mysql
+```sql
 SELECT
   列A,
   列B
 FROM 表
 WHERE
-  条件1 (
+  条件1 
     AND 或者 OR 或者 NOT
-  ) 条件2
+  条件2
 ```
 
 其中`AND`表示并且，`OR`表示或者，`NOT`表示排序符合此条件的记录。
 
+如：
+
+```sql
+select 
+  s_id , 
+  s_name 
+from students 
+where 
+  s_id < 8 
+    and 
+  s_sex = '男';
+```
+
 如果不加括号，条件运算按照`NOT`、`AND`、`OR`的优先级进行，即`NOT`优先级最高，其次是`AND`，最后是`OR`。加上括号可以改变优先级。
 
-#### 选择范围——BETWEEN
+```sql
+select 
+  s_id , 
+  s_name 
+from students 
+where 
+  (s_id < 8 or s_age>23)
+     
+  s_sex = '男';
+```
+
+这里就会先执行`or`，然后再执行后面的`and`，我们在实际使用中遇到多个条件运算符时，尽量加上括号，方便更好的阅读。
+
+#### 选择范围
+
+关键字：`BETWEEN`
+
+`BETWEEN`后的值为从下限到上限。
 
 如：
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -647,13 +652,69 @@ WHERE
 
 ![](https://pic.downk.cc/item/5e858c9c504f4bcb04d3bc84.jpg)
 
-`BETWEEN`后的值为从下限到上限。
+### 投影查询
 
-#### 定义集合——IN或NOT IN
+用于指定查询结果中能显示哪些列。
+
+```sql
+SELECT 列1, 列2 FROM 表名
+```
+
+多个列中间用逗号隔开，如果选择所有列可以用`*`号简写。
+
+还是此表：
+
+![](https://pic.downk.cc/item/5e858953504f4bcb04d15f04.jpg)
+
+现在只想要查看姓名和年龄列：
+
+```sql
+SELECT student_name, student_age FROM t_student;
+```
+
+![](https://pic.downk.cc/item/5e858b21504f4bcb04d2a9a9.jpg)
+
+#### 组合查询（CONCAT）
+
+当我们需要将两列的数据放在一列（字段）中时，可以使用`CONCAT`来进行组合查询。
+
+注意这里不是把其他列删除了，而是只显示我们想看见的部分。
+
+```sql
+SELECT CONCAT(student_name, '——', student_age) '组合值' FROM t_student;
+```
+
+`CONCAT`中除了需要的列（字段），还可以添加字符将列与列之间用想要的符号连接起来，这里使用的是字符`'--'`  。
+
+![](https://pic.downk.cc/item/5e858b6d504f4bcb04d2e262.jpg)
+
+#### 排除重复（DISTINCT）
+
+现给原表加入一班级列`student_class`。
+
+![](https://pic.downk.cc/item/5e858baa504f4bcb04d30d15.jpg)
+
+查询班级列得到：
+
+```sql
+SELECT student_class FROM t_student;
+```
+
+![](https://pic.downk.cc/item/5e858bba504f4bcb04d31704.jpg)
+
+但是我们只想查看具体有哪些班级，这里就需要用到去重，也就是`DISTINCT`。
+
+```sql
+SELECT DISTINCT student_class FROM t_student;
+```
+
+![](https://pic.downk.cc/item/5e858bd7504f4bcb04d32e9b.jpg)
+
+#### 定义集合（IN或NOT IN）
 
 现在想查看年龄为17、20、23的学生信息： 
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -664,9 +725,9 @@ WHERE
 ![](https://pic.downk.cc/item/5e858cca504f4bcb04d3d9f6.jpg)
 反之`NOT IN`就是选择不包括在集合里的学生信息。
 
-#### 模糊查询——LIKE
+#### 模糊查询（LIKE）
 
-为了更好的解释模糊查询，这里重新建张表：
+为了更好的解释模糊查询，这里重新建张表`tt_student`。
 
 ![](https://pic.downk.cc/item/5e858ce6504f4bcb04d3ea6c.jpg)
 
@@ -682,7 +743,7 @@ WHERE
 
 **名字只有两个字的：**
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -696,7 +757,7 @@ WHERE
 
 **所有姓王的：**
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -708,7 +769,7 @@ WHERE
 
 **最后一个字是“王”的：**
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -719,7 +780,7 @@ WHERE
 ![](https://pic.downk.cc/item/5e858d59504f4bcb04d43c32.jpg)
 **只要是名字中有“王”字的：**
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -730,27 +791,31 @@ WHERE
 ![](https://pic.downk.cc/item/5e858d69504f4bcb04d448d9.jpg)
 这下模糊查询就很明白了吧，当然还有其他组合，大家可以自己尝试。
 
+> `LIKE`是模糊查询这些数据，`NOT LIKE`刚好相反，也就是不需要这些模糊查询出来的数据。
+
 #### 处理空值数据
 
 判断条件不能用`列名=NULL`，而是要用`IS NULL`或`IS NOT NULL`。
 
 **标准写法：**
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
 WHERE
-  性别 IS NULL
+  student_age IS NULL;
 ```
 
-### 排序操作——ORDER BY：
+### 排序查询（ORDER BY）
+
+指定查询的结果以什么样的顺序显示。
 
 使用`ORDER BY`时，列名上指定`ASC`或`DESC`。`ASC`表示正序，`DESC`表示倒序。如果不指定则默认为正序。
 
 **按年龄排：**
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -760,7 +825,7 @@ ORDER BY
 
 ![](https://pic.downk.cc/item/5e858dc8504f4bcb04d4a68a.jpg)
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -770,14 +835,120 @@ ORDER BY
 
 ![](https://pic.downk.cc/item/5e858dc8504f4bcb04d4a68a.jpg)
 
-## 最后一定要注意！
 
-**基本查询SQL的执行顺序：**
+
+### 分页查询
+
+使用SELECT查询时，如果结果集数据量很大，比如几万行数据，放在一个页面显示的话数据量太大，且对数据库的压力也大，不如分页显示，每次显示100条，也每次从数据库拿100条数据。
+
+要实现分页功能，实际上就是从结果集中显示第1~100条记录作为第1页，显示第101~200条记录作为第2页，以此类推。
+
+因此，分页实际上就是从结果集中“截取”出第M~N条记录。这个查询可以通过`LIMIT N OFFSET M`子句实现。
+
+其中：
+
+LIMIT 为返回限定行数的查询，
+
+`LIMIT N` 表示从第一行开始返回 `N` 行结果;
+
+`LIMIT N OFFSET M`中的`OFFSET M`为偏移量，就记录集索引`M`之前的数据不管，从索引`M`开始返回`N`行结果。
+
+#### 实操步骤
+
+这里使用上面模糊操作中的表`tt_student`训练。
+
+1. 我们先把所有学生按照年龄从高到低进行排序：
+
+```sql
+-- 按student_age从高到低
+SELECT * FROM tt_students ORDER BY student_age DESC;
+```
+
+2. 把结果集分页，每页4条记录。要获取第1页的记录，可以使用`LIMIT 4 OFFSET 0`：
+
+```sql
+-- 查询第1页
+SELECT * 
+FROM tt_students 
+ORDER BY student_age DESC 
+LIMIT 4 OFFSET 0;
+-- 或者使用下面语句
+SELECT * 
+FROM t_students 
+ORDER BY student_age DESC 
+LIMIT 4 ;
+```
+
+上述查询`LIMIT 4 OFFSET 0`表示，对结果集从0号记录开始，最多取4条。注意SQL记录集的索引从0开始。
+
+3. 如果要查询第2页，那么我们只需要“跳过”头4条记录，也就是对结果集从索引为4号的记录开始查询，把`OFFSET`设定为4。
+
+```sql
+-- 查询第2页
+SELECT * 
+FROM t_students 
+ORDER BY student_age DESC 
+LIMIT 4 OFFSET 4;
+-- 或者使用下面语句
+SELECT * 
+FROM t_students 
+ORDER BY student_age DESC 
+LIMIT 4 4;
+```
+
+由于表`tt_students`只有6条数据，因此第2页只有2条记录，因此最终的结果集按实际数量2显示，`LIMIT 4表示的意思是“最多4条记录”。
+
+如果后续还存在别的页，那么查询第3页的时候，`OFFSET`应该设定为8；
+
+查询第4页的时候，`OFFSET`应该设定为12。
+
+可见，分页查询的关键在于，首先要确定每页需要显示的结果数量`pageSize`（这里是4），然后根据当前页的索引`pageIndex`（从1开始），确定`LIMIT`和`OFFSET`应该设定的值：
+
+- `LIMIT = pageSize`；
+- `OFFSET = pageSize * (pageIndex - 1)`。
+
+这样就能正确查询出第N页的记录集。
+
+原本表`tt_student`一共就6条记录，但我们把`OFFSET`设置为20，会得到什么结果呢？
+
+```sql
+-- OFFSET设定为20
+SELECT * 
+FROM t_students 
+ORDER BY student_age DESC 
+LIMIT 4 OFFSET 20;
+```
+
+`OFFSET`超过了查询的最大数量并不会报错，而是得到一个空的结果集。
+
+#### 注意
+
+`OFFSET`是可选的，如果只写`LIMIT 15`，那么相当于`LIMIT 15 OFFSET 0`。
+
+在MySQL中，`LIMIT 15 OFFSET 30`还可以简写成`LIMIT 30, 15`。
+
+使用`LIMIT <M> OFFSET <N>`分页时，随着`N`越来越大，查询效率也会越来越低。
+
+#### 小结
+
+使用`LIMIT <M> OFFSET <N>`可以对结果集进行分页，每次查询返回结果集的一部分；
+
+分页查询需要先确定每页的数量和当前页数，然后确定`LIMIT`和`OFFSET`的值。
+
+#### 思考
+
+在分页查询之前，如何计算一共有几页（`totalPage`）？
+
+这部分可以通过后面学习聚合查询时获取总的数据量（`totalSize`）,然后可以整除的情况下`totalPage = totalSize/pageSize`，不能整除还有余数的情况下，`totalPage = totalSize/pageSize+1`，这里是否整除可以判断`totalSize%pageSize==0`是否为`true`来确定。
+
+## 基本查询SQL的执行顺序（极重要）
 
 1.    执行`FROM `
 2.    `WHERE`条件过滤 
 3.    `SELECT`投影 
 4.    `ORDER BY`排序
+
+还有聚合查询和多表查询，我们在第三节学习。
 
 # 聚合函数、分组、子查询及组合查询（三）
 
@@ -808,7 +979,7 @@ ORDER BY
 
 标准格式
 
-```mysql
+```sql
 SELECT
   COUNT(< 计数规范 >)
 FROM < 表名 >
@@ -824,7 +995,7 @@ FROM < 表名 >
 
 **例，计算班里共有多少学生：**
 
-```mysql
+```sql
 SELECT
   COUNT(*)
 FROM t_student;
@@ -834,7 +1005,7 @@ FROM t_student;
 
 **也可加入筛选条件，如求女学生数目：**
 
-```mysql
+```sql
 SELECT
   COUNT(*)
 FROM t_student
@@ -846,7 +1017,7 @@ WHERE
 
 **如果要计算班级数目，就需要用到`DISTINCT`：**
 
-```mysql
+```sql
 SELECT
   COUNT(DISTINCT student_class)
 FROM t_student;
@@ -864,7 +1035,7 @@ FROM t_student;
 
 **计算学生年龄之和：**
 
-```mysql
+```sql
 SELECT
   SUM(student_age)
 FROM t_student;
@@ -877,7 +1048,7 @@ FROM t_student;
 
 **计算学生平均年龄：**
 
-```mysql
+```sql
 SELECT
   AVG(student_age)
 FROM t_student;
@@ -891,7 +1062,7 @@ FROM t_student;
 
 **求年龄最大的学生信息（最小值同理）**
 
-```mysql
+```sql
 SELECT
   MAX(student_age)
 FROM t_student;
@@ -909,7 +1080,7 @@ FROM t_student;
 
 例，统计每个班的人数:
 
-```mysql
+```sql
 SELECT
   student_class,
   COUNT(ALL student_name) AS 总人数
@@ -932,7 +1103,7 @@ GROUP BY
 
 **统计每个班上20岁以上的学生人数：**
 
-```mysql
+```sql
 SELECT
   student_class,
   COUNT(student_name) AS 总人数
@@ -954,7 +1125,7 @@ GROUP BY
 
 能用下面的语句吗？
 
-```mysql
+```sql
 SELECT
   student_class,
   AVG(student_age)
@@ -969,7 +1140,7 @@ GROUP BY
 
 这里使用`HAIVING`即可完成：
 
-```mysql
+```sql
 SELECT
   student_class,
   AVG(student_age) AS 平均年龄
@@ -1030,7 +1201,7 @@ HAVING
 
 学生信息和班级名称位于不同的表中，要在同一张表中查出学生的学号、姓名、班级名称：
 
-```mysql
+```sql
 SELECT
   s.student_id,
   s.student_name,(
@@ -1068,7 +1239,7 @@ GROUP BY
 
 现要查出C语言成绩最高的学生的信息：
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -1103,7 +1274,7 @@ WHERE
 
 要查出C语言成绩比李四高的学生的信息：
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -1125,7 +1296,7 @@ WHERE
 
 现在我们回到最开始的问题，怎么查出每门课最高成绩的学生的信息：
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student s1
@@ -1168,7 +1339,7 @@ WHERE
 
 通过`UNION`运算符来将两张表纵向联接，基本方式为：
 
-```mysql
+```sql
 SELECT
   列1,
   列2
@@ -1183,7 +1354,7 @@ FROM 表2;
 
 `UNION ALL`为保留重复行：
 
-```mysql
+```sql
 SELECT
   列1,
   列2
@@ -1228,7 +1399,7 @@ FROM 表2;
 
 好了，扯远了。怎么联接这两张表呢？标准写法：
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student
@@ -1241,7 +1412,7 @@ JOIN t_class;
 
 这里就可以理解表联接的原理了，依次相连再相加。当然其中很多是无效行，为了去除无效的行我们就要用到外键来进行约束。学生表中的`_fk`与班级表中的`_infor`相关联：
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student s
@@ -1266,7 +1437,7 @@ JOIN t_class c ON s._fk = c._infor;
 
 内联接的简写：
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student s,
@@ -1288,7 +1459,7 @@ WHERE
 
 注意班级表中的四班是没有学生的，所以在内联接之后理所当然的被剔除了。现在以外联接做示例：
 
-```mysql
+```sql
 SELECT
   *
 FROM t_student s
@@ -1303,7 +1474,7 @@ RIGHT JOIN t_class c ON s._fk = c._infor;
 
 例如我们想查出还没有学生录入的班级信息：
 
-```mysql
+```sql
 SELECT
   c._id,
   c._cname,
@@ -1331,7 +1502,7 @@ WHERE
 
 现在可以通过自联接巧妙的将一张表分为员工部分和领导部分：
 
-```mysql
+```sql
 SELECT
   w.work_name,
   l.work_name as '领导姓名'
@@ -1355,7 +1526,7 @@ WHERE
 
 ### 1.查询凤姐所在的班级
 
-```mysql
+```sql
 SELECT
   _cname
 FROM t_student s,
@@ -1369,7 +1540,7 @@ WHERE
 
 ### 2.查询同朱军同班级的学生
 
-```mysql
+```sql
 SELECT
   s._name
 FROM t_student s
@@ -1392,7 +1563,7 @@ WHERE
 
 ### 3.查询每个班级的人数
 
-```mysql
+```sql
 SELECT
   d._cname,
   COUNT(_name)
@@ -1413,7 +1584,7 @@ GROUP BY
 
 ### 4.查询班级人数最多的班级
 
-```mysql
+```sql
 SELECT
   cc._cname,
   COUNT(_name)
@@ -1447,7 +1618,7 @@ HAVING
 
 ### 5.查询每个班中年龄最低的人
 
-```mysql
+```sql
 SELECT
   cc._cname,
   ss._name,
@@ -1478,6 +1649,3 @@ WHERE
 
 ![](https://pic.downk.cc/item/5e859654504f4bcb04daa1c5.jpg)
 
-## 结语
-
-SQL语句还是需要多多练习，熟能生巧。
